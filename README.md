@@ -54,6 +54,10 @@ This brings up:
 - Web at `http://localhost:3000`
 - API at `http://localhost:4000`
 
+If `3000` is already in use, set a different host port before starting:
+
+- `WEB_HOST_PORT=3001 docker compose up --build`
+
 ## Firebase Seed (optional)
 
 If Firebase Admin env vars are configured, seed demo data:
