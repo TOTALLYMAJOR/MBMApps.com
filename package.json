@@ -18,6 +18,7 @@
     "lint": "npm run build --workspace @mbm/contracts && npm run lint --workspace web && npm run lint --workspace api",
     "typecheck": "npm run build --workspace @mbm/contracts && npm run typecheck --workspace @mbm/contracts && npm run typecheck --workspace api && npm run typecheck --workspace web",
     "test": "npm run build --workspace @mbm/contracts && npm run test --workspace @mbm/contracts && npm run test --workspace api && npm run test --workspace web",
+    "validate": "npm run build --workspace @mbm/contracts && npm run lint --workspace web && npm run lint --workspace api && npm run typecheck --workspace api && npm run typecheck --workspace web && npm run test --workspace @mbm/contracts && npm run test --workspace api && npm run test --workspace web && npm run build --workspace api && npm run build --workspace web",
     "smoke": "tsx scripts/smoke.ts",
     "seed:firebase": "tsx scripts/seed-firebase.ts"
   },

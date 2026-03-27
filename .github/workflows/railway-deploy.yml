@@ -1,23 +1,33 @@
 name: Railway API Deploy
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - apps/api/**
-      - packages/contracts/**
-      - apps/api/Dockerfile
-      - package.json
-      - package-lock.json
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: railway-deploy-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
 
 jobs:
   deploy:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 2
 
       - uses: actions/setup-node@v4
         with:
@@ -27,13 +37,38 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Detect API-relevant changes
+        id: scope
+        run: |
+          set -euo pipefail
+
+          if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+            CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+          else
+            CHANGED_FILES="$(git ls-files)"
+          fi
+
+          echo "Changed files:" 
+          echo "$CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | grep -Eq '^(apps/api/|packages/contracts/|apps/api/Dockerfile|package\.json|package-lock\.json)'; then
+            echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+            echo "API scope changed. Proceeding with Railway deploy."
+          else
+            echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "No API scope changes detected. Skipping Railway deploy."
+          fi
+
       - name: Build API image
+        if: steps.scope.outputs.should_deploy == 'true'
         run: docker build -f apps/api/Dockerfile -t mbmapps-api:ci .
 
       - name: Install Railway CLI
-        run: npm install --global @railway/cli
+        if: steps.scope.outputs.should_deploy == 'true'
+        run: npm install --global @railway/cli@4.35.0
 
       - name: Deploy to Railway
+        if: steps.scope.outputs.should_deploy == 'true'
         run: railway up --service "$RAILWAY_SERVICE_ID" --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

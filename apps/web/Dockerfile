@@ -6,7 +6,7 @@ COPY tsconfig.base.json ./
 COPY apps/web/package.json apps/web/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
 
-RUN npm install --workspaces --include-workspace-root --ignore-scripts
+RUN npm ci --workspaces --include-workspace-root --ignore-scripts
 
 COPY apps/web ./apps/web
 COPY packages/contracts ./packages/contracts
@@ -17,12 +17,13 @@ RUN npm run build --workspace @mbm/contracts && npm run build --workspace web
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY package.json package-lock.json* ./
 COPY apps/web/package.json apps/web/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
 
-RUN npm install --omit=dev --workspaces --include-workspace-root --ignore-scripts
+RUN npm ci --omit=dev --workspaces --include-workspace-root --ignore-scripts
 
 COPY --from=builder /app/apps/web/.next ./apps/web/.next
 COPY --from=builder /app/apps/web/public ./apps/web/public
@@ -37,6 +38,9 @@ COPY --from=builder /app/apps/web/tsconfig.json ./apps/web/tsconfig.json
 COPY --from=builder /app/apps/web/next-env.d.ts ./apps/web/next-env.d.ts
 COPY --from=builder /app/content ./content
 COPY --from=builder /app/packages/contracts/dist ./packages/contracts/dist
+
+RUN chown -R node:node /app
+USER node
 
 EXPOSE 3001
 CMD ["npm", "run", "start", "--workspace", "web"]
