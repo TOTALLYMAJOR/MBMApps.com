@@ -82,10 +82,15 @@ export function DemoAuthPanel({ onRoleChange }: DemoAuthPanelProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4 text-sm text-white/85">
-      <p className="text-xs uppercase tracking-[0.2em] text-mist">Access</p>
+    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4 text-sm text-white/85 shadow-soft">
+      <p className="text-xs uppercase tracking-[0.2em] text-mist">Access Control</p>
       <p className="mt-2 font-mono text-xs text-white/80">Role: {role}</p>
-      <p className="mt-1 font-mono text-xs text-white/60">{user?.uid ?? 'No active session'}</p>
+      <p className="mt-1 font-mono text-xs text-white/60">
+        {user?.uid ? `${user.uid.slice(0, 8)}...${user.uid.slice(-6)}` : 'No active session'}
+      </p>
+      <p className="mt-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs text-mist">
+        Anonymous auth is used for demo access. Custom claims determine visibility depth.
+      </p>
       <div className="mt-4 flex gap-3">
         <button
           onClick={handleSignIn}

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ServicesSwitchboard } from '@/components/services-switchboard';
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -48,49 +49,69 @@ const architectureSchema = {
 
 export default function ServicesPage() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-16 lg:px-8">
-      <header>
-        <p className="text-xs uppercase tracking-[0.24em] text-signal">Services</p>
-        <h1 className="mt-3 font-display text-5xl text-white">Engineering outcomes, not feature factories.</h1>
-        <p className="mt-4 max-w-2xl text-lg text-mist">
-          We align architecture and execution with business goals so your software can scale confidently while moving faster.
-        </p>
-      </header>
-
-      <section className="mt-10 grid gap-6 md:grid-cols-3">
-        {services.map((service) => (
-          <article key={service.title} className="rounded-3xl border border-white/10 bg-slate-900/65 p-6 shadow-soft">
-            <h2 className="font-display text-2xl text-white">{service.title}</h2>
-            <p className="mt-3 text-sm leading-6 text-mist">{service.description}</p>
-            <ul className="mt-4 space-y-2 text-sm text-white/85">
-              {service.outcomes.map((outcome) => (
-                <li key={outcome} className="rounded-lg border border-white/10 bg-slate-950/55 px-3 py-2">
-                  {outcome}
-                </li>
+    <>
+      <div className="pb-20">
+        <section className="hero-mesh relative overflow-hidden border-b border-white/10">
+          <div className="ambient-grid pointer-events-none absolute inset-0 opacity-50" />
+          <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-16 lg:px-8 lg:pt-20">
+            <p className="text-xs uppercase tracking-[0.24em] text-signal">Services</p>
+            <h1 className="mt-3 max-w-4xl font-display text-5xl text-white md:text-6xl">Engineering outcomes, not feature factories.</h1>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-mist">
+              We align architecture and execution with business goals so your software scales confidently while delivery speed increases.
+            </p>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {[
+                ['Blueprint Velocity', 'Architecture direction in days, not months.'],
+                ['Operational Discipline', 'Typed contracts, safe deploy gates, and observability.'],
+                ['Business Translation', 'Technical decisions tied to ROI and growth levers.']
+              ].map(([title, detail]) => (
+                <article key={title} className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                  <p className="font-semibold text-white">{title}</p>
+                  <p className="mt-2 text-sm text-mist">{detail}</p>
+                </article>
               ))}
-            </ul>
-          </article>
-        ))}
-      </section>
+            </div>
+          </div>
+        </section>
 
-      <section className="mt-12 rounded-3xl border border-white/10 bg-slate-900/50 p-8">
-        <h2 className="font-display text-3xl text-white">Stack capability highlights</h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {[
-            ['Vercel', 'Global edge delivery, preview deployments, web vitals insights'],
-            ['Railway', 'Containerized API hosting with straightforward scaling and runtime controls'],
-            ['Firebase', 'Authentication, real-time data, and secure managed backend primitives'],
-            ['Docker', 'Portable service packaging for local parity and multi-provider portability']
-          ].map(([title, detail]) => (
-            <article key={title} className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
-              <p className="font-semibold text-white">{title}</p>
-              <p className="mt-1 text-sm text-mist">{detail}</p>
+        <section className="mx-auto mt-10 grid w-full max-w-6xl gap-6 px-6 md:grid-cols-3 lg:px-8">
+          {services.map((service) => (
+            <article key={service.title} className="rounded-3xl border border-white/10 bg-slate-900/65 p-6 shadow-soft">
+              <h2 className="font-display text-2xl text-white">{service.title}</h2>
+              <p className="mt-3 text-sm leading-6 text-mist">{service.description}</p>
+              <ul className="mt-4 space-y-2 text-sm text-white/85">
+                {service.outcomes.map((outcome) => (
+                  <li key={outcome} className="rounded-lg border border-white/10 bg-slate-950/55 px-3 py-2">
+                    {outcome}
+                  </li>
+                ))}
+              </ul>
             </article>
           ))}
-        </div>
-      </section>
+        </section>
 
+        <div className="mx-auto w-full max-w-6xl px-6 lg:px-8">
+          <ServicesSwitchboard />
+        </div>
+
+        <section className="mx-auto mt-12 w-full max-w-6xl rounded-3xl border border-white/10 bg-slate-900/50 p-8 md:p-10 lg:px-10">
+          <h2 className="font-display text-3xl text-white">Stack capability highlights</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {[
+              ['Vercel', 'Global edge delivery, preview deployments, web vitals insights'],
+              ['Railway', 'Containerized API hosting with straightforward scaling and runtime controls'],
+              ['Firebase', 'Authentication, real-time data, and secure managed backend primitives'],
+              ['Docker', 'Portable service packaging for local parity and multi-provider portability']
+            ].map(([title, detail]) => (
+              <article key={title} className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
+                <p className="font-semibold text-white">{title}</p>
+                <p className="mt-1 text-sm text-mist">{detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(architectureSchema) }} />
-    </div>
+    </>
   );
 }

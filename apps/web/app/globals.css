@@ -70,3 +70,28 @@ a {
   padding-left: 1rem;
   color: #a9b8d7;
 }
+
+.hero-mesh {
+  background:
+    radial-gradient(circle at 10% 15%, rgba(35, 151, 255, 0.24), transparent 38%),
+    radial-gradient(circle at 82% 18%, rgba(54, 217, 164, 0.2), transparent 34%),
+    linear-gradient(152deg, rgba(4, 15, 27, 0.98) 0%, rgba(9, 24, 42, 0.9) 48%, rgba(5, 14, 28, 1) 100%);
+}
+
+.ambient-grid {
+  background-image:
+    linear-gradient(rgba(132, 160, 197, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(132, 160, 197, 0.12) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0.8), transparent 72%);
+  animation: ambient-grid-shift 18s linear infinite;
+}
+
+@keyframes ambient-grid-shift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(44px, 28px, 0);
+  }
+}

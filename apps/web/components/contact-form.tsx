@@ -30,6 +30,7 @@ const initialState: FormState = {
 export function ContactForm() {
   const [state, setState] = useState<FormState>(initialState);
   const [startedAt] = useState(Date.now());
+  const [messageLength, setMessageLength] = useState(0);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -81,7 +82,18 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-5 rounded-3xl border border-white/10 bg-slate-950/80 p-6 shadow-panel">
+    <form onSubmit={onSubmit} className="space-y-5 rounded-3xl border border-white/10 bg-slate-950/80 p-6 shadow-panel md:p-7">
+      <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-mist">Intake Readiness</p>
+        <div className="mt-3 grid gap-2 text-xs text-white/80 md:grid-cols-3">
+          {['Scope clarity', 'Budget alignment', 'Timeline commitment'].map((item) => (
+            <p key={item} className="rounded-lg border border-white/10 bg-white/[0.03] px-2 py-1.5">
+              {item}
+            </p>
+          ))}
+        </div>
+      </div>
+
       <div className="grid gap-5 md:grid-cols-2">
         <label className="space-y-2 text-sm text-white/90">
           Name
@@ -160,9 +172,22 @@ export function ContactForm() {
           minLength={20}
           name="message"
           rows={5}
+          onChange={(event) => setMessageLength(event.target.value.length)}
           className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm outline-none transition focus:border-electric"
           placeholder="Share outcomes you need: conversion lift, quoting speed, automation, reliability, etc."
         />
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-mist">
+            <span>Brief quality signal</span>
+            <span>{messageLength} chars</span>
+          </div>
+          <div className="h-1.5 rounded-full bg-white/10">
+            <div
+              className="h-1.5 rounded-full bg-gradient-to-r from-electric to-signal transition-all"
+              style={{ width: `${Math.min((messageLength / 140) * 100, 100)}%` }}
+            />
+          </div>
+        </div>
       </label>
 
       <input

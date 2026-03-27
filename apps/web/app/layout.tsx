@@ -3,6 +3,7 @@ import { IBM_Plex_Mono, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
+import { StartupLoader } from '@/components/startup-loader';
 import { WebVitalsReporter } from '@/components/web-vitals-reporter';
 import { siteConfig } from '@/lib/site';
 
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
       <body className="text-ink antialiased">
+        <StartupLoader />
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">{children}</main>
