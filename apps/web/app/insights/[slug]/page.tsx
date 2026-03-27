@@ -1,0 +1,65 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { getInsightBySlug, getInsights } from '@/lib/content';
+import { siteConfig } from '@/lib/site';
+
+type InsightPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateStaticParams() {
+  const insights = await getInsights();
+  return insights.map((item) => ({ slug: item.slug }));
+}
+
+export async function generateMetadata({ params }: InsightPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getInsightBySlug(slug);
+
+  if (post === null) {
+    return {};
+  }
+
+  return {
+    title: post.frontmatter.title,
+    description: post.frontmatter.summary
+  };
+}
+
+export default async function InsightDetailPage({ params }: InsightPageProps) {
+  const { slug } = await params;
+  const post = await getInsightBySlug(slug);
+
+  if (post === null) {
+    notFound();
+  }
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.frontmatter.title,
+    description: post.frontmatter.summary,
+    datePublished: post.frontmatter.publishedAt,
+    author: {
+      '@type': 'Organization',
+      name: siteConfig.legalName
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.legalName
+    }
+  };
+
+  return (
+    <article className="mx-auto w-full max-w-3xl px-6 py-16 lg:px-8">
+      <p className="text-xs uppercase tracking-[0.22em] text-signal">Insight</p>
+      <h1 className="mt-3 font-display text-5xl text-white">{post.frontmatter.title}</h1>
+      <p className="mt-4 text-lg text-mist">{post.frontmatter.summary}</p>
+      <div className="mbm-prose mt-10">
+        <MDXRemote source={post.content} />
+      </div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+    </article>
+  );
+}

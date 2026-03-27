@@ -1,0 +1,24 @@
+# dependencies
+node_modules
+
+# next.js
+.next
+out
+
+# build
+dist
+coverage
+
+# env
+.env
+.env.*
+!.env.example
+
+# firebase
+firebase-debug.log
+.firebase/
+
+# misc
+.DS_Store
+.vscode/
+npm-debug.log*

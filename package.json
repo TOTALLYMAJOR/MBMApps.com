@@ -1,0 +1,28 @@
+{
+  "name": "mbmapps-platform",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "postinstall": "npm run build --workspace @mbm/contracts",
+    "dev": "npm run dev --workspace web",
+    "dev:web": "npm run dev --workspace web",
+    "dev:api": "npm run build --workspace @mbm/contracts && npm run dev --workspace api",
+    "build": "npm run build --workspace @mbm/contracts && npm run build --workspace api && npm run build --workspace web",
+    "lint": "npm run build --workspace @mbm/contracts && npm run lint --workspace web && npm run lint --workspace api",
+    "typecheck": "npm run build --workspace @mbm/contracts && npm run typecheck --workspace @mbm/contracts && npm run typecheck --workspace api && npm run typecheck --workspace web",
+    "test": "npm run build --workspace @mbm/contracts && npm run test --workspace @mbm/contracts && npm run test --workspace api && npm run test --workspace web",
+    "smoke": "tsx scripts/smoke.ts",
+    "seed:firebase": "tsx scripts/seed-firebase.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.6.3"
+  }
+}

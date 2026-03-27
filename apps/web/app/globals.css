@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at 16% 8%, rgba(24, 129, 255, 0.2), transparent 34%),
+    radial-gradient(circle at 82% 3%, rgba(54, 217, 164, 0.16), transparent 35%),
+    linear-gradient(180deg, #06111f 0%, #071422 45%, #050d19 100%);
+  color: #f5f7fb;
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mbm-prose {
+  color: rgba(245, 247, 251, 0.9);
+}
+
+.mbm-prose h1,
+.mbm-prose h2,
+.mbm-prose h3 {
+  color: #ffffff;
+  font-family: var(--font-space-grotesk), sans-serif;
+  line-height: 1.2;
+}
+
+.mbm-prose p {
+  color: #d5dded;
+  line-height: 1.8;
+}
+
+.mbm-prose a {
+  color: #52a9ff;
+}
+
+.mbm-prose ul {
+  padding-left: 1.25rem;
+  list-style: disc;
+  color: #d5dded;
+}
+
+.mbm-prose code {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 0.35rem;
+  padding: 0.1rem 0.35rem;
+}
+
+.mbm-prose blockquote {
+  margin: 1.5rem 0;
+  border-left: 2px solid rgba(82, 169, 255, 0.5);
+  padding-left: 1rem;
+  color: #a9b8d7;
+}

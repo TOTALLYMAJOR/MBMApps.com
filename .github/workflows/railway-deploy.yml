@@ -1,0 +1,40 @@
+name: Railway API Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/api/**
+      - packages/contracts/**
+      - apps/api/Dockerfile
+      - package.json
+      - package-lock.json
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build API image
+        run: docker build -f apps/api/Dockerfile -t mbmapps-api:ci .
+
+      - name: Install Railway CLI
+        run: npm install --global @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --service "$RAILWAY_SERVICE_ID" --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
