@@ -7,7 +7,7 @@ services:
       - .env
     environment:
       API_PORT: 4000
-      CORS_ORIGIN: http://localhost:3000
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3001}
     ports:
       - '${API_HOST_PORT:-4000}:4000'
 
@@ -18,9 +18,10 @@ services:
     env_file:
       - .env
     environment:
+      PORT: 3001
       BACKEND_API_URL: http://api:4000
-      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3001}
     depends_on:
       - api
     ports:
-      - '${WEB_HOST_PORT:-3000}:3000'
+      - '${WEB_HOST_PORT:-3001}:3001'

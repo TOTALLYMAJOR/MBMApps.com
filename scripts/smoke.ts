@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-const webUrl = process.env.APP_URL ?? 'http://localhost:3000';
+const webUrl = process.env.APP_URL ?? 'http://localhost:3001';
 const apiUrl = process.env.BACKEND_API_URL ?? 'http://localhost:4000';
 
 async function check(url: string, description: string) {

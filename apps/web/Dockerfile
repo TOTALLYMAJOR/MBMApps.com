@@ -38,5 +38,5 @@ COPY --from=builder /app/apps/web/next-env.d.ts ./apps/web/next-env.d.ts
 COPY --from=builder /app/content ./content
 COPY --from=builder /app/packages/contracts/dist ./packages/contracts/dist
 
-EXPOSE 3000
+EXPOSE 3001
 CMD ["npm", "run", "start", "--workspace", "web"]

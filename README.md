@@ -49,14 +49,17 @@ Production-ready company site and technical showcase for `MBMapps.com`, built as
 ### Build and run both services
 
 - `docker compose up --build`
+- `./scripts/start-docker-3001.sh`
 
 This brings up:
-- Web at `http://localhost:3000`
+- Web at `http://localhost:3001`
 - API at `http://localhost:4000`
 
-If `3000` is already in use, set a different host port before starting:
+If you need a different web host port, override it before starting:
 
-- `WEB_HOST_PORT=3001 docker compose up --build`
+- `WEB_HOST_PORT=3010 docker compose up --build`
+
+The helper script above automatically frees required ports and starts with web on `3001`.
 
 ## Firebase Seed (optional)
 
