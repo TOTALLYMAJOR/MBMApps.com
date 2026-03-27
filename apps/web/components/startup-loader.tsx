@@ -1,14 +1,50 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useCallback, useMemo, useRef, useState, useEffect, type CSSProperties } from 'react';
 
-const DISPLAY_MS = 1900;
-const FADE_MS = 650;
+const INITIAL_DISPLAY_MS = 1900;
+const INITIAL_FADE_MS = 650;
+const TRANSITION_DISPLAY_MS = 320;
+const TRANSITION_FADE_MS = 280;
 
 type IntroPhase = 'visible' | 'fading' | 'hidden';
 
 export function StartupLoader() {
+  const pathname = usePathname();
   const [phase, setPhase] = useState<IntroPhase>('visible');
+  const [displayDuration, setDisplayDuration] = useState(INITIAL_DISPLAY_MS);
+  const [fadeDuration, setFadeDuration] = useState(INITIAL_FADE_MS);
+  const timeoutsRef = useRef<number[]>([]);
+  const pathnameReadyRef = useRef(false);
+
+  const clearTimers = useCallback(() => {
+    timeoutsRef.current.forEach((id) => window.clearTimeout(id));
+    timeoutsRef.current = [];
+  }, []);
+
+  const runIntro = useCallback(
+    (displayMs: number, fadeMs: number, markAsSeen = false) => {
+      clearTimers();
+      setDisplayDuration(displayMs);
+      setFadeDuration(fadeMs);
+      setPhase('visible');
+
+      const fadeTimeout = window.setTimeout(() => {
+        setPhase('fading');
+      }, displayMs);
+
+      const hideTimeout = window.setTimeout(() => {
+        setPhase('hidden');
+        if (markAsSeen) {
+          window.sessionStorage.setItem('mbm_intro_seen', '1');
+        }
+      }, displayMs + fadeMs);
+
+      timeoutsRef.current = [fadeTimeout, hideTimeout];
+    },
+    [clearTimers]
+  );
 
   useEffect(() => {
     const alreadySeen = window.sessionStorage.getItem('mbm_intro_seen') === '1';
@@ -18,54 +54,64 @@ export function StartupLoader() {
       return;
     }
 
-    const fadeTimeout = window.setTimeout(() => {
-      setPhase('fading');
-    }, DISPLAY_MS);
-
-    const hideTimeout = window.setTimeout(() => {
-      setPhase('hidden');
-      window.sessionStorage.setItem('mbm_intro_seen', '1');
-    }, DISPLAY_MS + FADE_MS);
+    runIntro(INITIAL_DISPLAY_MS, INITIAL_FADE_MS, true);
 
     return () => {
-      window.clearTimeout(fadeTimeout);
-      window.clearTimeout(hideTimeout);
+      clearTimers();
     };
-  }, []);
+  }, [runIntro, clearTimers]);
+
+  useEffect(() => {
+    if (!pathnameReadyRef.current) {
+      pathnameReadyRef.current = true;
+      return;
+    }
+
+    runIntro(TRANSITION_DISPLAY_MS, TRANSITION_FADE_MS);
+
+    return () => {
+      clearTimers();
+    };
+  }, [pathname, runIntro, clearTimers]);
+
+  const cubes = useMemo(
+    () =>
+      Array.from({ length: 52 }, (_, index) => {
+        const left = (index * 37) % 100;
+        const top = (index * 53) % 100;
+        const size = 12 + ((index * 19) % 44);
+        const opacity = 0.2 + ((index * 13) % 50) / 180;
+        const duration = 7 + ((index * 11) % 6);
+        const delay = ((index * 7) % 22) * 0.08;
+        const driftX = ((index * 17) % 30) - 15;
+        const driftY = ((index * 23) % 30) - 15;
+
+        return {
+          id: index,
+          style: {
+            left: `${left}%`,
+            top: `${top}%`,
+            width: `${size}px`,
+            height: `${size}px`,
+            opacity,
+            animationDuration: `${duration}s`,
+            animationDelay: `${delay}s`,
+            '--cube-drift-x': `${driftX}px`,
+            '--cube-drift-y': `${driftY}px`
+          } as CSSProperties
+        };
+      }),
+    []
+  );
 
   if (phase === 'hidden') {
     return null;
   }
 
-  const cubes = Array.from({ length: 52 }, (_, index) => {
-    const left = (index * 37) % 100;
-    const top = (index * 53) % 100;
-    const size = 12 + ((index * 19) % 44);
-    const opacity = 0.2 + ((index * 13) % 50) / 180;
-    const duration = 7 + ((index * 11) % 6);
-    const delay = ((index * 7) % 22) * 0.08;
-    const driftX = ((index * 17) % 30) - 15;
-    const driftY = ((index * 23) % 30) - 15;
-
-    return {
-      id: index,
-      style: {
-        left: `${left}%`,
-        top: `${top}%`,
-        width: `${size}px`,
-        height: `${size}px`,
-        opacity,
-        animationDuration: `${duration}s`,
-        animationDelay: `${delay}s`,
-        '--cube-drift-x': `${driftX}px`,
-        '--cube-drift-y': `${driftY}px`
-      } as React.CSSProperties
-    };
-  });
-
   return (
     <div
-      className={`fixed inset-0 z-[120] overflow-hidden bg-black transition-opacity duration-[650ms] ${phase === 'fading' ? 'opacity-0' : 'opacity-100'}`}
+      className={`fixed inset-0 z-[120] overflow-hidden bg-black transition-opacity ${phase === 'fading' ? 'opacity-0' : 'opacity-100'}`}
+      style={{ transitionDuration: `${fadeDuration}ms`, '--intro-progress-ms': `${displayDuration + fadeDuration}ms` } as CSSProperties}
       aria-hidden="true"
     >
       <div className="intro-space absolute inset-0" />

@@ -1,17 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-
-const AIDnaChipScene = dynamic(
-  () => import('@/components/ai-dna-chip-scene').then((module) => module.AIDnaChipScene),
-  {
-    ssr: false,
-    loading: () => <div className="h-[360px] w-[320px] rounded-[28px] border border-white/15 bg-black/40 shadow-panel" />
-  }
-);
 
 type TrackId = 'platform' | 'revenue' | 'reliability';
 
@@ -91,10 +82,10 @@ const executionRail = [
 ];
 
 const signalTape = [
-  { stage: 'Leads Captured', value: 128, tint: 'from-[#ff7449]/85 to-[#ff4d2b]/40' },
-  { stage: 'Qualified', value: 74, tint: 'from-[#ffa65f]/80 to-[#ff7449]/35' },
-  { stage: 'Proposal', value: 39, tint: 'from-[#ffc487]/75 to-[#ff8a57]/35' },
-  { stage: 'Won', value: 22, tint: 'from-[#ffe2b0]/70 to-[#ff8f63]/30' }
+  { stage: 'Leads Captured', value: 128, tint: 'from-[#6f94ff]/85 to-[#3f5db9]/40' },
+  { stage: 'Qualified', value: 74, tint: 'from-[#8eadff]/80 to-[#5f7fd8]/35' },
+  { stage: 'Proposal', value: 39, tint: 'from-[#b5c9ff]/75 to-[#6f92eb]/35' },
+  { stage: 'Won', value: 22, tint: 'from-[#d4e2ff]/70 to-[#84a1f0]/30' }
 ];
 
 const maxPipelineValue = signalTape[0]?.value ?? 1;
@@ -149,9 +140,6 @@ export function HomeImmersive() {
     <>
       <section className="hero-mesh film-grain relative overflow-hidden border-b border-white/10">
         <div className="ambient-grid pointer-events-none absolute inset-0 opacity-35" />
-        <div className="absolute right-6 top-20 z-[2] hidden lg:block 2xl:right-16">
-          <AIDnaChipScene />
-        </div>
 
         <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-12 px-6 pb-20 pt-16 lg:grid-cols-[1.2fr_0.8fr] lg:px-8 lg:pt-24">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
@@ -179,8 +167,8 @@ export function HomeImmersive() {
             transition={{ duration: 0.75, delay: 0.15 }}
             className="surface-panel relative overflow-hidden p-6 backdrop-blur"
           >
-            <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-[#ff7a4a]/20 blur-3xl" />
-            <div className="absolute -bottom-16 -left-12 h-44 w-44 rounded-full bg-[#ffb07a]/15 blur-3xl" />
+            <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-electric/25 blur-3xl" />
+            <div className="absolute -bottom-16 -left-12 h-44 w-44 rounded-full bg-signal/20 blur-3xl" />
             <p className="kicker text-white/65">Signal Feed</p>
             <div className="mt-5 space-y-4">
               {signalTape.map((row, index) => (
@@ -291,7 +279,7 @@ export function HomeImmersive() {
                   transition={{ duration: 0.45, delay: 0.08 * index }}
                   className="font-mono text-sm leading-8 text-white/90"
                 >
-                  <span className="text-[#ff9a72]">$</span> {line}
+                  <span className="text-signal">$</span> {line}
                 </motion.p>
               ))}
             </div>

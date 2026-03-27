@@ -4,12 +4,12 @@
 
 :root {
   color-scheme: dark;
-  --mbm-canvas: 7 7 8;
+  --mbm-canvas: 4 6 14;
   --mbm-ink: 245 247 251;
-  --mbm-mist: 164 154 147;
-  --mbm-signal: 255 170 132;
-  --mbm-electric: 255 106 71;
-  --mbm-warning: 255 188 117;
+  --mbm-mist: 145 160 201;
+  --mbm-signal: 185 206 255;
+  --mbm-electric: 117 151 255;
+  --mbm-warning: 214 227 255;
 }
 
 * {
@@ -24,9 +24,9 @@ body {
 
 body {
   background:
-    radial-gradient(circle at 10% 4%, rgba(255, 118, 82, 0.2), transparent 34%),
-    radial-gradient(circle at 88% 0%, rgba(255, 184, 125, 0.14), transparent 36%),
-    linear-gradient(180deg, #070707 0%, #0a0a0c 46%, #040405 100%);
+    radial-gradient(circle at 12% 8%, rgba(114, 149, 255, 0.22), transparent 34%),
+    radial-gradient(circle at 86% 4%, rgba(174, 202, 255, 0.16), transparent 36%),
+    linear-gradient(180deg, #04060e 0%, #060914 46%, #03040a 100%);
   color: rgb(var(--mbm-ink));
   font-family: var(--font-space-grotesk), sans-serif;
 }
@@ -72,16 +72,16 @@ a {
 
 .mbm-prose blockquote {
   margin: 1.5rem 0;
-  border-left: 2px solid rgba(255, 126, 86, 0.55);
+  border-left: 2px solid rgba(129, 163, 255, 0.55);
   padding-left: 1rem;
-  color: #c5b7b0;
+  color: #b7c5e8;
 }
 
 .hero-mesh {
   background:
-    radial-gradient(circle at 12% 18%, rgba(255, 112, 69, 0.3), transparent 40%),
-    radial-gradient(circle at 84% 10%, rgba(255, 177, 120, 0.2), transparent 36%),
-    linear-gradient(152deg, rgba(11, 11, 12, 0.98) 0%, rgba(16, 12, 11, 0.92) 48%, rgba(6, 6, 8, 1) 100%);
+    radial-gradient(circle at 10% 18%, rgba(110, 144, 250, 0.3), transparent 40%),
+    radial-gradient(circle at 84% 10%, rgba(167, 198, 255, 0.22), transparent 36%),
+    linear-gradient(152deg, rgba(7, 10, 22, 0.98) 0%, rgba(9, 16, 36, 0.92) 48%, rgba(5, 8, 18, 1) 100%);
 }
 
 .section-shell {
@@ -145,7 +145,7 @@ a {
 
 .btn-theme-ghost:hover {
   border-color: rgba(var(--mbm-signal), 0.75);
-  color: rgba(255, 224, 211, 0.95);
+  color: rgba(226, 235, 255, 0.95);
 }
 
 .text-mbm-muted {
@@ -202,13 +202,13 @@ a {
 .intro-progress {
   background: linear-gradient(90deg, rgba(120, 152, 255, 0.7), rgba(212, 226, 255, 0.95));
   transform-origin: left center;
-  animation: intro-progress-fill 1.95s ease-in-out forwards;
+  animation: intro-progress-fill var(--intro-progress-ms, 1.95s) ease-in-out forwards;
 }
 
 .ambient-grid {
   background-image:
-    linear-gradient(rgba(255, 170, 140, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 170, 140, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(170, 194, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(170, 194, 255, 0.1) 1px, transparent 1px);
   background-size: 44px 44px;
   mask-image: radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0.88), transparent 72%);
   animation: ambient-grid-shift 18s linear infinite;
