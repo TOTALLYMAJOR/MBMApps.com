@@ -30,13 +30,11 @@ export default function HomePage() {
     <>
       <HomeImmersive />
       <section className="mx-auto w-full max-w-6xl px-6 pb-20 lg:px-8">
-        <div className="rounded-3xl border border-electric/35 bg-electric/10 p-8 text-center md:p-10">
-          <h2 className="font-display text-3xl text-white">Need a trusted partner to scale your web platform?</h2>
-          <p className="mt-3 text-mist">Let&apos;s map your technical roadmap and ship your highest-leverage product improvements.</p>
-          <Link
-            href="/contact"
-            className="mt-6 inline-flex rounded-full bg-electric px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-500"
-          >
+        <div className="section-shell p-8 text-center md:p-10">
+          <p className="kicker">{'// Next Move'}</p>
+          <h2 className="mt-3 font-display text-3xl text-white">Need a technical partner that executes with conviction?</h2>
+          <p className="text-mbm-muted mt-3">Let&apos;s map your highest-leverage roadmap and ship outcomes with speed, clarity, and production discipline.</p>
+          <Link href="/contact" className="btn-theme mt-6">
             Start Your Project
           </Link>
         </div>

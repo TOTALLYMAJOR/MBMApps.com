@@ -87,8 +87,8 @@ export function ServicesSwitchboard() {
   }
 
   return (
-    <section className="mt-12 rounded-3xl border border-white/10 bg-slate-950/55 p-8 md:p-10">
-      <p className="text-xs uppercase tracking-[0.24em] text-signal">Service Switchboard</p>
+    <section className="section-shell mt-12 p-8 md:p-10">
+      <p className="kicker">Service Switchboard</p>
       <h2 className="mt-3 font-display text-3xl text-white md:text-4xl">Select a track and inspect the delivery model.</h2>
 
       <div className="mt-7 flex flex-wrap gap-3">
@@ -100,9 +100,7 @@ export function ServicesSwitchboard() {
               type="button"
               onClick={() => setActiveId(track.id)}
               className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                activeTrack
-                  ? 'border-electric/70 bg-electric/20 text-white'
-                  : 'border-white/20 bg-white/5 text-mist hover:border-white/40 hover:text-white'
+                activeTrack ? 'border-electric/70 bg-electric/20 text-white' : 'border-white/20 bg-white/5 text-white/65 hover:border-white/40 hover:text-white'
               }`}
               aria-pressed={activeTrack}
             >
@@ -117,15 +115,15 @@ export function ServicesSwitchboard() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="mt-7 grid gap-6 rounded-2xl border border-white/10 bg-slate-950/75 p-6 md:grid-cols-[1.1fr_0.9fr]"
+        className="surface-card mt-7 grid gap-6 p-6 md:grid-cols-[1.1fr_0.9fr]"
       >
         <div>
           <h3 className="font-display text-2xl text-white">{active.title}</h3>
-          <p className="mt-3 text-sm leading-7 text-mist">{active.summary}</p>
+          <p className="text-mbm-muted mt-3 text-sm leading-7">{active.summary}</p>
 
           <div className="mt-5 space-y-3">
             {active.deliverables.map((item) => (
-              <p key={item} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/90">
+              <p key={item} className="surface-card px-4 py-3 text-sm text-white/90">
                 {item}
               </p>
             ))}
@@ -133,28 +131,28 @@ export function ServicesSwitchboard() {
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-mist">Execution Signals</p>
+          <div className="surface-card p-4">
+            <p className="kicker text-white/70">Execution Signals</p>
             <div className="mt-3 space-y-3">
               {active.kpis.map((kpi, index) => (
                 <div key={kpi.label}>
                   <div className="mb-2 flex items-center justify-between text-xs">
                     <span className="text-white/90">{kpi.label}</span>
-                    <span className="font-mono text-mist">{kpi.value}</span>
+                    <span className="font-mono text-white/65">{kpi.value}</span>
                   </div>
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${kpi.value}%` }}
                     transition={{ duration: 0.55, delay: index * 0.08 }}
-                    className="h-2 rounded-full bg-gradient-to-r from-electric to-signal"
+                    className="h-2 rounded-full bg-gradient-to-r from-electric via-signal to-warning"
                   />
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="rounded-2xl border border-signal/30 bg-signal/10 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-signal">Technology Fit</p>
+          <div className="rounded-2xl border border-electric/30 bg-electric/10 p-4">
+            <p className="kicker text-white/80">Technology Fit</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {active.stack.map((item) => (
                 <span key={item} className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.14em] text-white/90">

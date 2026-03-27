@@ -54,9 +54,9 @@ export default function ServicesPage() {
         <section className="hero-mesh relative overflow-hidden border-b border-white/10">
           <div className="ambient-grid pointer-events-none absolute inset-0 opacity-50" />
           <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-16 lg:px-8 lg:pt-20">
-            <p className="text-xs uppercase tracking-[0.24em] text-signal">Services</p>
+            <p className="kicker">Services</p>
             <h1 className="mt-3 max-w-4xl font-display text-5xl text-white md:text-6xl">Engineering outcomes, not feature factories.</h1>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-mist">
+            <p className="text-mbm-muted mt-4 max-w-3xl text-lg leading-8">
               We align architecture and execution with business goals so your software scales confidently while delivery speed increases.
             </p>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -65,9 +65,9 @@ export default function ServicesPage() {
                 ['Operational Discipline', 'Typed contracts, safe deploy gates, and observability.'],
                 ['Business Translation', 'Technical decisions tied to ROI and growth levers.']
               ].map(([title, detail]) => (
-                <article key={title} className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                <article key={title} className="surface-card p-4">
                   <p className="font-semibold text-white">{title}</p>
-                  <p className="mt-2 text-sm text-mist">{detail}</p>
+                  <p className="text-mbm-muted mt-2 text-sm">{detail}</p>
                 </article>
               ))}
             </div>
@@ -76,12 +76,12 @@ export default function ServicesPage() {
 
         <section className="mx-auto mt-10 grid w-full max-w-6xl gap-6 px-6 md:grid-cols-3 lg:px-8">
           {services.map((service) => (
-            <article key={service.title} className="rounded-3xl border border-white/10 bg-slate-900/65 p-6 shadow-soft">
+            <article key={service.title} className="surface-panel p-6">
               <h2 className="font-display text-2xl text-white">{service.title}</h2>
-              <p className="mt-3 text-sm leading-6 text-mist">{service.description}</p>
+              <p className="text-mbm-muted mt-3 text-sm leading-6">{service.description}</p>
               <ul className="mt-4 space-y-2 text-sm text-white/85">
                 {service.outcomes.map((outcome) => (
-                  <li key={outcome} className="rounded-lg border border-white/10 bg-slate-950/55 px-3 py-2">
+                  <li key={outcome} className="surface-card px-3 py-2">
                     {outcome}
                   </li>
                 ))}
@@ -94,7 +94,7 @@ export default function ServicesPage() {
           <ServicesSwitchboard />
         </div>
 
-        <section className="mx-auto mt-12 w-full max-w-6xl rounded-3xl border border-white/10 bg-slate-900/50 p-8 md:p-10 lg:px-10">
+        <section className="section-shell mx-auto mt-12 w-full max-w-6xl p-8 md:p-10 lg:px-10">
           <h2 className="font-display text-3xl text-white">Stack capability highlights</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {[
@@ -103,9 +103,9 @@ export default function ServicesPage() {
               ['Firebase', 'Authentication, real-time data, and secure managed backend primitives'],
               ['Docker', 'Portable service packaging for local parity and multi-provider portability']
             ].map(([title, detail]) => (
-              <article key={title} className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
+              <article key={title} className="surface-card p-4">
                 <p className="font-semibold text-white">{title}</p>
-                <p className="mt-1 text-sm text-mist">{detail}</p>
+                <p className="text-mbm-muted mt-1 text-sm">{detail}</p>
               </article>
             ))}
           </div>

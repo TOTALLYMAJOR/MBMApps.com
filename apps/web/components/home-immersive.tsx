@@ -9,9 +9,7 @@ const AIDnaChipScene = dynamic(
   () => import('@/components/ai-dna-chip-scene').then((module) => module.AIDnaChipScene),
   {
     ssr: false,
-    loading: () => (
-      <div className="h-[360px] w-[320px] rounded-[28px] border border-white/15 bg-slate-950/35 shadow-panel" />
-    )
+    loading: () => <div className="h-[360px] w-[320px] rounded-[28px] border border-white/15 bg-black/40 shadow-panel" />
   }
 );
 
@@ -27,78 +25,79 @@ type TrackBlueprint = {
 
 const metrics = [
   {
-    label: 'Performance Baseline',
-    value: 98,
-    suffix: '/100',
-    caption: 'Lighthouse budgets enforced in CI before release.'
+    label: 'Qualified Pipeline',
+    value: 128,
+    suffix: ' accounts',
+    caption: 'Live leads with scoring + backend validation in production.'
   },
   {
-    label: 'Release Lead Time',
+    label: 'Median Launch Cycle',
     value: 4,
     suffix: ' days',
-    caption: 'From scoped backlog to production deployment.'
+    caption: 'From scoped objective to tested release candidate.'
   },
   {
-    label: 'Failure Recovery',
+    label: 'Incident Recovery',
     value: 99.95,
     suffix: '%',
-    caption: 'Guardrails, observability, and rollback discipline.'
+    caption: 'Measured by automated health checks and rollback policy.'
   }
 ];
 
 const deliveryTracks: Record<TrackId, TrackBlueprint> = {
   platform: {
     label: 'Platform',
-    title: 'Composable platform architecture with provider portability built in.',
+    title: 'A composable platform that survives scale, team growth, and provider shifts.',
     summary:
-      'We design the core surface for scale first: typed contracts, container parity, environment segmentation, and deployment controls that keep release velocity high.',
+      'We design for operational durability first: typed contracts, environment symmetry, release controls, and guardrails that keep velocity high without sacrificing quality.',
     outcomes: [
-      'Monorepo + shared contract modules to prevent frontend/backend drift',
-      'Environment parity across local Docker, Vercel, and Railway',
-      'Auditable CI gates with typed APIs and smoke verification'
+      'Shared contract packages that eliminate frontend/backend schema drift',
+      'Containerized parity across local, preview, and production environments',
+      'Release gating with typed checks and smoke test orchestration'
     ],
     stack: ['Next.js App Router', 'TypeScript', 'Docker', 'GitHub Actions']
   },
   revenue: {
     label: 'Revenue',
-    title: 'Lead and pipeline systems that convert technical quality into business growth.',
+    title: 'A conversion system engineered like product infrastructure, not marketing copy.',
     summary:
-      'Conversion moments are engineered, not guessed. We pair UX intent with telemetry and backend resilience so lead capture, quote workflows, and follow-up flows perform under load.',
+      'Every growth moment is treated as a technical surface. We pair UX pathways with telemetry and reliability so contact capture, qualification, and follow-up flows compound.',
     outcomes: [
-      'Server-side validated contact + anti-spam handoff flow',
-      'Tracked events for submission, engagement, and conversion moments',
-      'Dashboard-ready data contracts for quote and funnel visibility'
+      'Server-validated intake with resilient anti-spam controls',
+      'Actionable event taxonomy from click to qualified conversion',
+      'Dashboard-ready data contracts for funnel and quote operations'
     ],
     stack: ['Route Handlers', 'Event Telemetry', 'Schema Validation', 'Analytics Hooks']
   },
   reliability: {
     label: 'Reliability',
-    title: 'Production confidence through observability, fault handling, and safe rollout practices.',
+    title: 'Production behavior designed for graceful degradation and rapid operator action.',
     summary:
-      'We instrument the system so failures degrade gracefully and operators can act quickly. Reliability becomes a product feature users can feel.',
+      'Reliability is a design principle, not a patch. We instrument the stack so failure states are observable, recoverable, and controlled under real traffic.',
     outcomes: [
-      'Request/error logging with actionable context for incident triage',
-      'Fallback states that keep UX intact during downstream outages',
-      'Core smoke checks for launch gates and post-deploy confidence'
+      'Structured request/error logging with meaningful triage context',
+      'Fallback UX states that hold quality under partial outages',
+      'Repeatable smoke gates for pre-launch and post-deploy verification'
     ],
     stack: ['Structured Logs', 'Health Endpoints', 'Web Vitals', 'Synthetic Smoke Tests']
   }
 };
 
 const executionRail = [
-  '$ docker compose up --build',
-  '$ npm run test && npm run build',
-  '$ railway up --detach',
-  '$ vercel deploy --prebuilt --prod'
+  'git pull --rebase origin main',
+  'npm run test && npm run build',
+  'railway up --detach',
+  'vercel deploy --prebuilt --prod'
 ];
 
-const pipelinePulse = [
-  { stage: 'Leads Captured', value: 128, tint: 'from-electric/70 to-electric/30' },
-  { stage: 'Qualified', value: 74, tint: 'from-signal/70 to-signal/25' },
-  { stage: 'Proposal Sent', value: 39, tint: 'from-cyan-300/70 to-cyan-400/20' },
-  { stage: 'Won', value: 22, tint: 'from-emerald-300/70 to-emerald-500/25' }
+const signalTape = [
+  { stage: 'Leads Captured', value: 128, tint: 'from-[#ff7449]/85 to-[#ff4d2b]/40' },
+  { stage: 'Qualified', value: 74, tint: 'from-[#ffa65f]/80 to-[#ff7449]/35' },
+  { stage: 'Proposal', value: 39, tint: 'from-[#ffc487]/75 to-[#ff8a57]/35' },
+  { stage: 'Won', value: 22, tint: 'from-[#ffe2b0]/70 to-[#ff8f63]/30' }
 ];
-const maxPipelineValue = pipelinePulse[0]?.value ?? 1;
+
+const maxPipelineValue = signalTape[0]?.value ?? 1;
 
 function AnimatedMetric({ value, suffix, label, caption }: (typeof metrics)[number]) {
   const [display, setDisplay] = useState(0);
@@ -130,14 +129,14 @@ function AnimatedMetric({ value, suffix, label, caption }: (typeof metrics)[numb
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.6 }}
       transition={{ duration: 0.55 }}
-      className="rounded-2xl border border-white/10 bg-slate-950/65 p-5 shadow-soft"
+      className="rounded-2xl border border-white/15 bg-black/35 p-5 shadow-soft backdrop-blur-sm"
     >
-      <p className="text-[0.66rem] uppercase tracking-[0.2em] text-mist">{label}</p>
+      <p className="font-mono text-[0.62rem] uppercase tracking-[0.22em] text-white/55">{label}</p>
       <p className="mt-3 font-display text-3xl font-semibold text-white">
         {rendered}
-        <span className="ml-1 text-lg text-mist">{suffix}</span>
+        <span className="ml-1 text-lg text-white/55">{suffix}</span>
       </p>
-      <p className="mt-3 text-sm leading-6 text-mist">{caption}</p>
+      <p className="mt-3 text-sm leading-6 text-white/70">{caption}</p>
     </motion.article>
   );
 }
@@ -148,25 +147,27 @@ export function HomeImmersive() {
 
   return (
     <>
-      <section className="hero-mesh relative overflow-hidden border-b border-white/10">
-        <div className="ambient-grid pointer-events-none absolute inset-0 opacity-50" />
+      <section className="hero-mesh film-grain relative overflow-hidden border-b border-white/10">
+        <div className="ambient-grid pointer-events-none absolute inset-0 opacity-35" />
         <div className="absolute right-6 top-20 z-[2] hidden lg:block 2xl:right-16">
           <AIDnaChipScene />
         </div>
-        <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-10 px-6 pb-20 pt-16 lg:grid-cols-[1.2fr_0.8fr] lg:px-8 lg:pt-24">
+
+        <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-12 px-6 pb-20 pt-16 lg:grid-cols-[1.2fr_0.8fr] lg:px-8 lg:pt-24">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <p className="text-xs uppercase tracking-[0.24em] text-signal">Advanced Product Engineering Studio</p>
-            <h1 className="mt-4 max-w-4xl font-display text-5xl font-semibold leading-tight text-white md:text-6xl">
-              Sophisticated web systems that convert quality engineering into measurable growth.
+            <p className="kicker">{'// MBMApps Operating Thesis'}</p>
+            <h1 className="mt-5 max-w-4xl font-display text-5xl font-semibold leading-[1.05] text-white md:text-6xl lg:text-7xl">
+              ENGINEERING DISCIPLINE THAT TURNS DIGITAL PRODUCTS INTO MARKET ADVANTAGE.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-mist">
-              MBMApps builds high-performance digital platforms where design precision, resilient architecture, and delivery discipline work as one system.
+            <p className="mt-6 max-w-2xl text-base leading-8 text-white/75 md:text-lg">
+              We build high-performance web systems with the same mindset used in elite investment operations: signal over noise, repeatable execution, and asymmetric upside.
             </p>
+
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/contact" className="rounded-full bg-electric px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-500">
+              <Link href="/contact" className="btn-theme">
                 Start a Discovery Call
               </Link>
-              <Link href="/demo" className="rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-white transition hover:border-signal/70">
+              <Link href="/demo" className="btn-theme-ghost">
                 Open Live Demo
               </Link>
             </div>
@@ -176,17 +177,17 @@ export function HomeImmersive() {
             initial={{ opacity: 0, scale: 0.98, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.15 }}
-            className="relative overflow-hidden rounded-3xl border border-white/15 bg-slate-950/70 p-6 shadow-panel"
+            className="surface-panel relative overflow-hidden p-6 backdrop-blur"
           >
-            <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-electric/20 blur-3xl" />
-            <div className="absolute -bottom-16 -left-12 h-44 w-44 rounded-full bg-signal/20 blur-3xl" />
-            <p className="text-[0.65rem] uppercase tracking-[0.22em] text-mist">Delivery Pulse</p>
+            <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-[#ff7a4a]/20 blur-3xl" />
+            <div className="absolute -bottom-16 -left-12 h-44 w-44 rounded-full bg-[#ffb07a]/15 blur-3xl" />
+            <p className="kicker text-white/65">Signal Feed</p>
             <div className="mt-5 space-y-4">
-              {pipelinePulse.map((row, index) => (
+              {signalTape.map((row, index) => (
                 <div key={row.stage}>
                   <div className="mb-2 flex items-center justify-between text-xs">
                     <span className="text-white/90">{row.stage}</span>
-                    <span className="font-mono text-mist">{row.value}</span>
+                    <span className="font-mono text-white/65">{row.value}</span>
                   </div>
                   <motion.div
                     initial={{ width: 0 }}
@@ -198,9 +199,9 @@ export function HomeImmersive() {
                 </div>
               ))}
             </div>
-            <div className="mt-6 rounded-2xl border border-white/10 bg-black/30 p-4">
-              <p className="text-[0.65rem] uppercase tracking-[0.2em] text-mist">Now Shipping</p>
-              <p className="mt-2 text-sm text-white">Cross-cloud deployment choreography with provider-safe runtime contracts.</p>
+            <div className="surface-card mt-6 p-4">
+              <p className="kicker text-white/80">Now Shipping</p>
+              <p className="mt-2 text-sm text-white/85">Cross-cloud deployment choreography with typed runtime boundaries.</p>
             </div>
           </motion.aside>
         </div>
@@ -213,9 +214,9 @@ export function HomeImmersive() {
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
-        <div className="rounded-3xl border border-white/10 bg-slate-950/55 p-8 md:p-10">
-          <p className="text-xs uppercase tracking-[0.24em] text-signal">Capability Matrix</p>
-          <h2 className="mt-3 font-display text-3xl text-white md:text-4xl">Choose the track, inspect the operating model.</h2>
+        <div className="section-shell p-8 md:p-10">
+          <p className="kicker">Operating Tracks</p>
+          <h2 className="mt-4 font-display text-3xl text-white md:text-4xl">Pick the track and inspect the execution model.</h2>
 
           <div className="mt-7 flex flex-wrap gap-3">
             {(Object.keys(deliveryTracks) as TrackId[]).map((id) => {
@@ -227,10 +228,8 @@ export function HomeImmersive() {
                   type="button"
                   onClick={() => setTrack(id)}
                   aria-pressed={isActive}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    isActive
-                      ? 'border border-electric/70 bg-electric/20 text-white'
-                      : 'border border-white/20 bg-white/5 text-mist hover:border-white/40 hover:text-white'
+                  className={`rounded-full px-4 py-2 text-sm font-semibold uppercase tracking-[0.08em] transition ${
+                    isActive ? 'border border-electric/70 bg-electric/15 text-white' : 'border border-white/25 bg-white/5 text-white/70 hover:border-white/40 hover:text-white'
                   }`}
                 >
                   {item.label}
@@ -244,32 +243,32 @@ export function HomeImmersive() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
-            className="mt-7 grid gap-6 rounded-2xl border border-white/10 bg-slate-950/70 p-6 md:grid-cols-[1.2fr_0.8fr]"
+            className="surface-card mt-7 grid gap-6 p-6 md:grid-cols-[1.2fr_0.8fr]"
           >
             <div>
               <h3 className="font-display text-2xl text-white">{activeTrack.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-mist">{activeTrack.summary}</p>
+              <p className="mt-3 text-sm leading-7 text-white/70">{activeTrack.summary}</p>
               <div className="mt-5 space-y-3">
                 {activeTrack.outcomes.map((item) => (
-                  <p key={item} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/90">
+                  <p key={item} className="rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-sm text-white/85">
                     {item}
                   </p>
                 ))}
               </div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-mist">Technology Fit</p>
+            <div className="surface-card p-5">
+              <p className="kicker text-white/65">Tech Fit</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {activeTrack.stack.map((item) => (
-                  <span key={item} className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.14em] text-white/85">
+                  <span key={item} className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.12em] text-white/80">
                     {item}
                   </span>
                 ))}
               </div>
-              <div className="mt-6 rounded-xl border border-signal/30 bg-signal/10 p-4">
-                <p className="font-mono text-xs uppercase tracking-[0.16em] text-signal">Implementation Note</p>
+              <div className="mt-6 rounded-xl border border-electric/35 bg-electric/10 p-4">
+                <p className="kicker text-white/80">Implementation Note</p>
                 <p className="mt-2 text-sm leading-6 text-white/90">
-                  Delivery is engineered around typed boundaries and measurable thresholds, so scaling does not degrade quality.
+                  Delivery is orchestrated around typed boundaries and measurable thresholds, so scaling does not erode quality.
                 </p>
               </div>
             </div>
@@ -278,11 +277,11 @@ export function HomeImmersive() {
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-6 pb-20 lg:px-8">
-        <div className="rounded-3xl border border-white/10 bg-black/25 p-8 md:p-10">
-          <p className="text-xs uppercase tracking-[0.24em] text-signal">Command Rail</p>
-          <h2 className="mt-3 font-display text-3xl text-white md:text-4xl">The build and deploy choreography is intentional, testable, and repeatable.</h2>
+        <div className="section-shell p-8 md:p-10">
+          <p className="kicker">Execution Rail</p>
+          <h2 className="mt-4 font-display text-3xl text-white md:text-4xl">The delivery cadence is explicit, testable, and repeatable.</h2>
           <div className="mt-8 grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
-            <div className="rounded-2xl border border-white/10 bg-slate-950/75 p-5">
+            <div className="rounded-2xl border border-white/15 bg-black/55 p-5">
               {executionRail.map((line, index) => (
                 <motion.p
                   key={line}
@@ -292,16 +291,19 @@ export function HomeImmersive() {
                   transition={{ duration: 0.45, delay: 0.08 * index }}
                   className="font-mono text-sm leading-8 text-white/90"
                 >
-                  <span className="text-signal">$</span> {line.replace('$ ', '')}
+                  <span className="text-[#ff9a72]">$</span> {line}
                 </motion.p>
               ))}
             </div>
-            <div className="rounded-2xl border border-electric/25 bg-electric/10 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-electric">Execution Outcome</p>
+            <div className="rounded-2xl border border-electric/35 bg-electric/10 p-5">
+              <p className="kicker text-white/80">Outcome</p>
               <p className="mt-3 text-sm leading-7 text-white/90">
-                Shipping quality is not luck. It is the result of a rigorous system where design, engineering, infrastructure, and observability operate as a single production pipeline.
+                Shipping quality is designed into the system: product experience, engineering, infrastructure, and observability operate as a single production instrument.
               </p>
-              <Link href="/services" className="mt-5 inline-flex rounded-full border border-electric/60 px-4 py-2 text-sm font-semibold text-white transition hover:bg-electric/20">
+              <Link
+                href="/services"
+                className="btn-theme-ghost mt-5"
+              >
                 See Service Blueprint
               </Link>
             </div>

@@ -13,12 +13,12 @@ const config: Config = {
         mono: ['var(--font-ibm-plex-mono)']
       },
       colors: {
-        canvas: '#06111f',
-        ink: '#f5f7fb',
-        mist: '#96a5c2',
-        signal: '#36d9a4',
-        electric: '#1d8fff',
-        warning: '#ffb648'
+        canvas: 'rgb(var(--mbm-canvas) / <alpha-value>)',
+        ink: 'rgb(var(--mbm-ink) / <alpha-value>)',
+        mist: 'rgb(var(--mbm-mist) / <alpha-value>)',
+        signal: 'rgb(var(--mbm-signal) / <alpha-value>)',
+        electric: 'rgb(var(--mbm-electric) / <alpha-value>)',
+        warning: 'rgb(var(--mbm-warning) / <alpha-value>)'
       },
       boxShadow: {
         panel: '0 10px 40px rgba(10, 30, 70, 0.35)',

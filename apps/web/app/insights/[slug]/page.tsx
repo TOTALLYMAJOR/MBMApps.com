@@ -53,9 +53,9 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
 
   return (
     <article className="mx-auto w-full max-w-3xl px-6 py-16 lg:px-8">
-      <p className="text-xs uppercase tracking-[0.22em] text-signal">Insight</p>
+      <p className="kicker">Insight</p>
       <h1 className="mt-3 font-display text-5xl text-white">{post.frontmatter.title}</h1>
-      <p className="mt-4 text-lg text-mist">{post.frontmatter.summary}</p>
+      <p className="text-mbm-muted mt-4 text-lg">{post.frontmatter.summary}</p>
       <div className="mbm-prose mt-10">
         <MDXRemote source={post.content} />
       </div>

@@ -49,27 +49,27 @@ export function DashboardShell({ initialMetrics, initialPipeline, usingFallbackD
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.8 }}
             transition={{ duration: 0.45, delay: index * 0.06 }}
-            className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 shadow-soft"
+            className="surface-panel p-5 shadow-soft"
           >
-            <p className="text-xs uppercase tracking-[0.2em] text-mist">{metric.label}</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-white/60">{metric.label}</p>
             <p className="mt-3 font-display text-3xl font-semibold text-white">{metric.value}</p>
-            <p className="mt-2 text-xs text-signal">{metric.trend}</p>
+            <p className="mt-2 text-xs text-signal/90">{metric.trend}</p>
           </motion.article>
         ))}
 
         <DemoAuthPanel onRoleChange={setRole} />
       </div>
 
-      <section className="rounded-3xl border border-white/10 bg-slate-900/65 p-6 shadow-panel">
+      <section className="surface-panel p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-2xl text-white">Pipeline Overview</h2>
-            <p className="text-sm text-mist">Updated {new Date(initialPipeline.generatedAt).toLocaleString()}</p>
+            <p className="text-sm text-white/65">Updated {new Date(initialPipeline.generatedAt).toLocaleString()}</p>
           </div>
           <div className="text-right">
-            <p className="text-xs uppercase tracking-[0.2em] text-mist">Open Pipeline Value</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-white/60">Open Pipeline Value</p>
             <p className="font-display text-3xl text-white">{currency(totals.value, initialPipeline.currency)}</p>
-            <p className="text-xs text-mist">{totals.deals} active opportunities</p>
+            <p className="text-xs text-white/60">{totals.deals} active opportunities</p>
           </div>
         </div>
 
@@ -90,30 +90,30 @@ export function DashboardShell({ initialMetrics, initialPipeline, usingFallbackD
                   type="button"
                   onClick={() => setActiveStageId(stage.id)}
                   className={`w-full rounded-2xl border p-4 text-left transition ${
-                    isActive ? 'border-electric/60 bg-electric/10' : 'border-white/10 bg-slate-950/70 hover:border-white/30'
+                    isActive ? 'border-electric/60 bg-electric/10' : 'border-white/10 bg-black/45 hover:border-white/30'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-white">{stage.name}</h3>
-                    <span className="text-xs text-mist">{stage.count} deals</span>
+                    <span className="text-xs text-white/60">{stage.count} deals</span>
                   </div>
-                  <p className="mt-2 text-sm text-signal">{currency(stage.totalValue, initialPipeline.currency)}</p>
+                  <p className="mt-2 text-sm text-signal/95">{currency(stage.totalValue, initialPipeline.currency)}</p>
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: `${(stage.totalValue / maxStageValue) * 100}%` }}
                     viewport={{ once: true, amount: 0.9 }}
                     transition={{ duration: 0.6, delay: index * 0.08 }}
-                    className="mt-3 h-2 rounded-full bg-gradient-to-r from-electric to-signal"
+                    className="mt-3 h-2 rounded-full bg-gradient-to-r from-electric via-signal to-warning"
                   />
                 </button>
               );
             })}
           </div>
 
-          <article className="rounded-2xl border border-white/10 bg-slate-950/70 p-5">
+          <article className="surface-card p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-mist">Stage Drilldown</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-white/60">Stage Drilldown</p>
                 <h3 className="mt-2 font-display text-2xl text-white">{activeStage?.name ?? 'Pipeline'}</h3>
               </div>
               <span className="rounded-full border border-white/20 px-2 py-1 text-xs text-white/80">
@@ -128,7 +128,7 @@ export function DashboardShell({ initialMetrics, initialPipeline, usingFallbackD
             {canViewDealDetails ? (
               <ul className="mt-4 space-y-2 text-xs text-white/80">
                 {(activeStage?.deals ?? []).map((deal) => (
-                  <li key={deal.id} className="rounded-lg border border-white/10 bg-slate-900/60 p-3">
+                  <li key={deal.id} className="surface-card p-3">
                     <p className="font-medium text-white">{deal.account}</p>
                     <p className="mt-1">
                       {currency(deal.amount, initialPipeline.currency)} | {deal.probability}% probability
@@ -137,17 +137,17 @@ export function DashboardShell({ initialMetrics, initialPipeline, usingFallbackD
                 ))}
               </ul>
             ) : (
-              <p className="mt-4 rounded-lg border border-white/10 bg-slate-900/55 p-3 text-xs text-mist">
+              <p className="surface-card mt-4 p-3 text-xs text-white/65">
                 Sign in with a `demo` or `admin` claim to view account-level opportunity details.
               </p>
             )}
 
-            <div className="mt-4 rounded-xl border border-white/10 bg-black/25 p-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-mist">Access Scope</p>
+            <div className="surface-card mt-4 p-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-white/60">Access Scope</p>
               <p className="mt-2 text-sm text-white/85">
                 Current role: <span className="font-mono text-signal">{role}</span>
               </p>
-              <p className="mt-1 text-xs text-mist">
+              <p className="mt-1 text-xs text-white/65">
                 Viewer mode exposes aggregate totals only, while elevated roles unlock opportunity-level detail.
               </p>
             </div>

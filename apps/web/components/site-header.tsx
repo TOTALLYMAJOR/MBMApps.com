@@ -9,7 +9,7 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-canvas/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-black/60 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 lg:px-8">
         <Link href="/" className="font-display text-lg font-semibold tracking-tight text-ink">
           MBMApps
@@ -23,7 +23,7 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'text-sm font-medium text-mist transition hover:text-white',
+                  'text-sm font-medium uppercase tracking-[0.08em] text-white/65 transition hover:text-white',
                   active && 'text-white'
                 )}
               >
@@ -34,7 +34,7 @@ export function SiteHeader() {
         </nav>
         <Link
           href="/demo"
-          className="rounded-full border border-electric/70 bg-electric/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-electric/35"
+          className="btn-theme"
         >
           Live Demo
         </Link>

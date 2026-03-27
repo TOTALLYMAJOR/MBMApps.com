@@ -82,12 +82,12 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-5 rounded-3xl border border-white/10 bg-slate-950/80 p-6 shadow-panel md:p-7">
-      <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-mist">Intake Readiness</p>
+    <form onSubmit={onSubmit} className="surface-panel space-y-5 p-6 md:p-7">
+      <div className="surface-card p-4">
+        <p className="kicker text-white/70">Intake Readiness</p>
         <div className="mt-3 grid gap-2 text-xs text-white/80 md:grid-cols-3">
           {['Scope clarity', 'Budget alignment', 'Timeline commitment'].map((item) => (
-            <p key={item} className="rounded-lg border border-white/10 bg-white/[0.03] px-2 py-1.5">
+            <p key={item} className="surface-card px-2 py-1.5">
               {item}
             </p>
           ))}
@@ -100,7 +100,7 @@ export function ContactForm() {
           <input
             required
             name="name"
-            className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
             placeholder="Avery Morgan"
           />
         </label>
@@ -110,7 +110,7 @@ export function ContactForm() {
             required
             type="email"
             name="email"
-            className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
             placeholder="avery@company.com"
           />
         </label>
@@ -122,7 +122,7 @@ export function ContactForm() {
           <input
             required
             name="company"
-            className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
             placeholder="Northline Foods"
           />
         </label>
@@ -131,7 +131,7 @@ export function ContactForm() {
           <select
             required
             name="budget"
-            className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
             defaultValue=""
           >
             <option value="" disabled>
@@ -151,7 +151,7 @@ export function ContactForm() {
         <select
           required
           name="timeline"
-          className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm outline-none transition focus:border-electric"
+          className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
           defaultValue=""
         >
           <option value="" disabled>
@@ -173,7 +173,7 @@ export function ContactForm() {
           name="message"
           rows={5}
           onChange={(event) => setMessageLength(event.target.value.length)}
-          className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm outline-none transition focus:border-electric"
+          className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
           placeholder="Share outcomes you need: conversion lift, quoting speed, automation, reliability, etc."
         />
         <div className="space-y-2">
@@ -183,7 +183,7 @@ export function ContactForm() {
           </div>
           <div className="h-1.5 rounded-full bg-white/10">
             <div
-              className="h-1.5 rounded-full bg-gradient-to-r from-electric to-signal transition-all"
+              className="h-1.5 rounded-full bg-gradient-to-r from-electric via-signal to-warning transition-all"
               style={{ width: `${Math.min((messageLength / 140) * 100, 100)}%` }}
             />
           </div>
@@ -201,7 +201,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={state.status === 'loading'}
-        className="w-full rounded-xl bg-electric px-4 py-3 font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-70"
+        className="w-full rounded-xl border border-electric/70 bg-electric/20 px-4 py-3 font-semibold text-white transition hover:bg-electric/35 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {state.status === 'loading' ? 'Submitting...' : 'Request Discovery Call'}
       </button>

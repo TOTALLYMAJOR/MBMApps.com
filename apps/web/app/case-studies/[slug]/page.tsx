@@ -62,10 +62,10 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
           industry: caseStudy.frontmatter.industry
         }}
       />
-      <p className="text-xs uppercase tracking-[0.22em] text-signal">{caseStudy.frontmatter.industry}</p>
+      <p className="kicker">{caseStudy.frontmatter.industry}</p>
       <h1 className="mt-3 font-display text-5xl text-white">{caseStudy.frontmatter.title}</h1>
-      <p className="mt-4 text-lg text-mist">{caseStudy.frontmatter.summary}</p>
-      <p className="mt-4 inline-flex rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/80">
+      <p className="text-mbm-muted mt-4 text-lg">{caseStudy.frontmatter.summary}</p>
+      <p className="surface-card mt-4 inline-flex rounded-full px-3 py-1 text-xs text-white/80">
         Outcome: {caseStudy.frontmatter.outcome}
       </p>
       <div className="mbm-prose mt-10">
