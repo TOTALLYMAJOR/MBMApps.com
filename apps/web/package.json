@@ -20,7 +20,7 @@
     "framer-motion": "^11.15.0",
     "gray-matter": "^4.0.3",
     "next": "^15.1.6",
-    "next-mdx-remote": "^5.0.0",
+    "next-mdx-remote": "^6.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "three": "^0.183.2",
