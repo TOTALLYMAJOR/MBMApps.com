@@ -350,7 +350,6 @@ export function LandingThreeStage() {
     document.addEventListener('visibilitychange', onVisibilityChange);
     mediaQuery.addEventListener('change', onMotionPreferenceChange);
 
-    const manager = new THREE.LoadingManager();
     let bootComplete = false;
 
     const completeBoot = async () => {
@@ -367,54 +366,90 @@ export function LandingThreeStage() {
       initScroll();
     };
 
-    manager.onProgress = (_url, itemsLoaded, itemsTotal) => {
-      const total = Math.max(1, itemsTotal);
-      setProgress((itemsLoaded / total) * 100);
+    const onAssetProgress = (event: ProgressEvent<EventTarget>) => {
+      if (event.lengthComputable && event.total > 0) {
+        setProgress((event.loaded / event.total) * 100);
+      }
     };
 
-    manager.onLoad = () => {
-      void completeBoot();
+    const styleImportedModel = (object: THREE.Object3D) => {
+      object.scale.setScalar(0.9);
+      object.rotation.x = 0.2;
+      object.traverse((child) => {
+        const mesh = child as THREE.Mesh;
+        if (mesh.isMesh) {
+          mesh.material = new THREE.MeshStandardMaterial({
+            color: '#dfe7ff',
+            metalness: 0.22,
+            roughness: 0.3
+          });
+          mesh.castShadow = false;
+          mesh.receiveShadow = false;
+        }
+      });
+      model = object;
+      stageGroup.add(object);
     };
 
-    manager.onError = () => {
-      createFallbackModel();
+    const loadGlbModel = async (): Promise<boolean> => {
+      try {
+        const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
+        const loader = new GLTFLoader();
+
+        const loaded = await new Promise<boolean>((resolve) => {
+          loader.load(
+            '/Models/bit.glb',
+            (gltf) => {
+              styleImportedModel(gltf.scene);
+              resolve(true);
+            },
+            onAssetProgress,
+            () => {
+              resolve(false);
+            }
+          );
+        });
+
+        return loaded;
+      } catch {
+        return false;
+      }
+    };
+
+    const loadObjModel = async (): Promise<boolean> => {
+      try {
+        const { OBJLoader } = await import('three/addons/loaders/OBJLoader.js');
+        const loader = new OBJLoader();
+
+        const loaded = await new Promise<boolean>((resolve) => {
+          loader.load(
+            '/Models/bit.obj',
+            (object) => {
+              styleImportedModel(object);
+              resolve(true);
+            },
+            onAssetProgress,
+            () => {
+              resolve(false);
+            }
+          );
+        });
+
+        return loaded;
+      } catch {
+        return false;
+      }
     };
 
     const loadModel = async () => {
-      try {
-        const { OBJLoader } = await import('three/addons/loaders/OBJLoader.js');
-        const objLoader = new OBJLoader(manager);
+      const glbLoaded = await loadGlbModel();
+      const objLoaded = glbLoaded ? false : await loadObjModel();
 
-        objLoader.load(
-          '/Models/bit.obj',
-          (object) => {
-            model = object;
-            model.scale.setScalar(0.9);
-            model.rotation.x = 0.2;
-            model.traverse((child) => {
-              const mesh = child as THREE.Mesh;
-              if (mesh.isMesh) {
-                mesh.material = new THREE.MeshStandardMaterial({
-                  color: '#dfe7ff',
-                  metalness: 0.22,
-                  roughness: 0.3
-                });
-                mesh.castShadow = false;
-                mesh.receiveShadow = false;
-              }
-            });
-            stageGroup.add(model);
-          },
-          undefined,
-          () => {
-            createFallbackModel();
-            void completeBoot();
-          }
-        );
-      } catch {
+      if (!glbLoaded && !objLoaded) {
         createFallbackModel();
-        void completeBoot();
       }
+
+      await completeBoot();
     };
 
     void loadModel();
