@@ -1,22 +1,17 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { useCallback, useMemo, useRef, useState, useEffect, type CSSProperties } from 'react';
 
-const INITIAL_DISPLAY_MS = 1900;
+const INITIAL_DISPLAY_MS = 2000;
 const INITIAL_FADE_MS = 650;
-const TRANSITION_DISPLAY_MS = 320;
-const TRANSITION_FADE_MS = 280;
 
 type IntroPhase = 'visible' | 'fading' | 'hidden';
 
 export function StartupLoader() {
-  const pathname = usePathname();
   const [phase, setPhase] = useState<IntroPhase>('visible');
   const [displayDuration, setDisplayDuration] = useState(INITIAL_DISPLAY_MS);
   const [fadeDuration, setFadeDuration] = useState(INITIAL_FADE_MS);
   const timeoutsRef = useRef<number[]>([]);
-  const pathnameReadyRef = useRef(false);
   const initializedRef = useRef(false);
 
   const clearTimers = useCallback(() => {
@@ -53,16 +48,13 @@ export function StartupLoader() {
     }
 
     initializedRef.current = true;
-
-    if (pathname === '/') {
-      window.sessionStorage.setItem('mbm_intro_seen', '1');
-      setPhase('hidden');
-      return;
-    }
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    const isReload = navEntry?.type === 'reload';
 
     const alreadySeen = window.sessionStorage.getItem('mbm_intro_seen') === '1';
+    const shouldPlay = isReload || !alreadySeen;
 
-    if (alreadySeen) {
+    if (!shouldPlay) {
       setPhase('hidden');
       return;
     }
@@ -72,20 +64,7 @@ export function StartupLoader() {
     return () => {
       clearTimers();
     };
-  }, [pathname, runIntro, clearTimers]);
-
-  useEffect(() => {
-    if (!pathnameReadyRef.current) {
-      pathnameReadyRef.current = true;
-      return;
-    }
-
-    runIntro(TRANSITION_DISPLAY_MS, TRANSITION_FADE_MS);
-
-    return () => {
-      clearTimers();
-    };
-  }, [pathname, runIntro, clearTimers]);
+  }, [runIntro, clearTimers]);
 
   const cubes = useMemo(
     () =>
@@ -117,6 +96,19 @@ export function StartupLoader() {
     []
   );
 
+  useEffect(() => {
+    if (phase === 'hidden') {
+      document.body.classList.remove('is-locked');
+      return;
+    }
+
+    document.body.classList.add('is-locked');
+
+    return () => {
+      document.body.classList.remove('is-locked');
+    };
+  }, [phase]);
+
   if (phase === 'hidden') {
     return null;
   }
@@ -124,7 +116,7 @@ export function StartupLoader() {
   return (
     <div
       className={`fixed inset-0 z-[120] overflow-hidden bg-black transition-opacity ${phase === 'fading' ? 'opacity-0' : 'opacity-100'}`}
-      style={{ transitionDuration: `${fadeDuration}ms`, '--intro-progress-ms': `${displayDuration + fadeDuration}ms` } as CSSProperties}
+      style={{ transitionDuration: `${fadeDuration}ms`, '--intro-progress-ms': `${displayDuration}ms` } as CSSProperties}
       aria-hidden="true"
     >
       <div className="intro-space absolute inset-0" />

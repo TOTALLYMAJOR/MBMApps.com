@@ -27,21 +27,16 @@ function parseNumber(value: string | undefined, fallback: number): number {
 
 export function LandingThreeStage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const loaderRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const canvas = canvasRef.current;
-    const loader = loaderRef.current;
-    const progressEl = progressRef.current;
 
-    if (canvas === null || loader === null || progressEl === null) {
+    if (canvas === null) {
       return;
     }
 
-    const body = document.body;
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     let prefersReducedMotion = mediaQuery.matches;
     let pageVisible = !document.hidden;
@@ -75,18 +70,6 @@ export function LandingThreeStage() {
     const clock = new THREE.Clock();
 
     const firstVisit = window.sessionStorage.getItem(FIRST_VISIT_KEY) !== '1';
-
-    if (firstVisit) {
-      body.classList.add('is-locked');
-    } else {
-      gsap.set(loader, { autoAlpha: 0, pointerEvents: 'none' });
-    }
-
-    const setProgress = (value: number) => {
-      progressEl.textContent = String(Math.max(0, Math.min(100, Math.round(value)))).padStart(2, '0');
-    };
-
-    setProgress(0);
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x050814, 5, 11);
@@ -217,13 +200,6 @@ export function LandingThreeStage() {
       introPlayed = true;
 
       if (prefersReducedMotion || !firstVisit) {
-        gsap.to(loader, {
-          autoAlpha: 0,
-          duration: 0.24,
-          ease: 'power2.out',
-          pointerEvents: 'none'
-        });
-        body.classList.remove('is-locked');
         document.querySelectorAll<HTMLElement>('.hero .intro-reveal').forEach((node) => node.classList.add('is-visible'));
         if (firstVisit) {
           window.sessionStorage.setItem(FIRST_VISIT_KEY, '1');
@@ -257,16 +233,6 @@ export function LandingThreeStage() {
             0
           )
           .to(
-            loader,
-            {
-              autoAlpha: 0,
-              duration: 0.55,
-              ease: 'power2.out',
-              pointerEvents: 'none'
-            },
-            0.45
-          )
-          .to(
             '.hero .intro-reveal',
             {
               y: 0,
@@ -275,12 +241,11 @@ export function LandingThreeStage() {
               stagger: 0.11,
               ease: 'power3.out'
             },
-            0.74
+            0.46
           );
       });
 
       window.sessionStorage.setItem(FIRST_VISIT_KEY, '1');
-      body.classList.remove('is-locked');
     };
 
     const tick = () => {
@@ -359,17 +324,10 @@ export function LandingThreeStage() {
 
       bootComplete = true;
       loaded = true;
-      setProgress(100);
       startLoop();
       await playIntro();
       initReveals();
       initScroll();
-    };
-
-    const onAssetProgress = (event: ProgressEvent<EventTarget>) => {
-      if (event.lengthComputable && event.total > 0) {
-        setProgress((event.loaded / event.total) * 100);
-      }
     };
 
     const styleImportedModel = (object: THREE.Object3D) => {
@@ -403,7 +361,7 @@ export function LandingThreeStage() {
               styleImportedModel(gltf.scene);
               resolve(true);
             },
-            onAssetProgress,
+            undefined,
             () => {
               resolve(false);
             }
@@ -428,7 +386,7 @@ export function LandingThreeStage() {
               styleImportedModel(object);
               resolve(true);
             },
-            onAssetProgress,
+            undefined,
             () => {
               resolve(false);
             }
@@ -456,7 +414,6 @@ export function LandingThreeStage() {
 
     return () => {
       stopLoop();
-      body.classList.remove('is-locked');
       observer?.disconnect();
       triggers.forEach((trigger) => trigger.kill());
       window.removeEventListener('pointermove', onPointerMove);
@@ -465,7 +422,7 @@ export function LandingThreeStage() {
       mediaQuery.removeEventListener('change', onMotionPreferenceChange);
       gsap.killTweensOf(target);
       gsap.killTweensOf(stageGroup.scale);
-      gsap.killTweensOf(loader);
+      gsap.killTweensOf('.hero .intro-reveal');
 
       scene.traverse((child) => {
         const mesh = child as THREE.Mesh;
@@ -486,17 +443,8 @@ export function LandingThreeStage() {
   }, []);
 
   return (
-    <>
-      <div className="landing-stage" aria-hidden="true">
-        <canvas ref={canvasRef} className="landing-stage__canvas" />
-      </div>
-
-      <div ref={loaderRef} className="landing-loader" data-loader aria-hidden="true">
-        <div className="landing-loader__brand">MBM</div>
-        <div ref={progressRef} className="landing-loader__progress" data-progress>
-          00
-        </div>
-      </div>
-    </>
+    <div className="landing-stage" aria-hidden="true">
+      <canvas ref={canvasRef} className="landing-stage__canvas" />
+    </div>
   );
 }
