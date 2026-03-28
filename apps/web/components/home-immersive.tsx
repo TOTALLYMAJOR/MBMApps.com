@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { LandingThreeStage } from '@/components/landing-three-stage';
 
 type TrackId = 'platform' | 'revenue' | 'reliability';
 
@@ -138,20 +139,29 @@ export function HomeImmersive() {
 
   return (
     <>
-      <section className="hero-mesh film-grain relative overflow-hidden border-b border-white/10">
-        <div className="ambient-grid pointer-events-none absolute inset-0 opacity-35" />
+      <LandingThreeStage />
+
+      <section
+        className="hero scene-panel relative overflow-hidden border-b border-white/10"
+        data-rot-y="0"
+        data-cam-z="4.8"
+        data-cam-y="0"
+        data-cam-x="0"
+        data-rot-x="0.18"
+      >
+        <div className="scene-wash pointer-events-none absolute inset-0" />
 
         <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-12 px-6 pb-20 pt-16 lg:grid-cols-[1.2fr_0.8fr] lg:px-8 lg:pt-24">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <p className="kicker">{'// MBMApps Operating Thesis'}</p>
-            <h1 className="mt-5 max-w-4xl font-display text-5xl font-semibold leading-[1.05] text-white md:text-6xl lg:text-7xl">
+            <p className="kicker intro-reveal">{'// MBMApps Operating Thesis'}</p>
+            <h1 className="intro-reveal mt-5 max-w-4xl font-display text-5xl font-semibold leading-[1.05] text-white md:text-6xl lg:text-7xl">
               ENGINEERING DISCIPLINE THAT TURNS DIGITAL PRODUCTS INTO MARKET ADVANTAGE.
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-white/75 md:text-lg">
+            <p className="intro-reveal mt-6 max-w-2xl text-base leading-8 text-white/75 md:text-lg">
               We build high-performance web systems with the same mindset used in elite investment operations: signal over noise, repeatable execution, and asymmetric upside.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="intro-reveal mt-8 flex flex-wrap gap-4">
               <Link href="/contact" className="btn-theme">
                 Start a Discovery Call
               </Link>
@@ -165,7 +175,7 @@ export function HomeImmersive() {
             initial={{ opacity: 0, scale: 0.98, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.15 }}
-            className="surface-panel relative overflow-hidden p-6 backdrop-blur"
+            className="surface-panel intro-reveal relative overflow-hidden p-6 backdrop-blur"
           >
             <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-electric/25 blur-3xl" />
             <div className="absolute -bottom-16 -left-12 h-44 w-44 rounded-full bg-signal/20 blur-3xl" />
@@ -195,16 +205,28 @@ export function HomeImmersive() {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-5 px-6 py-14 md:grid-cols-3 lg:px-8">
+      <section
+        className="scene-panel mx-auto grid w-full max-w-6xl gap-5 px-6 py-14 md:grid-cols-3 lg:px-8"
+        data-rot-y="0.68"
+        data-cam-z="4.3"
+        data-cam-y="0.12"
+        data-cam-x="0.08"
+      >
         {metrics.map((item) => (
           <AnimatedMetric key={item.label} {...item} />
         ))}
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
+      <section
+        className="scene-panel mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8"
+        data-rot-y="1.38"
+        data-cam-z="3.95"
+        data-cam-y="-0.08"
+        data-cam-x="-0.06"
+      >
         <div className="section-shell p-8 md:p-10">
-          <p className="kicker">Operating Tracks</p>
-          <h2 className="mt-4 font-display text-3xl text-white md:text-4xl">Pick the track and inspect the execution model.</h2>
+          <p className="kicker reveal">Operating Tracks</p>
+          <h2 className="reveal mt-4 font-display text-3xl text-white md:text-4xl">Pick the track and inspect the execution model.</h2>
 
           <div className="mt-7 flex flex-wrap gap-3">
             {(Object.keys(deliveryTracks) as TrackId[]).map((id) => {
@@ -264,10 +286,16 @@ export function HomeImmersive() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-6 pb-20 lg:px-8">
+      <section
+        className="scene-panel mx-auto w-full max-w-6xl px-6 pb-20 lg:px-8"
+        data-rot-y="2.2"
+        data-cam-z="4.4"
+        data-cam-y="0.04"
+        data-cam-x="0.1"
+      >
         <div className="section-shell p-8 md:p-10">
-          <p className="kicker">Execution Rail</p>
-          <h2 className="mt-4 font-display text-3xl text-white md:text-4xl">The delivery cadence is explicit, testable, and repeatable.</h2>
+          <p className="kicker reveal">Execution Rail</p>
+          <h2 className="reveal mt-4 font-display text-3xl text-white md:text-4xl">The delivery cadence is explicit, testable, and repeatable.</h2>
           <div className="mt-8 grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
             <div className="rounded-2xl border border-white/15 bg-black/55 p-5">
               {executionRail.map((line, index) => (

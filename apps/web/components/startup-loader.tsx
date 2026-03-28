@@ -17,6 +17,7 @@ export function StartupLoader() {
   const [fadeDuration, setFadeDuration] = useState(INITIAL_FADE_MS);
   const timeoutsRef = useRef<number[]>([]);
   const pathnameReadyRef = useRef(false);
+  const initializedRef = useRef(false);
 
   const clearTimers = useCallback(() => {
     timeoutsRef.current.forEach((id) => window.clearTimeout(id));
@@ -47,6 +48,18 @@ export function StartupLoader() {
   );
 
   useEffect(() => {
+    if (initializedRef.current) {
+      return;
+    }
+
+    initializedRef.current = true;
+
+    if (pathname === '/') {
+      window.sessionStorage.setItem('mbm_intro_seen', '1');
+      setPhase('hidden');
+      return;
+    }
+
     const alreadySeen = window.sessionStorage.getItem('mbm_intro_seen') === '1';
 
     if (alreadySeen) {
@@ -59,7 +72,7 @@ export function StartupLoader() {
     return () => {
       clearTimers();
     };
-  }, [runIntro, clearTimers]);
+  }, [pathname, runIntro, clearTimers]);
 
   useEffect(() => {
     if (!pathnameReadyRef.current) {
