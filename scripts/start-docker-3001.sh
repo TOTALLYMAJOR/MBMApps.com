@@ -3,6 +3,7 @@ set -euo pipefail
 
 WEB_PORT="${WEB_HOST_PORT:-3001}"
 API_PORT="${API_HOST_PORT:-4000}"
+BUILD_MODE="${DOCKER_BUILD:-1}"
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 kill_port() {
@@ -34,8 +35,22 @@ kill_port "${API_PORT}"
 
 echo "Starting Docker Compose with WEB_HOST_PORT=${WEB_PORT} and API_HOST_PORT=${API_PORT}"
 cd "${PROJECT_ROOT}"
+
+compose_args=(up)
+case "${BUILD_MODE}" in
+  0|false|FALSE|no|NO)
+    echo "Docker Compose mode: fast start (skip image rebuild)."
+    ;;
+  *)
+    compose_args+=(--build)
+    echo "Docker Compose mode: build and start."
+    ;;
+esac
+
+compose_args+=("$@")
+
 WEB_HOST_PORT="${WEB_PORT}" \
 API_HOST_PORT="${API_PORT}" \
 CORS_ORIGIN="${CORS_ORIGIN:-http://localhost:${WEB_PORT}}" \
 NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL:-http://localhost:${WEB_PORT}}" \
-docker compose up --build "$@"
+docker compose "${compose_args[@]}"

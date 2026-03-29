@@ -40,26 +40,26 @@ Production-ready company site and technical showcase for `MBMapps.com`, built as
    - `cp .env.example .env`
 2. Install dependencies:
    - `npm install`
-3. Run web and API separately:
-   - `npm run dev:web`
-   - `npm run dev:api`
+3. Start development stack (Docker-first default):
+   - `npm run dev`
 
-## Docker
-
-### Build and run both services
-
-- `docker compose up --build`
-- `./scripts/start-docker-3001.sh`
-
-This brings up:
+This boots both services with Docker Compose:
 - Web at `http://localhost:3001`
 - API at `http://localhost:4000`
 
-If you need a different web host port, override it before starting:
+Helpful controls:
+- Detached mode: `npm run dev:docker:detached`
+- Fast restart (skip rebuild): `npm run dev:docker:fast`
+- Fast restart detached: `npm run dev:docker:fast:detached`
+- Tail logs: `npm run dev:docker:logs`
+- Stop stack: `npm run dev:docker:down`
 
-- `WEB_HOST_PORT=3010 docker compose up --build`
+If you need a different web host port, override before starting:
+- `WEB_HOST_PORT=3010 npm run dev`
 
-The helper script above automatically frees required ports and starts with web on `3001`.
+Host-only fallback (without Docker):
+- `npm run dev:host:web`
+- `npm run dev:host:api`
 
 ## Firebase Seed (optional)
 
