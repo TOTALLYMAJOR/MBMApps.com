@@ -74,7 +74,14 @@ Host-only fallback:
 - Avoid autoplay by default unless explicitly required and tested for low-end devices.
 - Watch page weight and first-load JS trends on key routes (`/`, `/demo`, `/contact`).
 
-## 9) AI-Assisted Development Prompts (Repo-Specific)
+## 9) Salesforce Metadata Hygiene
+
+- Treat `.sfdx/tools/*` and `.sfdx/typings/*` as local generated artifacts, not canonical source metadata.
+- When object schemas change, refresh local definitions before development and testing.
+- For shared changes, document which org/schema snapshot was used when regenerating caches.
+- Avoid mixing unrelated `.sfdx` cache regeneration with feature work to keep diffs reviewable.
+
+## 10) AI-Assisted Development Prompts (Repo-Specific)
 
 - Security review:
 `Review this MBMApps monorepo change set for security issues. Focus on user input handling, auth boundaries, API mutation routes, and secret leakage risks. Return concrete findings with file paths and fixes.`
@@ -91,7 +98,7 @@ Host-only fallback:
 - Refactor discipline:
 `Suggest only refactors that reduce complexity without changing behavior. Rank by payoff and implementation risk.`
 
-## 10) Recommended Next Actions (Priority Order)
+## 11) Recommended Next Actions (Priority Order)
 
 1. Add `healthcheck` + `depends_on.condition: service_healthy` in `docker-compose.yml`.
 2. Add `.github/CODEOWNERS`.
@@ -100,7 +107,7 @@ Host-only fallback:
 5. Add PR template with checklist for tests, docs, and rollout risk.
 6. Add an optional dev compose override for live reload (`docker compose watch` or bind-mounted dev services).
 
-## 11) Reference Links
+## 12) Reference Links
 
 - Docker Compose startup/readiness: https://docs.docker.com/compose/how-tos/startup-order/
 - Docker build cache/context optimization: https://docs.docker.com/build/cache/optimize/

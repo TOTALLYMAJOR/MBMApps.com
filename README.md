@@ -61,6 +61,18 @@ Host-only fallback (without Docker):
 - `npm run dev:host:web`
 - `npm run dev:host:api`
 
+## Salesforce Metadata Cache (Local)
+
+This repo includes local Salesforce DX metadata cache artifacts used for object discovery and IDE assistance:
+
+- `.sfdx/tools/sobjects/standardObjects/*.cls`: generated Apex object definitions
+- `.sfdx/tools/soqlMetadata/standardObjects/*.json`: SOQL Builder object metadata
+- `.sfdx/typings/lwc/sobjects/*.d.ts`: LWC typing stubs for sObjects
+
+Use this cache for reference while building integrations. Refresh it from VS Code with `SFDX: Refresh SObject Definitions` when object schemas change.
+
+These files are local tooling artifacts and may vary by org; keep them out of commits unless your branch explicitly requires sharing regenerated metadata.
+
 ## Firebase Seed (optional)
 
 If Firebase Admin env vars are configured, seed demo data:
