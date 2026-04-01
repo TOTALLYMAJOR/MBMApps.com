@@ -1,6 +1,6 @@
 # MBMApps Development Best Practices
 
-Last updated: 2026-03-29
+Last updated: 2026-04-01
 
 ## 1) Operating Principle
 
@@ -70,8 +70,9 @@ Host-only fallback:
 ## 8) Performance Baseline (Web + Media)
 
 - Place static media under `apps/web/public/media`.
-- For hero/demo video, default to user-initiated playback and `preload="metadata"`.
-- Avoid autoplay by default unless explicitly required and tested for low-end devices.
+- For hero/demo video, default to user-initiated playback and `preload="metadata"` unless product UX explicitly requires autoplay.
+- If autoplay is required, enforce `muted`, `playsInline`, and validate on low-end devices.
+- Current approved exception: `/demo` QuietPilot preview uses muted autoplay + loop with top-focused crop for immediate product context.
 - Watch page weight and first-load JS trends on key routes (`/`, `/demo`, `/contact`).
 
 ## 9) Salesforce Metadata Hygiene

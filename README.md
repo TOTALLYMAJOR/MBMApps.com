@@ -15,6 +15,8 @@ Production-ready company site and technical showcase for `MBMapps.com`, built as
 - SEO: metadata, JSON-LD schema, OG image route, robots, and sitemap
 - Lead funnel: contact form with anti-spam honeypot and server-side submission route
 - Observability: web vitals + event telemetry (`contact_submitted`, `demo_login`, `case_study_viewed`)
+- Homepage: animated testimonials signal section integrated into `HomeImmersive`
+- Demo media: `/demo` QuietPilot preview autoplays muted, loops, and uses top-focused crop for above-the-fold context
 
 ### API (`apps/api`)
 - Express + TypeScript + Zod validation
