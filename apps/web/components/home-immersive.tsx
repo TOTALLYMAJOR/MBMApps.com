@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { LandingThreeStage } from '@/components/landing-three-stage';
+import { TestimonialsSignalSection } from '@/components/testimonials-signal-section';
 
 type TrackId = 'platform' | 'revenue' | 'reliability';
 
@@ -285,6 +286,8 @@ export function HomeImmersive() {
           </motion.div>
         </div>
       </section>
+
+      <TestimonialsSignalSection />
 
       <section
         className="scene-panel mx-auto w-full max-w-6xl px-6 pb-20 lg:px-8"

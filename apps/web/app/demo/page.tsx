@@ -35,7 +35,7 @@ export default async function DemoPage() {
               <p className="kicker text-white/70">QuietPilot Preview</p>
               <div className="mt-3 overflow-hidden rounded-xl border border-white/15 bg-black/45">
                 <div className="aspect-video">
-                  <video className="h-full w-full object-cover" controls playsInline preload="metadata">
+                  <video className="h-full w-full scale-[1.08] object-cover object-top" autoPlay loop muted playsInline preload="metadata">
                     <source src="/media/quiet-pilot.mp4" type="video/mp4" />
                     Your browser does not support the demo video.
                   </video>

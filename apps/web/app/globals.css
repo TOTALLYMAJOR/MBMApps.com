@@ -348,11 +348,186 @@ a {
   }
 }
 
+.testimonial-signal {
+  isolation: isolate;
+}
+
+.testimonial-signal__backdrop {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(94, 146, 255, 0.14), transparent 56%),
+    radial-gradient(circle at 18% 18%, rgba(93, 136, 238, 0.14), transparent 32%),
+    radial-gradient(circle at 82% 12%, rgba(167, 193, 255, 0.1), transparent 36%),
+    linear-gradient(178deg, rgba(5, 8, 19, 0.4) 0%, rgba(4, 7, 17, 0.16) 56%, rgba(4, 6, 14, 0.42) 100%);
+}
+
+.testimonial-signal__grain {
+  opacity: 0.08;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.22) 0.6px, transparent 0.9px),
+    radial-gradient(circle, rgba(205, 220, 255, 0.2) 0.5px, transparent 0.85px);
+  background-size: 3px 3px, 4px 4px;
+  animation: grain-shift 1s steps(2) infinite;
+}
+
+.testimonial-flow-line {
+  animation: testimonial-flow 10s linear infinite;
+}
+
+.testimonial-flow-packet {
+  animation: testimonial-flow 4.6s linear infinite;
+}
+
+.testimonial-scanner {
+  animation: testimonial-scanner 2.4s linear infinite;
+}
+
+.testimonial-glyph svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.testimonial-glyph-wiggle {
+  animation: testimonial-wiggle 3.1s ease-in-out infinite;
+}
+
+.testimonial-glyph-slide {
+  animation: testimonial-slide 2.2s ease-in-out infinite;
+}
+
+.testimonial-glyph-pop {
+  animation: testimonial-pop 2.5s ease-in-out infinite;
+}
+
+.testimonial-glyph-float {
+  animation: testimonial-float 3.3s ease-in-out infinite;
+}
+
+.testimonial-glyph-rotate {
+  animation: testimonial-rotate 8s linear infinite;
+}
+
+.testimonial-glyph-rotate-reverse {
+  animation: testimonial-rotate-reverse 11s linear infinite;
+}
+
+.testimonial-glyph-switch {
+  animation: testimonial-switch 2s ease-in-out infinite;
+}
+
+@keyframes testimonial-flow {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+@keyframes testimonial-scanner {
+  0%,
+  100% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+}
+
+@keyframes testimonial-wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-8deg);
+  }
+  75% {
+    transform: rotate(8deg);
+  }
+}
+
+@keyframes testimonial-slide {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(4px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes testimonial-pop {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes testimonial-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes testimonial-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes testimonial-rotate-reverse {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes testimonial-switch {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero .intro-reveal,
   .reveal,
   .is-visible {
     transform: none;
     transition: opacity 180ms linear;
+  }
+
+  .testimonial-signal__grain,
+  .testimonial-flow-line,
+  .testimonial-flow-packet,
+  .testimonial-scanner,
+  .testimonial-glyph-wiggle,
+  .testimonial-glyph-slide,
+  .testimonial-glyph-pop,
+  .testimonial-glyph-float,
+  .testimonial-glyph-rotate,
+  .testimonial-glyph-rotate-reverse,
+  .testimonial-glyph-switch {
+    animation: none !important;
   }
 }
