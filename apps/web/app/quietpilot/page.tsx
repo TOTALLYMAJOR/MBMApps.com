@@ -68,14 +68,14 @@ export default function QuietPilotPage() {
     <main className="bg-[#f7f8fc] text-zinc-950">
       <section className="relative overflow-hidden border-b border-indigo-100">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_25%_15%,rgba(14,165,233,0.18),transparent_34%),linear-gradient(180deg,#ffffff_0%,#f7f8fc_88%)]" />
-        <div className="relative mx-auto w-full max-w-6xl px-6 py-14 lg:px-8 lg:py-20">
-          <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+        <div className="relative mx-auto w-full max-w-[1360px] px-4 py-8 sm:px-6 lg:px-8">
+          <div className="grid w-full gap-8 xl:grid-cols-[minmax(280px,0.78fr)_minmax(0,1.22fr)] xl:items-center xl:gap-10">
             <div>
               <p className="text-xs font-semibold uppercase text-indigo-500">QuietPilot by MBMApps</p>
-              <h1 className="mt-4 max-w-3xl font-display text-4xl font-semibold leading-tight text-indigo-950 md:text-5xl">
+              <h1 className="mt-4 max-w-3xl font-display text-3xl font-semibold leading-tight text-indigo-950 md:text-4xl xl:text-5xl">
                 The service-operations command center from lead intake to job readiness.
               </h1>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-indigo-700 md:text-lg">
+              <p className="mt-4 max-w-2xl text-base leading-7 text-indigo-700">
                 QuietPilot gives service operators one calm place to watch leads, quotes, proposals, staffing, inventory, jobs, and payment risk without turning the business into a spreadsheet chase.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
@@ -101,7 +101,9 @@ export default function QuietPilotPage() {
               </div>
             </div>
 
-            <QuietPilotCommandPreview />
+            <div className="min-w-0 xl:justify-self-end">
+              <QuietPilotCommandPreview className="mx-auto w-full max-w-[860px]" />
+            </div>
           </div>
         </div>
       </section>

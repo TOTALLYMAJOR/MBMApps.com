@@ -200,20 +200,20 @@ const toneClasses = {
 
 function SidebarNav() {
   return (
-    <aside className="hidden w-56 shrink-0 flex-col border-r border-indigo-200 bg-white md:flex">
-      <div className="flex h-14 shrink-0 items-center border-b border-indigo-100 px-5">
+    <aside className="hidden w-48 shrink-0 flex-col border-r border-indigo-200 bg-white md:flex 2xl:w-52">
+      <div className="flex h-12 shrink-0 items-center border-b border-indigo-100 px-4">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-950 text-white">
             <Route className="h-4 w-4" aria-hidden="true" />
           </div>
-          <span className="text-sm font-semibold text-indigo-950">QUIETPILOT</span>
+          <span className="text-xs font-semibold text-indigo-950 2xl:text-sm">QUIETPILOT</span>
         </div>
       </div>
 
-      <div className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
+      <div className="flex-1 space-y-5 overflow-y-auto px-2.5 py-3">
         {navGroups.map((group) => (
           <div key={group.label}>
-            <p className="mb-2 px-3 text-xs font-medium uppercase text-indigo-400">{group.label}</p>
+            <p className="mb-2 px-2.5 text-[11px] font-medium uppercase text-indigo-400">{group.label}</p>
             <nav className="space-y-1" aria-label={group.label}>
               {group.items.map((item) => {
                 const Icon = item.icon;
@@ -222,7 +222,7 @@ function SidebarNav() {
                     key={item.label}
                     href="#preview"
                     className={cn(
-                      'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                      'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors',
                       item.active ? 'bg-indigo-100 text-indigo-950' : 'text-indigo-600 hover:bg-indigo-50 hover:text-indigo-950'
                     )}
                   >
@@ -237,11 +237,11 @@ function SidebarNav() {
         ))}
       </div>
 
-      <div className="border-t border-indigo-100 p-4">
+      <div className="border-t border-indigo-100 p-3">
         <div className="flex items-center gap-3 rounded-md p-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full border border-indigo-300 bg-indigo-200 text-xs font-medium text-indigo-700">OM</div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-indigo-950">Operator Mode</p>
+            <p className="truncate text-[13px] font-medium text-indigo-950">Operator Mode</p>
             <p className="truncate text-xs text-indigo-500">Service business HQ</p>
           </div>
         </div>
@@ -259,7 +259,7 @@ function PilotPulse() {
   return (
     <section className="relative overflow-hidden rounded-lg border border-indigo-200 bg-white/85 shadow-sm backdrop-blur-sm">
       <div className="pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-indigo-100/80 to-transparent" />
-      <div className="relative grid gap-4 p-4 md:grid-cols-[1.35fr_0.65fr] md:items-center">
+      <div className="relative grid gap-3 p-3 2xl:grid-cols-[1.35fr_0.65fr] 2xl:items-center">
         <div className="min-w-0">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">
@@ -277,8 +277,8 @@ function PilotPulse() {
               <PulseIcon className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
-              <h2 className="text-lg font-semibold text-indigo-950">{pulse.title}</h2>
-              <p className="mt-1 max-w-2xl text-sm leading-6 text-indigo-600">{pulse.insight}</p>
+              <h2 className="text-base font-semibold text-indigo-950 2xl:text-lg">{pulse.title}</h2>
+              <p className="mt-1 max-w-2xl text-[13px] leading-5 text-indigo-600 2xl:text-sm 2xl:leading-6">{pulse.insight}</p>
             </div>
           </div>
 
@@ -307,14 +307,14 @@ function PilotPulse() {
               <p className="mt-1 text-2xl font-semibold text-indigo-950">{pulse.metric}</p>
               <p className="text-xs text-indigo-500">{pulse.metricLabel}</p>
             </div>
-            <div className="relative h-16 w-16 rounded-full bg-indigo-100 p-1">
+            <div className="relative h-14 w-14 rounded-full bg-indigo-100 p-1 2xl:h-16 2xl:w-16">
               <div className="flex h-full w-full items-center justify-center rounded-full bg-white text-indigo-950">
                 <Radar className="h-7 w-7" aria-hidden="true" />
               </div>
               <div className="absolute inset-0 animate-spin rounded-full border-2 border-sky-400/70 border-t-transparent" />
             </div>
           </div>
-          <button type="button" className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-indigo-950 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-800">
+          <button type="button" className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-indigo-950 px-3 py-2 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-indigo-800 2xl:text-sm">
             {actionText}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -333,7 +333,7 @@ function ActionQueue() {
           Action Queue
         </h2>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2.5">
         {actions.map((item) => {
           const Icon = item.icon;
           const classes = toneClasses[item.tone];
@@ -343,7 +343,7 @@ function ActionQueue() {
               className={cn('relative overflow-hidden rounded-lg border bg-white p-3 shadow-sm transition-colors', classes.border)}
             >
               <div className={cn('absolute bottom-0 left-0 top-0 w-1', classes.stripe)} />
-              <div className="flex flex-col gap-3 pl-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 pl-2 2xl:flex-row 2xl:items-center 2xl:justify-between">
                 <div className="flex min-w-0 items-start gap-3">
                   <div className={cn('mt-0.5 shrink-0 rounded-md p-1.5', classes.icon)}>
                     <Icon className="h-5 w-5" aria-hidden="true" />
@@ -354,14 +354,14 @@ function ActionQueue() {
                       <h3 className="truncate font-medium text-indigo-950">{item.title}</h3>
                       {item.meta ? <span className="text-xs font-medium text-indigo-400">{item.meta}</span> : null}
                     </div>
-                    <p className="mt-1 text-sm text-indigo-500">{item.detail}</p>
+                    <p className="mt-1 text-[13px] leading-5 text-indigo-500 2xl:text-sm">{item.detail}</p>
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  <button type="button" className="rounded-md bg-indigo-950 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-800">
+                  <button type="button" className="rounded-md bg-indigo-950 px-3 py-1.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-indigo-800 2xl:text-sm">
                     {item.primary}
                   </button>
-                  <button type="button" className="rounded-md px-2 py-1.5 text-sm font-medium text-indigo-400 transition-colors hover:bg-indigo-50 hover:text-indigo-700">
+                  <button type="button" className="rounded-md px-2 py-1.5 text-[13px] font-medium text-indigo-400 transition-colors hover:bg-indigo-50 hover:text-indigo-700 2xl:text-sm">
                     {item.secondary}
                   </button>
                 </div>
@@ -415,18 +415,21 @@ function ReadinessIcon({ state }: { state: 'ready' | 'pending' | 'blocked' }) {
   );
 }
 
-export function QuietPilotCommandPreview() {
+export function QuietPilotCommandPreview({ className }: { className?: string }) {
   return (
     <section
       id="preview"
       aria-label="QuietPilot command center preview"
-      className="overflow-hidden rounded-lg border border-indigo-200 bg-[#fafafa] text-sm text-zinc-900 shadow-2xl shadow-indigo-950/10"
+      className={cn(
+        'h-[clamp(520px,calc(100svh-8rem),720px)] overflow-hidden rounded-lg border border-indigo-200 bg-[#fafafa] text-[13px] text-zinc-900 shadow-2xl shadow-indigo-950/10 2xl:text-sm',
+        className
+      )}
     >
-      <div className="flex min-h-[760px] flex-col md:flex-row">
+      <div className="flex h-full min-h-0 flex-col md:flex-row">
         <SidebarNav />
 
         <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
-          <header className="flex h-14 shrink-0 items-center justify-between border-b border-indigo-200 bg-white px-4 md:hidden">
+          <header className="flex h-12 shrink-0 items-center justify-between border-b border-indigo-200 bg-white px-4 md:hidden">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-950 text-white">
               <Route className="h-4 w-4" aria-hidden="true" />
             </div>
@@ -435,23 +438,18 @@ export function QuietPilotCommandPreview() {
             </button>
           </header>
 
-          <header className="hidden h-14 shrink-0 items-center justify-between border-b border-indigo-200/80 bg-white/70 px-8 backdrop-blur-md md:flex">
+          <header className="hidden h-12 shrink-0 items-center justify-between border-b border-indigo-200/80 bg-white/70 px-4 backdrop-blur-md md:flex 2xl:px-6">
             <div className="flex items-center gap-2 text-sm">
               <span className="text-indigo-500">Work</span>
               <span className="text-indigo-300">/</span>
               <span className="font-medium text-indigo-950">Command Center</span>
             </div>
-            <div className="flex items-center gap-3">
-              <label className="relative block">
-                <span className="sr-only">Search anything</span>
+            <div className="flex items-center gap-2 2xl:gap-3">
+              <div className="relative block" aria-hidden="true">
                 <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-indigo-400" aria-hidden="true" />
-                <input
-                  type="text"
-                  placeholder="Search anything..."
-                  className="w-64 rounded-md border border-transparent bg-indigo-100/60 py-1.5 pl-8 pr-4 text-sm text-indigo-950 outline-none transition-all placeholder:text-indigo-400 focus:border-indigo-300 focus:bg-white"
-                />
-              </label>
-              <button type="button" className="flex items-center gap-2 rounded-md bg-indigo-950 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-800">
+                <span className="block w-44 rounded-md border border-transparent bg-indigo-100/60 py-1.5 pl-8 pr-3 text-[13px] text-indigo-400 xl:w-52 2xl:w-64 2xl:text-sm">Search anything...</span>
+              </div>
+              <button type="button" className="flex items-center gap-2 rounded-md bg-indigo-950 px-3 py-1.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-indigo-800 2xl:text-sm">
                 <PlusCircle className="h-4 w-4" aria-hidden="true" />
                 New Quote
               </button>
@@ -459,9 +457,9 @@ export function QuietPilotCommandPreview() {
           </header>
 
           <div className="flex-1 overflow-y-auto">
-            <div className="mx-auto max-w-6xl space-y-6 p-4 md:p-6">
+            <div className="mx-auto max-w-6xl space-y-4 p-3 2xl:p-4">
               <div>
-                <p className="text-xl font-semibold text-indigo-950">Good morning. Here is your operational overview.</p>
+                <p className="text-lg font-semibold text-indigo-950 2xl:text-xl">Good morning. Here is your operational overview.</p>
                 <p className="mt-1 text-indigo-500">You have 3 items requiring immediate attention today.</p>
               </div>
 
@@ -506,7 +504,7 @@ export function QuietPilotCommandPreview() {
                 })}
               </section>
 
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
                 <section className="flex h-full flex-col">
                   <div className="mb-3 flex items-center justify-between">
                     <h2 className="text-sm font-semibold text-indigo-950">Recent Inquiries</h2>
