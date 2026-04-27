@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { LandingThreeStage } from '@/components/landing-three-stage';
 import { TestimonialsSignalSection } from '@/components/testimonials-signal-section';
+import { quietPilotProduct } from '@/lib/site';
 
 type TrackId = 'platform' | 'revenue' | 'reliability';
 
@@ -85,9 +86,9 @@ const executionRail = [
 
 const signalTape = [
   { stage: 'Leads Captured', value: 128, tint: 'from-[#6f94ff]/85 to-[#3f5db9]/40' },
-  { stage: 'Qualified', value: 74, tint: 'from-[#8eadff]/80 to-[#5f7fd8]/35' },
-  { stage: 'Proposal', value: 39, tint: 'from-[#b5c9ff]/75 to-[#6f92eb]/35' },
-  { stage: 'Won', value: 22, tint: 'from-[#d4e2ff]/70 to-[#84a1f0]/30' }
+  { stage: 'Quotes Active', value: 74, tint: 'from-[#8eadff]/80 to-[#5f7fd8]/35' },
+  { stage: 'Proposals Viewed', value: 39, tint: 'from-[#b5c9ff]/75 to-[#6f92eb]/35' },
+  { stage: 'Jobs Ready', value: 22, tint: 'from-[#d4e2ff]/70 to-[#84a1f0]/30' }
 ];
 
 const maxPipelineValue = signalTape[0]?.value ?? 1;
@@ -156,18 +157,18 @@ export function HomeImmersive() {
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <p className="kicker intro-reveal">{'// MBMApps Operating Thesis'}</p>
             <h1 className="intro-reveal mt-5 max-w-4xl font-display text-5xl font-semibold leading-[1.05] text-white md:text-6xl lg:text-7xl">
-              ENGINEERING DISCIPLINE THAT TURNS DIGITAL PRODUCTS INTO MARKET ADVANTAGE.
+              QUIETPILOT IS THE FLAGSHIP SERVICE OPERATIONS SYSTEM FROM MBMAPPS.
             </h1>
             <p className="intro-reveal mt-6 max-w-2xl text-base leading-8 text-white/75 md:text-lg">
-              We build high-performance web systems with the same mindset used in elite investment operations: signal over noise, repeatable execution, and asymmetric upside.
+              MBMApps builds high-performance web systems, led by QuietPilot: a calm command center for service businesses moving from lead intake to quotes, proposals, job readiness, and payment follow-up.
             </p>
 
             <div className="intro-reveal mt-8 flex flex-wrap gap-4">
-              <Link href="/contact" className="btn-theme">
-                Start a Discovery Call
+              <Link href={quietPilotProduct.path} className="btn-theme">
+                Explore QuietPilot
               </Link>
-              <Link href="/demo" className="btn-theme-ghost">
-                Open Live Demo
+              <Link href={quietPilotProduct.appUrl} target="_blank" rel="noreferrer" className="btn-theme-ghost">
+                Open QuietPilot App
               </Link>
             </div>
           </motion.div>
@@ -200,7 +201,7 @@ export function HomeImmersive() {
             </div>
             <div className="surface-card mt-6 p-4">
               <p className="kicker text-white/80">Now Shipping</p>
-              <p className="mt-2 text-sm text-white/85">Cross-cloud deployment choreography with typed runtime boundaries.</p>
+              <p className="mt-2 text-sm text-white/85">QuietPilot command-center workflows for lead-to-job service operations.</p>
             </div>
           </motion.aside>
         </div>

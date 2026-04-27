@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { navigation } from '@/lib/site';
+import { navigation, quietPilotProduct } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
 export function SiteHeader() {
@@ -33,10 +33,12 @@ export function SiteHeader() {
           })}
         </nav>
         <Link
-          href="/demo"
+          href={quietPilotProduct.appUrl}
           className="btn-theme"
+          target="_blank"
+          rel="noreferrer"
         >
-          Live Demo
+          Open QuietPilot
         </Link>
       </div>
     </header>
