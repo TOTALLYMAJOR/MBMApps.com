@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/contact-form';
+import { TrackedLink } from '@/components/tracked-link';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -28,9 +28,14 @@ export default function ContactPage() {
           <div className="surface-card p-5 text-sm text-white/85">
             <p className="font-semibold text-white">Prefer booking directly?</p>
             <p className="text-mbm-muted mt-2">Use our scheduling link to reserve a discovery call.</p>
-            <Link href={schedulingUrl} className="btn-theme mt-4">
+            <TrackedLink
+              href={schedulingUrl}
+              className="btn-theme mt-4"
+              trackingEvent="scheduling_started"
+              trackingMetadata={{ surface: 'contact-page', target: 'discovery-call' }}
+            >
               Book Call
-            </Link>
+            </TrackedLink>
           </div>
 
           <div className="surface-panel p-5">

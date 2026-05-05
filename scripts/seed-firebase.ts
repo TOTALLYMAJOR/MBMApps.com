@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import { syntheticMetrics, syntheticPipeline } from '@mbm/contracts';
+import { syntheticMetrics, syntheticOperationalOutcomes, syntheticPipeline } from '@mbm/contracts';
 
 function required(name: string) {
   const value = process.env[name];
@@ -35,6 +35,11 @@ async function main() {
   await db.collection('demoPipeline').doc('latest').set({
     ...syntheticPipeline,
     generatedAt: new Date().toISOString()
+  });
+
+  await db.collection('operationalOutcomeSnapshots').doc('latest').set({
+    ...syntheticOperationalOutcomes,
+    capturedAt: new Date().toISOString()
   });
 
   console.log('Firebase seed complete.');

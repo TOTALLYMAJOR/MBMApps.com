@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { ContentReadBeacon } from '@/components/content-read-beacon';
 import { EventBeacon } from '@/components/event-beacon';
 import { getCaseStudies, getCaseStudyBySlug } from '@/lib/content';
 import { siteConfig } from '@/lib/site';
@@ -59,7 +60,24 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
         path={`/case-studies/${slug}`}
         metadata={{
           case_study: slug,
-          industry: caseStudy.frontmatter.industry
+          industry: caseStudy.frontmatter.industry,
+          persona: caseStudy.frontmatter.persona,
+          funnel_stage: caseStudy.frontmatter.funnelStage,
+          champion_signal: caseStudy.frontmatter.championSignal
+        }}
+      />
+      <ContentReadBeacon
+        section="case-study"
+        slug={slug}
+        path={`/case-studies/${slug}`}
+        metadata={{
+          industry: caseStudy.frontmatter.industry,
+          persona: caseStudy.frontmatter.persona,
+          funnel_stage: caseStudy.frontmatter.funnelStage,
+          problem: caseStudy.frontmatter.problem,
+          capability: caseStudy.frontmatter.capability,
+          champion_signal: caseStudy.frontmatter.championSignal,
+          primary_outcome: caseStudy.frontmatter.primaryOutcome
         }}
       />
       <p className="kicker">{caseStudy.frontmatter.industry}</p>

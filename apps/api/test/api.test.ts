@@ -1,8 +1,39 @@
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
+import { Timestamp } from 'firebase-admin/firestore';
+import { contactSubmissionSchema, eventTelemetrySchema } from '@mbm/contracts';
 import { createApp } from '../src/app.js';
+import { buildContactRecord, buildTelemetryRecord } from '../src/repository.js';
 
 const app = createApp();
+
+const enrichedContactPayload = {
+  name: 'Jordan Lee',
+  email: 'jordan@mbmapps.com',
+  company: 'Northline Kitchens',
+  message: 'We need a platform to automate quoting and measure conversion by segment.',
+  budget: '25k-75k',
+  timeline: '30-days',
+  source: 'integration-test',
+  website: '',
+  decisionRole: 'operations-leader',
+  industry: 'Food Services',
+  companySize: '51-200',
+  locationCount: 14,
+  teamSize: 42,
+  monthlyQuoteVolume: 80,
+  serviceCategory: 'food-services',
+  currentTools: ['HubSpot', 'Google Sheets'],
+  currentCrmOrOpsSystem: 'HubSpot',
+  operationalMaturity: 'spreadsheet-led',
+  primaryBusinessPain: 'quote-speed',
+  topConstraint: 'team-capacity',
+  consent: {
+    dataProcessingAccepted: true,
+    marketingOptIn: true,
+    acceptedAt: new Date().toISOString()
+  }
+};
 
 describe('MBM API', () => {
   it('serves health check', async () => {
@@ -20,6 +51,22 @@ describe('MBM API', () => {
     expect(Array.isArray(response.body.metrics)).toBe(true);
   });
 
+  it('returns operational outcomes', async () => {
+    const response = await request(app).get('/v1/demo/outcomes');
+
+    expect(response.status).toBe(200);
+    expect(response.body.ok).toBe(true);
+    expect(response.body.outcomes.revenueInfluenced).toBeGreaterThan(0);
+  });
+
+  it('returns champion cohorts', async () => {
+    const response = await request(app).get('/v1/champion/cohorts');
+
+    expect(response.status).toBe(200);
+    expect(response.body.ok).toBe(true);
+    expect(Array.isArray(response.body.cohorts)).toBe(true);
+  });
+
   it('rejects invalid contact payloads', async () => {
     const response = await request(app).post('/v1/contact').send({ name: 'A' });
 
@@ -28,16 +75,7 @@ describe('MBM API', () => {
   });
 
   it('accepts valid contact payload', async () => {
-    const response = await request(app).post('/v1/contact').send({
-      name: 'Jordan Lee',
-      email: 'jordan@mbmapps.com',
-      company: 'Northline Kitchens',
-      message: 'We need a platform to automate quoting and measure conversion by segment.',
-      budget: '25k-75k',
-      timeline: '30-days',
-      source: 'integration-test',
-      website: ''
-    });
+    const response = await request(app).post('/v1/contact').send(enrichedContactPayload);
 
     expect(response.status).toBe(200);
     expect(response.body.ok).toBe(true);
@@ -48,6 +86,12 @@ describe('MBM API', () => {
       event: 'web_vital',
       path: '/demo',
       at: new Date().toISOString(),
+      context: {
+        sessionId: 'session_api_test',
+        anonymousId: 'anon_api_test',
+        routeSource: '/demo',
+        deviceClass: 'desktop'
+      },
       metadata: {
         metric: 'LCP',
         value: 2043
@@ -56,5 +100,36 @@ describe('MBM API', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.ok).toBe(true);
+  });
+
+  it('builds enriched contact records with champion intelligence fields', () => {
+    const submission = contactSubmissionSchema.parse(enrichedContactPayload);
+    const record = buildContactRecord(submission, Timestamp.fromDate(new Date('2026-05-04T12:00:00.000Z')));
+
+    expect(record.lifecycleStatus).toBe('new');
+    expect(record.championProfile.primaryBusinessPain).toBe('quote-speed');
+    expect(record.championScore.total).toBeGreaterThan(60);
+    expect(record.dataQuality.retentionPolicy).toBe('sales-intelligence-24-months');
+  });
+
+  it('builds telemetry records with governance metadata', () => {
+    const payload = eventTelemetrySchema.parse({
+      event: 'quietpilot_opened',
+      path: '/quietpilot',
+      at: new Date().toISOString(),
+      context: {
+        sessionId: 'session_api_test',
+        anonymousId: 'anon_api_test',
+        deviceClass: 'desktop'
+      },
+      metadata: {
+        surface: 'site-header'
+      }
+    });
+    const record = buildTelemetryRecord(payload, Timestamp.fromDate(new Date('2026-05-04T12:00:00.000Z')));
+
+    expect(record.schemaVersion).toBe(1);
+    expect(record.dataQuality.piiBoundary).toBe('anonymous-event');
+    expect(record.dataQuality.retentionPolicy).toBe('behavioral-telemetry-13-months');
   });
 });

@@ -1,9 +1,18 @@
 import {
+  championProfileSchema,
+  championScoreSchema,
+  deriveChampionProfile,
+  deriveChampionScore,
+  operationalOutcomeSnapshotSchema,
   type ContactSubmission,
+  type ChampionCohort,
   type DemoMetric,
   type EventTelemetryPayload,
+  type OperationalOutcomeSnapshot,
   type PipelineSnapshot,
+  syntheticChampionCohorts,
   syntheticMetrics,
+  syntheticOperationalOutcomes,
   syntheticPipeline
 } from '@mbm/contracts';
 import { randomUUID } from 'node:crypto';
@@ -38,6 +47,46 @@ export async function loadPipeline(): Promise<PipelineSnapshot> {
   return doc.data() as PipelineSnapshot;
 }
 
+export async function loadOperationalOutcomes(): Promise<OperationalOutcomeSnapshot> {
+  const db = getFirestoreDb();
+  if (db === null) {
+    return syntheticOperationalOutcomes;
+  }
+
+  const doc = await db.collection('operationalOutcomeSnapshots').doc('latest').get();
+  if (!doc.exists) {
+    return syntheticOperationalOutcomes;
+  }
+
+  return operationalOutcomeSnapshotSchema.parse(doc.data());
+}
+
+export function buildContactRecord(submission: ContactSubmission, createdAt: Timestamp = Timestamp.now()) {
+  const championProfile = deriveChampionProfile(submission);
+  const championScore = deriveChampionScore(submission);
+
+  return {
+    ...submission,
+    schemaVersion: 1,
+    createdAt,
+    status: 'new',
+    lifecycleStatus: 'new',
+    lifecycle: {
+      status: 'new',
+      updatedAt: createdAt,
+      lossReason: null,
+      measuredOutcome: null
+    },
+    championProfile,
+    championScore,
+    dataQuality: {
+      piiBoundary: 'contact-submission',
+      retentionPolicy: 'sales-intelligence-24-months',
+      sourceSchemaVersion: 1
+    }
+  };
+}
+
 export async function storeContact(submission: ContactSubmission): Promise<string> {
   const id = `contact_${randomUUID()}`;
   const db = getFirestoreDb();
@@ -46,13 +95,22 @@ export async function storeContact(submission: ContactSubmission): Promise<strin
     return id;
   }
 
-  await db.collection('contactSubmissions').doc(id).set({
-    ...submission,
-    createdAt: Timestamp.now(),
-    status: 'new'
-  });
+  await db.collection('contactSubmissions').doc(id).set(buildContactRecord(submission));
 
   return id;
+}
+
+export function buildTelemetryRecord(event: EventTelemetryPayload, createdAt: Timestamp = Timestamp.now()) {
+  return {
+    ...event,
+    createdAt,
+    dataQuality: {
+      sourceSchemaVersion: event.schemaVersion,
+      piiBoundary: event.userId ? 'pseudonymous-user-event' : 'anonymous-event',
+      retentionPolicy: 'behavioral-telemetry-13-months',
+      botSignal: event.context.deviceClass === 'bot'
+    }
+  };
 }
 
 export async function storeTelemetry(event: EventTelemetryPayload): Promise<void> {
@@ -61,8 +119,86 @@ export async function storeTelemetry(event: EventTelemetryPayload): Promise<void
     return;
   }
 
-  await db.collection('telemetryEvents').add({
-    ...event,
-    createdAt: Timestamp.now()
-  });
+  await db.collection('telemetryEvents').add(buildTelemetryRecord(event));
+}
+
+export async function loadChampionCohorts(): Promise<ChampionCohort[]> {
+  const db = getFirestoreDb();
+  if (db === null) {
+    return syntheticChampionCohorts;
+  }
+
+  const snapshot = await db.collection('contactSubmissions').orderBy('createdAt', 'desc').limit(250).get();
+  if (snapshot.empty) {
+    return syntheticChampionCohorts;
+  }
+
+  const buckets = new Map<
+    string,
+    {
+      label: string;
+      count: number;
+      scoreTotal: number;
+      wonCount: number;
+      revenueTotal: number;
+      signals: Map<string, number>;
+    }
+  >();
+
+  for (const doc of snapshot.docs) {
+    const data = doc.data();
+    const profileResult = championProfileSchema.safeParse(data.championProfile);
+    const scoreResult = championScoreSchema.safeParse(data.championScore);
+
+    if (!profileResult.success || !scoreResult.success) {
+      continue;
+    }
+
+    const profile = profileResult.data;
+    const score = scoreResult.data;
+    const id = `${profile.primaryBusinessPain}-${profile.serviceCategory}`;
+    const label = `${profile.primaryBusinessPain.replace(/-/g, ' ')} / ${profile.serviceCategory.replace(/-/g, ' ')}`;
+    const bucket =
+      buckets.get(id) ??
+      {
+        label,
+        count: 0,
+        scoreTotal: 0,
+        wonCount: 0,
+        revenueTotal: 0,
+        signals: new Map<string, number>()
+      };
+
+    bucket.count += 1;
+    bucket.scoreTotal += score.total;
+    if (data.lifecycleStatus === 'closed_won' || data.status === 'closed_won') {
+      bucket.wonCount += 1;
+    }
+    if (typeof data.revenueInfluenced === 'number') {
+      bucket.revenueTotal += data.revenueInfluenced;
+    }
+
+    for (const reason of score.reasons) {
+      bucket.signals.set(reason, (bucket.signals.get(reason) ?? 0) + 1);
+    }
+
+    buckets.set(id, bucket);
+  }
+
+  const generatedAt = new Date().toISOString();
+  const cohorts = Array.from(buckets.entries()).map(([id, bucket]) => ({
+    id,
+    label: bucket.label,
+    count: bucket.count,
+    averageScore: Math.round(bucket.scoreTotal / Math.max(bucket.count, 1)),
+    primarySignals: Array.from(bucket.signals.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([signal]) => signal),
+    conversionRate: Math.round((bucket.wonCount / Math.max(bucket.count, 1)) * 100),
+    averageRevenueInfluenced: Math.round(bucket.revenueTotal / Math.max(bucket.count, 1)),
+    generatedAt
+  }));
+
+  return cohorts.length > 0 ? cohorts : syntheticChampionCohorts;
 }

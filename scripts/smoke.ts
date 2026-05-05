@@ -14,6 +14,8 @@ async function check(url: string, description: string) {
 async function main() {
   await check(`${apiUrl}/healthz`, 'API health');
   await check(`${apiUrl}/v1/demo/metrics`, 'API demo metrics');
+  await check(`${apiUrl}/v1/demo/outcomes`, 'API operational outcomes');
+  await check(`${apiUrl}/v1/champion/cohorts`, 'API champion cohorts');
   await check(`${webUrl}/`, 'Web home');
   await check(`${webUrl}/demo`, 'Web demo page');
   await check(`${webUrl}/sitemap.xml`, 'Web sitemap');

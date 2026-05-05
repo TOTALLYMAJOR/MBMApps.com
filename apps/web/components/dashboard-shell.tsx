@@ -1,22 +1,26 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import type { DemoMetric, PipelineSnapshot } from '@mbm/contracts';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { DemoMetric, OperationalOutcomeSnapshot, PipelineSnapshot } from '@mbm/contracts';
 import { motion } from 'framer-motion';
 import { DemoAuthPanel } from '@/components/demo-auth-panel';
+import { trackEvent } from '@/lib/telemetry';
 import { currency } from '@/lib/utils';
 
 type DashboardShellProps = {
   initialMetrics: DemoMetric[];
   initialPipeline: PipelineSnapshot;
+  initialOutcomes: OperationalOutcomeSnapshot;
   usingFallbackData: boolean;
 };
 
 type DemoRole = 'guest' | 'viewer' | 'demo' | 'admin';
 
-export function DashboardShell({ initialMetrics, initialPipeline, usingFallbackData }: DashboardShellProps) {
+export function DashboardShell({ initialMetrics, initialPipeline, initialOutcomes, usingFallbackData }: DashboardShellProps) {
   const [role, setRole] = useState<DemoRole>('guest');
   const [activeStageId, setActiveStageId] = useState(initialPipeline.stages[0]?.id ?? '');
+  const roleRef = useRef<DemoRole>('guest');
+  const activeStageIdRef = useRef(activeStageId);
 
   const totals = useMemo(() => {
     return initialPipeline.stages.reduce(
@@ -39,6 +43,78 @@ export function DashboardShell({ initialMetrics, initialPipeline, usingFallbackD
   );
   const canViewDealDetails = role === 'demo' || role === 'admin';
 
+  useEffect(() => {
+    roleRef.current = role;
+  }, [role]);
+
+  useEffect(() => {
+    activeStageIdRef.current = activeStageId;
+  }, [activeStageId]);
+
+  useEffect(() => {
+    const startedAt = Date.now();
+
+    void trackEvent('demo_started', '/demo', {
+      using_fallback_data: usingFallbackData,
+      stage_count: initialPipeline.stages.length,
+      open_pipeline_value: totals.value
+    });
+
+    return () => {
+      void trackEvent('demo_time_spent', '/demo', {
+        duration_seconds: Math.round((Date.now() - startedAt) / 1000),
+        last_stage_id: activeStageIdRef.current || null,
+        role: roleRef.current
+      });
+    };
+  }, [initialPipeline.stages.length, totals.value, usingFallbackData]);
+
+  useEffect(() => {
+    if (usingFallbackData) {
+      void trackEvent('dashboard_drilldown_viewed', '/demo', {
+        drilldown: 'fallback-data-banner',
+        source: 'resilient-fallback'
+      });
+    }
+  }, [usingFallbackData]);
+
+  useEffect(() => {
+    if (canViewDealDetails) {
+      void trackEvent('dashboard_drilldown_viewed', '/demo', {
+        drilldown: 'deal-details-unlocked',
+        role,
+        stage_id: activeStage?.id ?? null
+      });
+    }
+  }, [activeStage?.id, canViewDealDetails, role]);
+
+  const handleRoleChange = useCallback((nextRole: DemoRole) => {
+    setRole(nextRole);
+    void trackEvent('demo_role_resolved', '/demo', {
+      role: nextRole,
+      can_view_deal_details: nextRole === 'demo' || nextRole === 'admin'
+    });
+  }, []);
+
+  const handleStageSelect = useCallback(
+    (stage: PipelineSnapshot['stages'][number]) => {
+      setActiveStageId(stage.id);
+      void trackEvent('demo_stage_selected', '/demo', {
+        stage_id: stage.id,
+        stage_name: stage.name,
+        stage_count: stage.count,
+        stage_value: stage.totalValue,
+        role
+      });
+      void trackEvent('dashboard_drilldown_viewed', '/demo', {
+        drilldown: 'pipeline-stage',
+        stage_id: stage.id,
+        stage_name: stage.name
+      });
+    },
+    [role]
+  );
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-4">
@@ -57,8 +133,35 @@ export function DashboardShell({ initialMetrics, initialPipeline, usingFallbackD
           </motion.article>
         ))}
 
-        <DemoAuthPanel onRoleChange={setRole} />
+        <DemoAuthPanel onRoleChange={handleRoleChange} />
       </div>
+
+      <section className="surface-panel p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="kicker text-white/65">Champion Outcome Signals</p>
+            <h2 className="mt-2 font-display text-2xl text-white">Operational outcome snapshot</h2>
+            <p className="mt-1 text-sm text-white/60">Period: {initialOutcomes.period}</p>
+          </div>
+          <p className="rounded-full border border-white/15 px-3 py-1 text-xs uppercase tracking-[0.12em] text-white/65">
+            Schema v{initialOutcomes.schemaVersion}
+          </p>
+        </div>
+        <div className="mt-5 grid gap-3 md:grid-cols-4">
+          {[
+            ['Quote turnaround', `${initialOutcomes.quoteTurnaroundHours}h`, 'Median cycle time'],
+            ['Win rate', `${initialOutcomes.averageWinRate}%`, 'Closed opportunity quality'],
+            ['Job readiness', `${initialOutcomes.jobReadinessRate}%`, 'Ready before service day'],
+            ['Payment risk', currency(initialOutcomes.paymentRiskAmount, 'USD'), 'Outstanding risk amount']
+          ].map(([label, value, detail]) => (
+            <article key={label} className="surface-card p-4">
+              <p className="text-xs uppercase tracking-[0.16em] text-white/55">{label}</p>
+              <p className="mt-2 font-display text-2xl text-white">{value}</p>
+              <p className="mt-1 text-xs text-white/60">{detail}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <section className="surface-panel p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -88,7 +191,7 @@ export function DashboardShell({ initialMetrics, initialPipeline, usingFallbackD
                 <button
                   key={stage.id}
                   type="button"
-                  onClick={() => setActiveStageId(stage.id)}
+                  onClick={() => handleStageSelect(stage)}
                   className={`w-full rounded-2xl border p-4 text-left transition ${
                     isActive ? 'border-electric/60 bg-electric/10' : 'border-white/10 bg-black/45 hover:border-white/30'
                   }`}

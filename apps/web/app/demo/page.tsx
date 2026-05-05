@@ -2,9 +2,9 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import { DashboardShell } from '@/components/dashboard-shell';
-import { getDemoMetrics, getDemoPipeline } from '@/lib/backend-client';
+import { TrackedLink } from '@/components/tracked-link';
+import { getDemoMetrics, getDemoPipeline, getOperationalOutcomes } from '@/lib/backend-client';
 import { quietPilotProduct } from '@/lib/site';
 
 const QUIET_PILOT_ARTWORK_URL = '/media/quiet-pilot-flagship.png';
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DemoPage() {
-  const [metricsResult, pipelineResult] = await Promise.all([getDemoMetrics(), getDemoPipeline()]);
+  const [metricsResult, pipelineResult, outcomesResult] = await Promise.all([getDemoMetrics(), getDemoPipeline(), getOperationalOutcomes()]);
   const hasQuietPilotArtwork = QUIET_PILOT_ARTWORK_CANDIDATES.some((filePath) => existsSync(filePath));
 
   return (
@@ -35,12 +35,24 @@ export default async function DemoPage() {
                 This environment demonstrates QuietPilot production patterns in action: typed API contracts, role-aware Firebase access, and resilient fallback behavior when upstream services degrade.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href={quietPilotProduct.path} className="btn-theme">
+                <TrackedLink
+                  href={quietPilotProduct.path}
+                  className="btn-theme"
+                  trackingEvent="cta_clicked"
+                  trackingMetadata={{ surface: 'demo-hero', target: 'quietpilot-page' }}
+                >
                   View QuietPilot
-                </Link>
-                <Link href={quietPilotProduct.appUrl} target="_blank" rel="noreferrer" className="btn-theme-ghost">
+                </TrackedLink>
+                <TrackedLink
+                  href={quietPilotProduct.appUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-theme-ghost"
+                  trackingEvent="quietpilot_opened"
+                  trackingMetadata={{ surface: 'demo-hero', target: 'quietpilot-app' }}
+                >
                   Open QuietPilot App
-                </Link>
+                </TrackedLink>
               </div>
               <div className="mt-7 flex flex-wrap gap-3">
                 {['Typed API Contracts', 'Realtime Auth Context', 'Graceful Fallback Mode', 'Telemetry Event Capture'].map((item) => (
@@ -94,7 +106,8 @@ export default async function DemoPage() {
         <DashboardShell
           initialMetrics={metricsResult.data}
           initialPipeline={pipelineResult.data}
-          usingFallbackData={metricsResult.fallback || pipelineResult.fallback}
+          initialOutcomes={outcomesResult.data}
+          usingFallbackData={metricsResult.fallback || pipelineResult.fallback || outcomesResult.fallback}
         />
       </div>
     </div>

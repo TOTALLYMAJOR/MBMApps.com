@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
-import { contactSubmissionSchema } from '@mbm/contracts';
+import { contactSubmissionSchema, type EventTelemetryPayload } from '@mbm/contracts';
 import { z } from 'zod';
 
 const requestSchema = contactSubmissionSchema.extend({
@@ -11,13 +11,18 @@ function backendBaseUrl() {
   return process.env.BACKEND_API_URL ?? 'http://localhost:4000';
 }
 
-async function forwardTelemetry() {
+type TelemetryMetadata = Record<string, string | number | boolean | null>;
+
+async function forwardTelemetry(event: EventTelemetryPayload['event'], metadata: TelemetryMetadata = {}) {
   const body = {
-    event: 'contact_submitted',
+    schemaVersion: 1,
+    event,
     path: '/contact',
     at: new Date().toISOString(),
+    source: 'server',
     metadata: {
-      source: 'next-api-contact'
+      source: 'next-api-contact',
+      ...metadata
     }
   };
 
@@ -45,6 +50,11 @@ export async function POST(request: Request) {
   const elapsed = Date.now() - startedAt;
 
   if (submission.website.trim().length > 0 || elapsed < 1500) {
+    void forwardTelemetry('contact_filtered', {
+      filter_reason: submission.website.trim().length > 0 ? 'honeypot' : 'elapsed_under_threshold',
+      elapsed_ms: elapsed
+    });
+
     return NextResponse.json({
       ok: true,
       submissionId: `filtered_${randomUUID()}`,
@@ -66,10 +76,22 @@ export async function POST(request: Request) {
       throw new Error(`Backend failed: ${response.status}`);
     }
 
-    void forwardTelemetry();
+    void forwardTelemetry('contact_submitted', {
+      budget: submission.budget,
+      timeline: submission.timeline,
+      decision_role: submission.decisionRole,
+      service_category: submission.serviceCategory,
+      primary_business_pain: submission.primaryBusinessPain
+    });
     const result = (await response.json()) as unknown;
     return NextResponse.json(result, { status: 200 });
   } catch {
+    void forwardTelemetry('contact_queued', {
+      queue_reason: 'backend_unavailable',
+      budget: submission.budget,
+      timeline: submission.timeline
+    });
+
     return NextResponse.json(
       {
         ok: true,

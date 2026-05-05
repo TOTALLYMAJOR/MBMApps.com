@@ -3,7 +3,7 @@
 Production-ready company site and technical showcase for `MBMapps.com`, built as a monorepo with:
 
 - `apps/web`: Next.js App Router marketing + demo experience
-- `apps/api`: Dockerized TypeScript API for demo metrics, pipeline, contact intake, and telemetry
+- `apps/api`: Dockerized TypeScript API for demo metrics, pipeline, outcome snapshots, champion cohorts, contact intake, and telemetry
 - `packages/contracts`: Shared API/event/data contracts used by both app and API
 
 ## Architecture
@@ -13,8 +13,8 @@ Production-ready company site and technical showcase for `MBMapps.com`, built as
 - Routes: `/`, `/services`, `/case-studies`, `/about`, `/insights`, `/contact`, `/demo`
 - MDX-driven content for insights and case studies from `/content`
 - SEO: metadata, JSON-LD schema, OG image route, robots, and sitemap
-- Lead funnel: contact form with anti-spam honeypot and server-side submission route
-- Observability: web vitals + event telemetry (`contact_submitted`, `demo_login`, `case_study_viewed`)
+- Lead funnel: enriched contact form with anti-spam honeypot, champion profile signals, consent metadata, and server-side submission route
+- Observability: web vitals + intent telemetry with session, anonymous visitor, attribution, device class, schema version, and data quality context
 - Homepage: animated testimonials signal section integrated into `HomeImmersive`
 - Demo media: `/demo` QuietPilot preview autoplays muted, loops, and uses top-focused crop for above-the-fold context
 
@@ -24,6 +24,8 @@ Production-ready company site and technical showcase for `MBMapps.com`, built as
   - `GET /healthz`
   - `GET /v1/demo/metrics`
   - `GET /v1/demo/pipeline`
+  - `GET /v1/demo/outcomes`
+  - `GET /v1/champion/cohorts`
   - `POST /v1/contact`
   - `POST /v1/events`
 - Rate limiting + helmet + CORS + structured logging
@@ -32,9 +34,23 @@ Production-ready company site and technical showcase for `MBMapps.com`, built as
 ### Shared Contracts (`packages/contracts`)
 - `DemoMetric`
 - `PipelineSnapshot`
+- `OperationalOutcomeSnapshot`
 - `ContactSubmission`
+- `ChampionProfile`
+- `ChampionScore`
+- `ChampionCohort`
 - `ApiError`
 - `EventTelemetryPayload`
+
+## Champion Intelligence Layer
+
+The platform now captures richer data to help define an Elkite champion: a best-fit QuietPilot/MBMApps operator with strong fit, urgency, adoption intent, operational complexity, commercial readiness, and measurable outcome potential.
+
+- Contact intake captures role, industry, company size, locations, team size, quote volume, current tools, operational maturity, primary pain, top constraint, and consent metadata.
+- API contact storage derives and persists `ChampionProfile` and `ChampionScore` alongside lifecycle status and data-quality governance fields.
+- Demo data includes numeric operational outcome snapshots for quote turnaround, win rate, response time, proposal views, job readiness, payment risk, staffing gaps, inventory blockers, and revenue influenced.
+- Content frontmatter includes persona, funnel stage, problem, capability, champion signal, and primary outcome; detail pages emit read-depth telemetry.
+- Telemetry taxonomy includes journey events such as `cta_clicked`, `quietpilot_opened`, `demo_started`, `demo_stage_selected`, `dashboard_drilldown_viewed`, `content_read`, `quote_interest`, `scheduling_started`, and `scheduling_completed`.
 
 ## Local Development
 

@@ -30,6 +30,7 @@ import {
   XCircle,
   Zap
 } from 'lucide-react';
+import { trackEvent } from '@/lib/telemetry';
 import { cn } from '@/lib/utils';
 
 type PreviewNavItem = {
@@ -255,6 +256,7 @@ function PilotPulse() {
   const pulse = pulses[active] ?? pulses[0]!;
   const PulseIcon = pulse.icon;
   const actionText = useMemo(() => (active === 0 ? 'Open staffing plan' : active === 1 ? 'Draft follow-up' : 'Create automations'), [active]);
+  const pulseEvent = active === 1 ? 'proposal_viewed' : active === 2 ? 'quote_interest' : 'dashboard_drilldown_viewed';
 
   return (
     <section className="relative overflow-hidden rounded-lg border border-indigo-200 bg-white/85 shadow-sm backdrop-blur-sm">
@@ -287,7 +289,14 @@ function PilotPulse() {
               <button
                 key={item.label}
                 type="button"
-                onClick={() => setActive(index)}
+                onClick={() => {
+                  setActive(index);
+                  void trackEvent(index === 1 ? 'proposal_viewed' : index === 2 ? 'quote_interest' : 'dashboard_drilldown_viewed', '/quietpilot', {
+                    surface: 'quietpilot-preview',
+                    pulse: item.label,
+                    title: item.title
+                  });
+                }}
                 aria-pressed={active === index}
                 className={cn(
                   'rounded-md border px-3 py-1.5 text-xs font-medium transition-colors',
@@ -314,7 +323,18 @@ function PilotPulse() {
               <div className="absolute inset-0 animate-spin rounded-full border-2 border-sky-400/70 border-t-transparent" />
             </div>
           </div>
-          <button type="button" className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-indigo-950 px-3 py-2 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-indigo-800 2xl:text-sm">
+          <button
+            type="button"
+            onClick={() => {
+              void trackEvent(pulseEvent, '/quietpilot', {
+                surface: 'quietpilot-preview',
+                action: actionText,
+                pulse: pulse.label,
+                title: pulse.title
+              });
+            }}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-indigo-950 px-3 py-2 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-indigo-800 2xl:text-sm"
+          >
             {actionText}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -358,10 +378,32 @@ function ActionQueue() {
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  <button type="button" className="rounded-md bg-indigo-950 px-3 py-1.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-indigo-800 2xl:text-sm">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void trackEvent(item.title.includes('Proposal') ? 'proposal_viewed' : item.title.includes('Quote') ? 'quote_interest' : 'dashboard_drilldown_viewed', '/quietpilot', {
+                        surface: 'quietpilot-action-queue',
+                        action: item.primary,
+                        queue_item: item.title,
+                        tone: item.tone
+                      });
+                    }}
+                    className="rounded-md bg-indigo-950 px-3 py-1.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-indigo-800 2xl:text-sm"
+                  >
                     {item.primary}
                   </button>
-                  <button type="button" className="rounded-md px-2 py-1.5 text-[13px] font-medium text-indigo-400 transition-colors hover:bg-indigo-50 hover:text-indigo-700 2xl:text-sm">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void trackEvent('dashboard_drilldown_viewed', '/quietpilot', {
+                        surface: 'quietpilot-action-queue',
+                        action: item.secondary,
+                        queue_item: item.title,
+                        tone: item.tone
+                      });
+                    }}
+                    className="rounded-md px-2 py-1.5 text-[13px] font-medium text-indigo-400 transition-colors hover:bg-indigo-50 hover:text-indigo-700 2xl:text-sm"
+                  >
                     {item.secondary}
                   </button>
                 </div>
@@ -449,7 +491,16 @@ export function QuietPilotCommandPreview({ className }: { className?: string }) 
                 <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-indigo-400" aria-hidden="true" />
                 <span className="block w-44 rounded-md border border-transparent bg-indigo-100/60 py-1.5 pl-8 pr-3 text-[13px] text-indigo-400 xl:w-52 2xl:w-64 2xl:text-sm">Search anything...</span>
               </div>
-              <button type="button" className="flex items-center gap-2 rounded-md bg-indigo-950 px-3 py-1.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-indigo-800 2xl:text-sm">
+              <button
+                type="button"
+                onClick={() => {
+                  void trackEvent('quote_interest', '/quietpilot', {
+                    surface: 'quietpilot-preview-header',
+                    action: 'new_quote'
+                  });
+                }}
+                className="flex items-center gap-2 rounded-md bg-indigo-950 px-3 py-1.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-indigo-800 2xl:text-sm"
+              >
                 <PlusCircle className="h-4 w-4" aria-hidden="true" />
                 New Quote
               </button>
@@ -470,6 +521,13 @@ export function QuietPilotCommandPreview({ className }: { className?: string }) 
                     <button
                       key={filter}
                       type="button"
+                      onClick={() => {
+                        void trackEvent('filter_used', '/quietpilot', {
+                          surface: 'quietpilot-preview',
+                          filter,
+                          default_active: index === 0
+                        });
+                      }}
                       className={cn(
                         'rounded-md border px-3 py-1.5 text-xs font-medium transition-colors',
                         index === 0

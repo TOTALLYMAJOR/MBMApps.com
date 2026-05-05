@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { ContentReadBeacon } from '@/components/content-read-beacon';
 import { getInsightBySlug, getInsights } from '@/lib/content';
 import { siteConfig } from '@/lib/site';
 
@@ -53,6 +54,20 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
 
   return (
     <article className="mx-auto w-full max-w-3xl px-6 py-16 lg:px-8">
+      <ContentReadBeacon
+        section="insight"
+        slug={slug}
+        path={`/insights/${slug}`}
+        metadata={{
+          industry: post.frontmatter.industry,
+          persona: post.frontmatter.persona,
+          funnel_stage: post.frontmatter.funnelStage,
+          problem: post.frontmatter.problem,
+          capability: post.frontmatter.capability,
+          champion_signal: post.frontmatter.championSignal,
+          primary_outcome: post.frontmatter.primaryOutcome
+        }}
+      />
       <p className="kicker">Insight</p>
       <h1 className="mt-3 font-display text-5xl text-white">{post.frontmatter.title}</h1>
       <p className="text-mbm-muted mt-4 text-lg">{post.frontmatter.summary}</p>

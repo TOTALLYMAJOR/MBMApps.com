@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
+import type { EventTelemetryPayload } from '@mbm/contracts';
 import { trackEvent } from '@/lib/telemetry';
 
 type EventBeaconProps = {
-  event: 'case_study_viewed' | 'demo_login';
+  event: EventTelemetryPayload['event'];
   path: string;
   metadata?: Record<string, string | number | boolean | null>;
 };

@@ -3,10 +3,12 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import {
+  championCohortsResponseSchema,
   contactSubmissionSchema,
   demoMetricsResponseSchema,
   demoPipelineResponseSchema,
   eventTelemetrySchema,
+  operationalOutcomeResponseSchema,
   telemetryResponseSchema,
   type ApiError,
   type ContactSubmission
@@ -15,7 +17,7 @@ import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
 import { config } from './config.js';
 import { logger } from './logger.js';
-import { loadMetrics, loadPipeline, storeContact, storeTelemetry } from './repository.js';
+import { loadChampionCohorts, loadMetrics, loadOperationalOutcomes, loadPipeline, storeContact, storeTelemetry } from './repository.js';
 
 const messageSchema = z.object({
   message: z.string().min(2)
@@ -74,6 +76,26 @@ export function createApp() {
     try {
       const pipeline = await loadPipeline();
       const payload = demoPipelineResponseSchema.parse({ ok: true, pipeline });
+      res.status(200).json(payload);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get('/v1/demo/outcomes', limiter, async (_req, res, next) => {
+    try {
+      const outcomes = await loadOperationalOutcomes();
+      const payload = operationalOutcomeResponseSchema.parse({ ok: true, outcomes });
+      res.status(200).json(payload);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get('/v1/champion/cohorts', limiter, async (_req, res, next) => {
+    try {
+      const cohorts = await loadChampionCohorts();
+      const payload = championCohortsResponseSchema.parse({ ok: true, cohorts, generatedAt: new Date().toISOString() });
       res.status(200).json(payload);
     } catch (error) {
       next(error);

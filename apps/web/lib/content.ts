@@ -10,7 +10,13 @@ const frontmatterSchema = z.object({
   outcome: z.string().min(2),
   publishedAt: z.string(),
   tags: z.array(z.string().min(2)).min(1),
-  featured: z.boolean().default(false)
+  featured: z.boolean().default(false),
+  persona: z.string().min(2),
+  funnelStage: z.enum(['awareness', 'consideration', 'evaluation', 'decision', 'retention']),
+  problem: z.string().min(2),
+  capability: z.string().min(2),
+  championSignal: z.string().min(2),
+  primaryOutcome: z.string().min(2)
 });
 
 export type ContentFrontmatter = z.infer<typeof frontmatterSchema>;

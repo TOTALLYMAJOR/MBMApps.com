@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { TrackedLink } from '@/components/tracked-link';
 import { navigation, quietPilotProduct } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
@@ -32,14 +33,16 @@ export function SiteHeader() {
             );
           })}
         </nav>
-        <Link
+        <TrackedLink
           href={quietPilotProduct.appUrl}
           className="btn-theme"
           target="_blank"
           rel="noreferrer"
+          trackingEvent="quietpilot_opened"
+          trackingMetadata={{ surface: 'site-header', target: 'quietpilot-app' }}
         >
           Open QuietPilot
-        </Link>
+        </TrackedLink>
       </div>
     </header>
   );

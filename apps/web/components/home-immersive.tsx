@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { LandingThreeStage } from '@/components/landing-three-stage';
 import { TestimonialsSignalSection } from '@/components/testimonials-signal-section';
+import { TrackedLink } from '@/components/tracked-link';
 import { quietPilotProduct } from '@/lib/site';
 
 type TrackId = 'platform' | 'revenue' | 'reliability';
@@ -164,12 +165,24 @@ export function HomeImmersive() {
             </p>
 
             <div className="intro-reveal mt-8 flex flex-wrap gap-4">
-              <Link href={quietPilotProduct.path} className="btn-theme">
+              <TrackedLink
+                href={quietPilotProduct.path}
+                className="btn-theme"
+                trackingEvent="cta_clicked"
+                trackingMetadata={{ surface: 'home-hero', target: 'quietpilot-page' }}
+              >
                 Explore QuietPilot
-              </Link>
-              <Link href={quietPilotProduct.appUrl} target="_blank" rel="noreferrer" className="btn-theme-ghost">
+              </TrackedLink>
+              <TrackedLink
+                href={quietPilotProduct.appUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-theme-ghost"
+                trackingEvent="quietpilot_opened"
+                trackingMetadata={{ surface: 'home-hero', target: 'quietpilot-app' }}
+              >
                 Open QuietPilot App
-              </Link>
+              </TrackedLink>
             </div>
           </motion.div>
 

@@ -1,9 +1,15 @@
 import {
+  championCohortsResponseSchema,
   demoMetricsResponseSchema,
   demoPipelineResponseSchema,
+  operationalOutcomeResponseSchema,
+  syntheticChampionCohorts,
   syntheticMetrics,
+  syntheticOperationalOutcomes,
   syntheticPipeline,
+  type ChampionCohort,
   type DemoMetric,
+  type OperationalOutcomeSnapshot,
   type PipelineSnapshot
 } from '@mbm/contracts';
 
@@ -61,5 +67,29 @@ export async function getDemoPipeline(): Promise<FetchOutcome<PipelineSnapshot>>
       },
       fallback: true
     };
+  }
+}
+
+export async function getOperationalOutcomes(): Promise<FetchOutcome<OperationalOutcomeSnapshot>> {
+  try {
+    const payload = await fetchJson(`${backendBaseUrl()}/v1/demo/outcomes`, operationalOutcomeResponseSchema);
+    return { data: payload.outcomes, fallback: false };
+  } catch {
+    return {
+      data: {
+        ...syntheticOperationalOutcomes,
+        capturedAt: new Date().toISOString()
+      },
+      fallback: true
+    };
+  }
+}
+
+export async function getChampionCohorts(): Promise<FetchOutcome<ChampionCohort[]>> {
+  try {
+    const payload = await fetchJson(`${backendBaseUrl()}/v1/champion/cohorts`, championCohortsResponseSchema);
+    return { data: payload.cohorts, fallback: false };
+  } catch {
+    return { data: syntheticChampionCohorts, fallback: true };
   }
 }

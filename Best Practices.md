@@ -66,6 +66,7 @@ Host-only fallback:
 - Add dependency update automation with bounded PR volume.
 - Review user input handling and API mutation endpoints for injection and validation gaps.
 - Keep auth, telemetry, and contact submission paths covered by tests.
+- Keep champion intelligence data governed: schema version every event, consent metadata on intake, clear PII boundaries, and explicit retention policy fields on stored contact/telemetry records.
 
 ## 8) Performance Baseline (Web + Media)
 
