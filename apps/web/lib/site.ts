@@ -16,6 +16,7 @@ export const siteConfig = {
 export const quietPilotProduct = {
   name: 'QuietPilot',
   path: '/quietpilot',
+  purchasePath: '/quietpilot/purchase',
   demoPath: '/demo',
   appUrl: process.env.NEXT_PUBLIC_QUIETPILOT_APP_URL ?? 'https://app.quietpilot.com',
   description:

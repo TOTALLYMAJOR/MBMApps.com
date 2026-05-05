@@ -9,6 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseRoutes: MetadataRoute.Sitemap = [
     '',
     quietPilotProduct.path,
+    quietPilotProduct.purchasePath,
     '/services',
     '/case-studies',
     '/about',

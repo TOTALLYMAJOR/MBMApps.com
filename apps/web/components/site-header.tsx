@@ -34,14 +34,12 @@ export function SiteHeader() {
           })}
         </nav>
         <TrackedLink
-          href={quietPilotProduct.appUrl}
+          href={quietPilotProduct.purchasePath}
           className="btn-theme"
-          target="_blank"
-          rel="noreferrer"
-          trackingEvent="quietpilot_opened"
-          trackingMetadata={{ surface: 'site-header', target: 'quietpilot-app' }}
+          trackingEvent="cta_clicked"
+          trackingMetadata={{ surface: 'site-header', target: 'quietpilot-purchase' }}
         >
-          Open QuietPilot
+          Purchase QuietPilot
         </TrackedLink>
       </div>
     </header>

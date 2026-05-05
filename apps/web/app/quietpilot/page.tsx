@@ -80,14 +80,12 @@ export default function QuietPilotPage() {
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <TrackedLink
-                  href={quietPilotProduct.appUrl}
-                  target="_blank"
-                  rel="noreferrer"
+                  href={quietPilotProduct.purchasePath}
                   className="inline-flex items-center gap-2 rounded-md bg-indigo-950 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-800"
-                  trackingEvent="quietpilot_opened"
-                  trackingMetadata={{ surface: 'quietpilot-hero', target: 'quietpilot-app' }}
+                  trackingEvent="cta_clicked"
+                  trackingMetadata={{ surface: 'quietpilot-hero', target: 'quietpilot-purchase' }}
                 >
-                  Open QuietPilot
+                  Purchase QuietPilot
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </TrackedLink>
                 <TrackedLink
@@ -171,14 +169,12 @@ export default function QuietPilotPage() {
           </div>
           <div className="flex flex-wrap gap-3">
             <TrackedLink
-              href={quietPilotProduct.appUrl}
-              target="_blank"
-              rel="noreferrer"
+              href={quietPilotProduct.purchasePath}
               className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-3 text-sm font-semibold text-indigo-950 transition hover:bg-cyan-50"
-              trackingEvent="quietpilot_opened"
-              trackingMetadata={{ surface: 'quietpilot-footer-cta', target: 'quietpilot-app' }}
+              trackingEvent="cta_clicked"
+              trackingMetadata={{ surface: 'quietpilot-footer-cta', target: 'quietpilot-purchase' }}
             >
-              Open App
+              Purchase QuietPilot
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </TrackedLink>
             <TrackedLink
