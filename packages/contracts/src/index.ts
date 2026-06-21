@@ -25,6 +25,7 @@ export const serviceCategorySchema = z.enum([
   'saas',
   'professional-services',
   'other'
+]);
 
 export const operationalMaturitySchema = z.enum(['unknown', 'manual', 'spreadsheet-led', 'tool-assisted', 'systematized', 'optimized']);
 
