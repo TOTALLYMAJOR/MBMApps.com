@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ArrowRight, CheckCircle2, ClipboardCheck, Lock, Package, ShieldCheck, Users } from 'lucide-react';
 import { QuietPilotCommandPreview } from '@/components/quietpilot-command-preview';
+import { QuietPilotWorkflowArchitecture } from '@/components/quietpilot-workflow-architecture';
 import { TrackedLink } from '@/components/tracked-link';
 import { quietPilotProduct, siteConfig } from '@/lib/site';
 
@@ -117,6 +118,8 @@ export default function QuietPilotPage() {
           </div>
         </div>
       </section>
+
+      <QuietPilotWorkflowArchitecture />
 
       <section className="mx-auto grid w-full max-w-6xl gap-4 px-6 py-12 md:grid-cols-3 lg:px-8">
         {outcomes.map((item) => {

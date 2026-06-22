@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getCaseStudies, getInsights } from '@/lib/content';
+import { projectScreens } from '@/lib/projects';
 import { quietPilotProduct, siteConfig } from '@/lib/site';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -8,6 +9,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const baseRoutes: MetadataRoute.Sitemap = [
     '',
+    '/apps',
+    ...projectScreens.map((project) => project.path),
     quietPilotProduct.path,
     quietPilotProduct.purchasePath,
     '/services',

@@ -1,12 +1,12 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
-import { HomeImmersive } from '@/components/home-immersive';
-import { quietPilotProduct, siteConfig } from '@/lib/site';
+import { AppPanelHome } from '@/components/app-panel-home';
+import { projectScreens } from '@/lib/projects';
+import { siteConfig } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: 'High-Quality Web Technology At Scale',
+  title: 'App Panel',
   description:
-    'MBMApps delivers scalable web products with modern architecture, measurable business impact, and production-grade reliability.'
+    'MBMApps presents each product as a dedicated app screen across operations, sports, youth leagues, studio work, and design canvases.'
 };
 
 export default function HomePage() {
@@ -26,21 +26,29 @@ export default function HomePage() {
     sameAs: [siteConfig.social.github, siteConfig.social.linkedin]
   };
 
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'MBMApps app panel',
+    itemListElement: projectScreens.map((project, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'SoftwareApplication',
+        name: project.name,
+        applicationCategory: project.category,
+        operatingSystem: 'Web',
+        description: project.description,
+        url: `${siteConfig.url}${project.path}`
+      }
+    }))
+  };
+
   return (
     <>
-      <HomeImmersive />
-      <section className="mx-auto w-full max-w-6xl px-6 pb-20 lg:px-8">
-        <div className="section-shell p-8 text-center md:p-10">
-          <p className="kicker">{'// Next Move'}</p>
-          <h2 className="mt-3 font-display text-3xl text-white">QuietPilot is the flagship product.</h2>
-          <p className="text-mbm-muted mt-3">See the service-operations command center, then open the app when you are ready to inspect the operator workflow.</p>
-          <Link href={quietPilotProduct.appUrl} target="_blank" rel="noreferrer" className="btn-theme mt-6">
-            Open QuietPilot
-          </Link>
-        </div>
-      </section>
-
+      <AppPanelHome />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
     </>
   );
 }
