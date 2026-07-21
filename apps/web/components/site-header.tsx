@@ -10,13 +10,13 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-black/60 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight text-ink">
-          <span className="h-2.5 w-2.5 rounded-sm bg-indigo-400 shadow-[0_0_16px_rgba(129,140,248,0.75)]" aria-hidden="true" />
-          MBMApps
+    <header className="northstar-header sticky top-0 z-40">
+      <div className="northstar-container flex items-center justify-between py-4">
+        <Link href="/" className="group flex items-center gap-3 font-display text-lg font-medium tracking-[-0.025em] text-white">
+          <span className="northstar-logo-mark" aria-hidden="true"><span /><span /><span /></span>
+          <span>MBMApps</span>
         </Link>
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
           {navigation.map((item) => {
             const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
 
@@ -25,8 +25,8 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'text-sm font-medium uppercase tracking-[0.08em] text-white/65 transition hover:text-white',
-                  active && 'text-white'
+                  'northstar-nav-link',
+                  active && 'northstar-nav-link--active'
                 )}
               >
                 {item.label}
@@ -34,14 +34,17 @@ export function SiteHeader() {
             );
           })}
         </nav>
-        <TrackedLink
-          href="/apps"
-          className="btn-theme gap-2"
-          trackingEvent="cta_clicked"
-          trackingMetadata={{ surface: 'site-header', target: 'apps-catalog' }}
-        >
-          Browse apps
-        </TrackedLink>
+        <div className="flex items-center gap-2">
+          <Link href="/services" className="northstar-header-link hidden sm:inline-flex">Build with us</Link>
+          <TrackedLink
+            href="/apps"
+            className="northstar-header-cta"
+            trackingEvent="cta_clicked"
+            trackingMetadata={{ surface: 'site-header', target: 'apps-catalog' }}
+          >
+            Browse apps
+          </TrackedLink>
+        </div>
       </div>
     </header>
   );

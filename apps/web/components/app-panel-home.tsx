@@ -574,6 +574,52 @@ export function AppPanelHome() {
         </div>
       </section>
 
+      <section className="northstar-section northstar-container">
+        <div className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr]">
+          <div>
+            <p className="northstar-kicker">More than a portfolio</p>
+            <h2 className="northstar-section-heading mt-4">A product studio built around operating leverage.</h2>
+            <p className="mt-6 max-w-xl text-sm leading-7 text-white/50">MBMApps builds its own focused products and helps teams modernize the workflows that move revenue, delivery, and decision-making.</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/services" className="storefront-action">Explore engineering services <ArrowUpRight className="h-4 w-4" /></Link>
+              <Link href="/case-studies" className="storefront-detail-link">See client outcomes <ChevronRight className="h-4 w-4" /></Link>
+            </div>
+          </div>
+          <div className="northstar-rule-list border-y border-white/10">
+            {[
+              ['01', 'Product systems', 'Production-ready web applications with typed contracts, modular services, and release controls.'],
+              ['02', 'Revenue workflows', 'Quote, pricing, CRM, and customer-lifecycle systems shaped around the actual operating model.'],
+              ['03', 'Cloud reliability', 'Vercel, Railway, Firebase, Docker, and CI/CD topology selected for parity and recovery.']
+            ].map(([index, title, detail]) => (
+              <article key={index} className="grid gap-4 py-6 sm:grid-cols-[3rem_11rem_1fr]">
+                <span className="northstar-number text-xs">{index}</span>
+                <h3 className="font-display text-xl font-medium text-white">{title}</h3>
+                <p className="text-sm leading-7 text-white/46">{detail}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-20 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <article className="northstar-card p-7 md:p-10">
+            <div className="flex items-center justify-between gap-4">
+              <p className="northstar-kicker">Measured outcome</p>
+              <span className="northstar-number text-xs">Hospitality</span>
+            </div>
+            <p className="mt-20 font-display text-[clamp(3.5rem,8vw,7rem)] font-light leading-none tracking-[-0.065em] text-white">42 min.</p>
+            <p className="mt-5 max-w-xl text-sm leading-7 text-white/52">Quote turnaround reduced from 2.5 days to 42 minutes for a regional catering workflow, with conversion visibility improving alongside speed.</p>
+          </article>
+          <article className="northstar-card flex flex-col p-7 md:p-10">
+            <p className="northstar-kicker">Delivery posture</p>
+            <div className="mt-auto pt-20">
+              <p className="font-display text-4xl font-light tracking-[-0.05em] text-white">Architecture direction in days, not months.</p>
+              <p className="mt-5 text-sm leading-7 text-white/48">Typed boundaries, automated quality gates, and technical decisions tied back to the business result.</p>
+              <Link href="/contact" className="storefront-action storefront-action--primary mt-7">Bring us the constraint <ArrowUpRight className="h-4 w-4" /></Link>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section
         id="app-panel"
         className="scene-panel relative overflow-hidden border-y border-white/10"

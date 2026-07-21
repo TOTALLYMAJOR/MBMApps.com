@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { ArrowUpRight, Check } from 'lucide-react';
 import { ContactForm } from '@/components/contact-form';
+import { NorthstarPageHero } from '@/components/northstar-page-hero';
 import { TrackedLink } from '@/components/tracked-link';
 
 export const metadata: Metadata = {
@@ -12,52 +14,50 @@ export default function ContactPage() {
 
   return (
     <div className="pb-20">
-      <section className="hero-mesh relative overflow-hidden border-b border-white/10">
-        <div className="ambient-grid pointer-events-none absolute inset-0 opacity-50" />
-        <div className="mx-auto w-full max-w-6xl px-6 pb-14 pt-16 lg:px-8 lg:pt-20">
-          <p className="kicker">Let&apos;s Build</p>
-          <h1 className="mt-3 max-w-4xl font-display text-5xl text-white md:text-6xl">Tell us what outcome you need next.</h1>
-          <p className="text-mbm-muted mt-4 max-w-3xl text-lg leading-8">
-            Share your goals and constraints. We reply with a scoped technical approach, architecture recommendation, and realistic timeline to launch.
-          </p>
-        </div>
-      </section>
-
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 py-10 lg:grid-cols-[1.08fr_1fr] lg:px-8">
-        <section className="space-y-6">
-          <div className="surface-card p-5 text-sm text-white/85">
-            <p className="font-semibold text-white">Prefer booking directly?</p>
-            <p className="text-mbm-muted mt-2">Use our scheduling link to reserve a discovery call.</p>
-            <TrackedLink
-              href={schedulingUrl}
-              className="btn-theme mt-4"
-              trackingEvent="scheduling_started"
-              trackingMetadata={{ surface: 'contact-page', target: 'discovery-call' }}
-            >
-              Book Call
-            </TrackedLink>
+      <NorthstarPageHero
+        eyebrow="Start a conversation"
+        title="Tell us what needs to work better."
+        description="Share the outcome, the constraint, and what is already in motion. We’ll respond with a scoped technical approach, an architecture recommendation, and a realistic path to launch."
+        signal="INTAKE / OPEN"
+        actions={(
+          <TrackedLink
+            href={schedulingUrl}
+            className="storefront-hero-button storefront-hero-button--primary"
+            trackingEvent="scheduling_started"
+            trackingMetadata={{ surface: 'contact-page', target: 'discovery-call' }}
+          >
+            Book a discovery call <ArrowUpRight className="h-4 w-4" />
+          </TrackedLink>
+        )}
+        aside={(
+          <div>
+            <p className="font-display text-3xl font-light tracking-[-0.04em] text-white">Practical next steps, not a generic discovery script.</p>
+            <p className="mt-4 text-sm leading-7 text-white/48">MBMApps reviews the operating context before recommending scope.</p>
           </div>
+        )}
+      />
 
-          <div className="surface-panel p-5">
-            <p className="kicker text-white/70">What You Receive</p>
-            <div className="mt-4 space-y-3 text-sm text-white/90">
+      <div className="northstar-section northstar-container grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+        <section className="space-y-4 lg:sticky lg:top-28">
+          <div className="northstar-card p-6 md:p-8">
+            <p className="northstar-kicker">What you receive</p>
+            <div className="northstar-rule-list mt-6 text-sm text-white/76">
               {[
                 'A focused architecture recommendation based on your context',
                 'Suggested delivery phases with risk-aware scope boundaries',
                 'An implementation path across product, infrastructure, and operations'
               ].map((item) => (
-                <p key={item} className="surface-card px-4 py-3">
-                  {item}
+                <p key={item} className="flex gap-3 py-4 leading-6">
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-indigo-300" aria-hidden="true" />{item}
                 </p>
               ))}
             </div>
           </div>
 
-          <div className="rounded-2xl border border-electric/30 bg-electric/10 p-5">
-            <p className="kicker text-white/80">Response Commitment</p>
-            <p className="mt-2 text-sm leading-6 text-white/90">
-              MBMApps reviews submissions quickly and responds with practical next steps, not generic discovery scripts.
-            </p>
+          <div className="northstar-card p-6 md:p-8">
+            <p className="northstar-kicker">Useful context</p>
+            <p className="mt-4 text-sm leading-7 text-white/52">Budget range, timeline, current tools, and the cost of the present workflow help us shape a credible first response.</p>
+            <p className="mt-6 font-mono text-xs text-indigo-200/70">Chicago, IL · Remote delivery</p>
           </div>
         </section>
 

@@ -175,12 +175,12 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="surface-panel space-y-5 p-6 md:p-7">
-      <div className="surface-card p-4">
-        <p className="kicker text-white/70">Intake Readiness</p>
+    <form onSubmit={onSubmit} className="northstar-card space-y-6 p-6 md:p-8">
+      <div className="border-b border-white/10 pb-5">
+        <p className="northstar-kicker">Intake Readiness</p>
         <div className="mt-3 grid gap-2 text-xs text-white/80 md:grid-cols-3">
           {['Scope clarity', 'Budget alignment', 'Timeline commitment'].map((item) => (
-            <p key={item} className="surface-card px-2 py-1.5">
+            <p key={item} className="border-l border-indigo-300/30 py-1 pl-2 text-white/48">
               {item}
             </p>
           ))}
@@ -193,7 +193,7 @@ export function ContactForm() {
           <input
             required
             name="name"
-            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="northstar-input"
             placeholder="Avery Morgan"
           />
         </label>
@@ -203,7 +203,7 @@ export function ContactForm() {
             required
             type="email"
             name="email"
-            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="northstar-input"
             placeholder="avery@company.com"
           />
         </label>
@@ -215,7 +215,7 @@ export function ContactForm() {
           <input
             required
             name="company"
-            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="northstar-input"
             placeholder="Northline Foods"
           />
         </label>
@@ -224,7 +224,7 @@ export function ContactForm() {
           <select
             required
             name="budget"
-            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="northstar-input"
             defaultValue=""
           >
             <option value="" disabled>
@@ -245,7 +245,7 @@ export function ContactForm() {
           <select
             required
             name="timeline"
-            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="northstar-input"
             defaultValue=""
           >
             <option value="" disabled>
@@ -264,7 +264,7 @@ export function ContactForm() {
           <select
             required
             name="decisionRole"
-            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="northstar-input"
             defaultValue=""
           >
             <option value="" disabled>
@@ -279,9 +279,9 @@ export function ContactForm() {
         </label>
       </div>
 
-      <div className="surface-card space-y-5 p-4">
+      <div className="space-y-5 border-y border-white/10 py-6">
         <div>
-          <p className="kicker text-white/70">Champion Signals</p>
+          <p className="northstar-kicker">Champion Signals</p>
           <p className="mt-2 text-xs leading-5 text-white/65">
             These details help us benchmark fit, urgency, operating complexity, and outcome potential.
           </p>
@@ -293,7 +293,7 @@ export function ContactForm() {
             <input
               required
               name="industry"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               placeholder="Events, catering, field services..."
             />
           </label>
@@ -303,7 +303,7 @@ export function ContactForm() {
             <select
               required
               name="serviceCategory"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               defaultValue=""
             >
               <option value="" disabled>
@@ -324,7 +324,7 @@ export function ContactForm() {
             <select
               required
               name="companySize"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               defaultValue=""
             >
               <option value="" disabled>
@@ -345,7 +345,7 @@ export function ContactForm() {
               min={1}
               type="number"
               name="locationCount"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               defaultValue={1}
             />
           </label>
@@ -356,7 +356,7 @@ export function ContactForm() {
               min={0}
               type="number"
               name="teamSize"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               placeholder="24"
             />
           </label>
@@ -369,7 +369,7 @@ export function ContactForm() {
               min={0}
               type="number"
               name="monthlyQuoteVolume"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               placeholder="60"
             />
           </label>
@@ -378,7 +378,7 @@ export function ContactForm() {
             Current CRM / ops system
             <input
               name="currentCrmOrOpsSystem"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               placeholder="HubSpot, Salesforce, spreadsheets..."
             />
           </label>
@@ -388,7 +388,7 @@ export function ContactForm() {
           Current tools
           <input
             name="currentTools"
-            className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+            className="northstar-input"
             placeholder="Comma-separated tools"
           />
         </label>
@@ -399,7 +399,7 @@ export function ContactForm() {
             <select
               required
               name="operationalMaturity"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               defaultValue=""
             >
               <option value="" disabled>
@@ -418,7 +418,7 @@ export function ContactForm() {
             <select
               required
               name="primaryBusinessPain"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               defaultValue=""
             >
               <option value="" disabled>
@@ -437,7 +437,7 @@ export function ContactForm() {
             <select
               required
               name="topConstraint"
-              className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+              className="northstar-input"
               defaultValue=""
             >
               <option value="" disabled>
@@ -461,7 +461,7 @@ export function ContactForm() {
           name="message"
           rows={5}
           onChange={(event) => setMessageLength(event.target.value.length)}
-          className="w-full rounded-xl border border-white/15 bg-black/45 px-3 py-2 text-sm outline-none transition focus:border-electric"
+          className="northstar-input"
           placeholder="Share outcomes you need: conversion lift, quoting speed, automation, reliability, etc."
         />
         <div className="space-y-2">
@@ -500,7 +500,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={state.status === 'loading'}
-        className="w-full rounded-xl border border-electric/70 bg-electric/20 px-4 py-3 font-semibold text-white transition hover:bg-electric/35 disabled:cursor-not-allowed disabled:opacity-70"
+        className="storefront-action storefront-action--primary w-full justify-center disabled:cursor-not-allowed disabled:opacity-70"
       >
         {state.status === 'loading' ? 'Submitting...' : 'Request Discovery Call'}
       </button>

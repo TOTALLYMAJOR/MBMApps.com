@@ -9,7 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['var(--font-space-grotesk)'],
+        display: ['var(--font-bricolage-grotesk)'],
+        sans: ['var(--font-space-grotesk)'],
         mono: ['var(--font-ibm-plex-mono)']
       },
       colors: {
