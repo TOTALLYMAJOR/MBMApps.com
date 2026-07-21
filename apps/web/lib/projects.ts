@@ -1,292 +1,226 @@
 import type { LucideIcon } from 'lucide-react';
-import {
-  CalendarDays,
-  CircleDollarSign,
-  ClipboardCheck,
-  Gamepad2,
-  Goal,
-  Layers3,
-  Map,
-  MessageCircle,
-  Palette,
-  Radar,
-  Route,
-  ShieldCheck,
-  Sparkles,
-  Trophy,
-  Users,
-  Zap
-} from 'lucide-react';
-import { championCoachProduct, quietPilotProduct } from '@/lib/site';
+import { CalendarDays, FileCheck2, Route } from 'lucide-react';
 
-export type ProjectTone = 'quietpilot' | 'coach' | 'clubhouse' | 'studio' | 'canvas';
+export type ProductAccent = 'violet' | 'field' | 'amber';
 
-export type ProjectMetric = {
+export type ProductCapability = {
   label: string;
-  value: string;
-  detail: string;
-  icon: LucideIcon;
+  description: string;
 };
 
-export type ProjectScreen = {
+export type ProductScenario = {
+  trigger: string;
+  decision: string;
+  systemResponse: string;
+  authorityBoundary: string;
+  resultingClarity: string;
+};
+
+export type ProductRecord = {
+  id: string;
   slug: string;
   name: string;
   shortName: string;
+  parentLabel: string;
   category: string;
-  status: string;
-  tone: ProjectTone;
+  audience: string[];
+  operatingEnvironment: string;
+  headline: string;
+  supportingStatement: string;
+  description: string;
+  problemStatement: string;
+  capabilities: ProductCapability[];
+  scenario: ProductScenario;
+  screenshot: {
+    src: string;
+    alt: string;
+    caption: string;
+    maturity: string;
+  };
+  accentToken: ProductAccent;
   icon: LucideIcon;
   path: string;
+  websiteUrl: string;
+  websiteLabel: string;
+  analyticsId: string;
+  status: string;
+  accessDescription: string;
+  proofBoundary: string;
   sourceRepository: {
     label: string;
     href: string;
   };
-  eyebrow: string;
-  title: string;
-  summary: string;
-  description: string;
-  audience: string;
-  commerce: {
-    availability: 'Available now' | 'Private preview' | 'In development';
-    actionLabel: string;
-    actionHref: string;
-    note: string;
-  };
-  primary: {
+  secondaryAction?: {
     label: string;
     href: string;
-    external?: boolean;
   };
-  secondary: {
-    label: string;
-    href: string;
-    external?: boolean;
-  };
-  metrics: ProjectMetric[];
-  stages: string[];
-  capabilities: string[];
-  proofPoints: string[];
+  visible: boolean;
 };
 
-export const projectScreens: [ProjectScreen, ...ProjectScreen[]] = [
+export const products: [ProductRecord, ...ProductRecord[]] = [
   {
+    id: 'quietpilot',
     slug: 'quietpilot',
-    name: quietPilotProduct.name,
+    name: 'QuietPilot',
     shortName: 'QP',
-    category: 'Service operations',
-    status: 'Live product',
-    tone: 'quietpilot',
+    parentLabel: 'An MBMApps product',
+    category: 'Catering revenue and operations',
+    audience: ['Catering operators', 'Sales teams', 'Production leads'],
+    operatingEnvironment: 'Accepted-work and event-readiness operations',
+    headline: 'Run Catering Without Chaos.',
+    supportingStatement: 'Every accepted event becomes a proof-driven production plan.',
+    description:
+      'QuietPilot connects commercial context with payment evidence, staffing, inventory, production, and readiness so operators can see what is known, what is blocked, and what needs review.',
+    problemStatement:
+      'Accepted work can move faster than the evidence needed to staff, supply, and safely prepare the event.',
+    capabilities: [
+      { label: 'Quotes and proposals', description: 'Keep commercial context connected to the event.' },
+      { label: 'Payment verification', description: 'Separate payment context from provider-backed proof.' },
+      { label: 'Staffing and inventory', description: 'Surface coverage gaps and missing stock evidence.' },
+      { label: 'Readiness review', description: 'Show blockers and the next responsible action.' }
+    ],
+    scenario: {
+      trigger: 'A customer accepts a proposal for an upcoming catered event.',
+      decision: 'The operator must determine whether payment, staffing, inventory, and production requirements are actually ready.',
+      systemResponse: 'QuietPilot carries the accepted commercial context forward and surfaces missing evidence.',
+      authorityBoundary: 'The operator retains approval and readiness authority.',
+      resultingClarity: 'The team can distinguish accepted work from operationally cleared work.'
+    },
+    screenshot: {
+      src: '/product-screens/quietpilot.png',
+      alt: 'QuietPilot public catering demo showing accepted-work, payment, staffing, inventory, and readiness context.',
+      caption:
+        'This live public view demonstrates connected sample proof states. It does not claim payment settlement or operational clearance.',
+      maturity: 'Read-only public demo'
+    },
+    accentToken: 'violet',
     icon: Route,
     path: '/apps/quietpilot',
+    websiteUrl: 'https://www.quietpilot.us',
+    websiteLabel: 'Explore QuietPilot',
+    analyticsId: 'quietpilot',
+    status: 'Public product site',
+    accessDescription: 'Read-only demo available',
+    proofBoundary:
+      'Accepted is not paid, provider return is not settlement, and staffing or inventory planning alone does not prove readiness.',
     sourceRepository: {
       label: 'TOTALLYMAJOR/QuietPilot',
       href: 'https://github.com/TOTALLYMAJOR/QuietPilot'
     },
-    eyebrow: 'Flagship service operations',
-    title: 'Lead intake, quotes, proposals, payment risk, and job readiness in one operator screen.',
-    summary:
-      'QuietPilot is the revenue operating system for service businesses that need commercial state and fulfillment readiness to move together.',
-    description:
-      'QuietPilot connects inquiry, quoting, proposal delivery, payment proof, staffing, inventory, readiness, and audit history so operators can see what is commercially true before work moves forward.',
-    audience: 'Caterers, rentals teams, field-service operators, and service businesses that need quote-to-ready control.',
-    commerce: {
-      availability: 'Available now',
-      actionLabel: 'Buy QuietPilot',
-      actionHref: quietPilotProduct.purchasePath,
-      note: 'Secure checkout and organization activation'
+    secondaryAction: {
+      label: 'Purchase QuietPilot',
+      href: '/quietpilot/purchase'
     },
-    primary: {
-      label: 'View QuietPilot',
-      href: quietPilotProduct.path
-    },
-    secondary: {
-      label: 'Open app',
-      href: quietPilotProduct.appUrl,
-      external: true
-    },
-    metrics: [
-      { label: 'New leads', value: '12', detail: '3 need action', icon: MessageCircle },
-      { label: 'Proposal value', value: '$42k', detail: '2 viewed today', icon: CircleDollarSign },
-      { label: 'Ready jobs', value: '82%', detail: 'after staffing action', icon: CalendarDays }
-    ],
-    stages: ['Inquiry', 'Quote', 'Proposal', 'Payment', 'Ready'],
-    capabilities: ['Configurable quote flow', 'Proposal decision room', 'Payment proof handoff', 'Readiness gates'],
-    proofPoints: ['Saved quote versions stay immutable', 'Payment status comes from provider proof', 'Readiness is evidence-backed']
+    visible: true
   },
   {
-    slug: 'champion-coach-os',
-    name: championCoachProduct.name,
-    shortName: 'CC',
-    category: 'Competitive coaching',
-    status: 'Product screen',
-    tone: 'coach',
-    icon: Gamepad2,
-    path: championCoachProduct.path,
-    sourceRepository: {
-      label: 'TOTALLYMAJOR/champion-coach-os',
-      href: 'https://github.com/TOTALLYMAJOR/champion-coach-os'
-    },
-    eyebrow: 'Competitive coaching cockpit',
-    title: 'Champion prep, lane pressure, build timing, and review loops as one performance screen.',
-    summary:
-      'Champion Coach OS frames matchup reads, recall decisions, item paths, and review notes so a player can practice with a clearer operating model.',
+    id: 'leaguepilot',
+    slug: 'leaguepilot',
+    name: 'LeaguePilot',
+    shortName: 'LP',
+    parentLabel: 'An MBMApps product',
+    category: 'Private youth-sports operations',
+    audience: ['Parents', 'Coaches', 'League administrators'],
+    operatingEnvironment: 'Private team and season coordination',
+    headline: 'Stop chasing families. Run the season.',
+    supportingStatement:
+      'Schedules, RSVPs, coach updates, and Parent Replay in one calm, role-aware home.',
     description:
-      'A coaching cockpit for competitive play that turns prep, draft context, lane signals, item timing, and replay notes into a repeatable training workflow.',
-    audience: 'Players, coaches, and creators who want structured practice plans instead of scattered notes.',
-    commerce: {
-      availability: 'Private preview',
-      actionLabel: 'Request access',
-      actionHref: '/contact',
-      note: 'Talk with MBMApps about preview access'
-    },
-    primary: {
-      label: 'View Champion Coach OS',
-      href: championCoachProduct.path
-    },
-    secondary: {
-      label: 'Contact MBMApps',
-      href: '/contact'
-    },
-    metrics: [
-      { label: 'Lane calls', value: '9', detail: 'pressure states', icon: Radar },
-      { label: 'Build paths', value: '14', detail: 'matchup variants', icon: Zap },
-      { label: 'Review notes', value: '27', detail: 'coachable moments', icon: Trophy }
+      'LeaguePilot gives families and approved team staff one private place for schedules, attendance, official updates, practice context, and the details that keep a season moving.',
+    problemStatement:
+      'Schedule changes and team updates fragment across texts, inboxes, calendars, and sideline conversations.',
+    capabilities: [
+      { label: 'Schedules and calendars', description: 'Keep official game and practice context together.' },
+      { label: 'RSVP visibility', description: 'See responses and unresolved attendance.' },
+      { label: 'Team communication', description: 'Center coach and parent updates in one team home.' },
+      { label: 'Role-aware access', description: 'Respect team, family, coach, and administrator scope.' }
     ],
-    stages: ['Scout', 'Draft', 'Lane', 'Build', 'Review'],
-    capabilities: ['Champion matchup reads', 'Lane-state planning', 'Build-path branches', 'Review-loop notes'],
-    proofPoints: ['Screen-first coaching model', 'Combat UI exploration', 'Practice workflow framing']
-  },
-  {
-    slug: 'little-league-hq',
-    name: 'Little League HQ',
-    shortName: 'LL',
-    category: 'Youth sports',
-    status: 'MVP concept',
-    tone: 'clubhouse',
-    icon: Goal,
-    path: '/apps/little-league-hq',
+    scenario: {
+      trigger: 'A schedule change affects players, parents, coaches, and volunteers.',
+      decision: 'The league must determine who is affected, who has responded, and what remains unresolved.',
+      systemResponse: 'LeaguePilot centralizes the schedule, RSVP state, location context, and role-based visibility.',
+      authorityBoundary: 'Coaches and administrators retain control over official team information.',
+      resultingClarity: 'Families see one reliable team source instead of fragmented messages.'
+    },
+    screenshot: {
+      src: '/product-screens/leaguepilot.png',
+      alt: 'LeaguePilot public product page showing private youth-sports schedules and game-day coordination.',
+      caption:
+        'This live public view demonstrates the product entry point. Private team areas remain role-scoped and require approved access.',
+      maturity: 'Public product overview'
+    },
+    accentToken: 'field',
+    icon: CalendarDays,
+    path: '/apps/leaguepilot',
+    websiteUrl: 'https://www.leaguepilot.us',
+    websiteLabel: 'Explore LeaguePilot',
+    analyticsId: 'leaguepilot',
+    status: 'Public product site',
+    accessDescription: 'Sign-in or access request required for team areas',
+    proofBoundary:
+      'Private team information remains role-scoped. External notifications and provider delivery depend on configuration and verified sends.',
     sourceRepository: {
       label: 'TOTALLYMAJOR/LittleLeaguePlatform',
       href: 'https://github.com/TOTALLYMAJOR/LittleLeaguePlatform'
     },
-    eyebrow: 'Parent-friendly soccer clubhouse',
-    title: 'A safe team hub for coaches, parents, schedules, game-day questions, and kid-friendly league moments.',
-    summary:
-      'Little League HQ keeps youth soccer communication organized for families with approachable schedules, team chat, coach notes, and game-day cards.',
-    description:
-      'A youth league app direction for 4 to 6 year olds that emphasizes parent safety, coach announcements, team coordination, schedules, rosters, and cheerful clubhouse presentation.',
-    audience: 'Youth leagues, coaches, parents, and organizers running early-childhood sports seasons.',
-    commerce: {
-      availability: 'In development',
-      actionLabel: 'Join the interest list',
-      actionHref: '/contact',
-      note: 'Tell us about your league and season'
-    },
-    primary: {
-      label: 'View project',
-      href: '/apps/little-league-hq'
-    },
-    secondary: {
-      label: 'Plan a youth app',
-      href: '/contact'
-    },
-    metrics: [
-      { label: 'Team spaces', value: '1/team', detail: 'private parent groups', icon: Users },
-      { label: 'Coach notes', value: 'Pinned', detail: 'clear reminders', icon: ShieldCheck },
-      { label: 'Game day', value: 'Cards', detail: 'field and arrival info', icon: Map }
-    ],
-    stages: ['Teams', 'Roster', 'Schedule', 'Chat', 'Game Day'],
-    capabilities: ['Team chat', 'Coach announcements', 'Game-day cards', 'Moderation and audit fields'],
-    proofPoints: ['No child chat accounts', 'Role-scoped access model', 'Child names minimized in parent-facing UI']
+    visible: true
   },
   {
-    slug: 'little-legend-studios',
-    name: 'Little Legend Studios',
-    shortName: 'LS',
-    category: 'Creative studio',
-    status: 'Studio project',
-    tone: 'studio',
-    icon: Palette,
-    path: '/apps/little-legend-studios',
-    sourceRepository: {
-      label: 'TOTALLYMAJOR/lit',
-      href: 'https://github.com/TOTALLYMAJOR/lit'
-    },
-    eyebrow: 'Creative product studio',
-    title: 'A playful studio surface for story-rich digital products, characters, worlds, and family-friendly experiences.',
-    summary:
-      'Little Legend Studios is the creative side of the portfolio, focused on warm visual systems, playful product worlds, and story-led experiences.',
+    id: 'quoteflow',
+    slug: 'quoteflow',
+    name: 'QuoteFlow',
+    shortName: 'QF',
+    parentLabel: 'An MBMApps product',
+    category: 'Quote-to-event operations',
+    audience: ['Catering sales teams', 'Administrators', 'Event teams'],
+    operatingEnvironment: 'Guided quoting, customer decisions, and event handoff',
+    headline: 'Move from first inquiry to a clearer event.',
+    supportingStatement:
+      'Guided quotes, customer decisions, payment state, and event production—with their boundaries intact.',
     description:
-      'A studio project for packaging creative experiments, character-led interfaces, and family-friendly product worlds with a polished digital presence.',
-    audience: 'Brands, families, creators, and product teams that need a warmer storytelling layer around software.',
-    commerce: {
-      availability: 'Private preview',
-      actionLabel: 'Start a studio brief',
-      actionHref: '/contact',
-      note: 'Commission a story-led digital experience'
-    },
-    primary: {
-      label: 'View project',
-      href: '/apps/little-legend-studios'
-    },
-    secondary: {
-      label: 'Start a studio brief',
-      href: '/contact'
-    },
-    metrics: [
-      { label: 'Visual worlds', value: 'Story', detail: 'character-led surfaces', icon: Sparkles },
-      { label: 'Experience tone', value: 'Warm', detail: 'family-friendly UI', icon: Palette },
-      { label: 'Delivery model', value: 'Digital', detail: 'sites and apps', icon: Layers3 }
+      'QuoteFlow is the product system behind the QuotePilot workspace, connecting quote configuration, proposals, customer decisions, payment context, and event-production planning.',
+    problemStatement:
+      'Quote revisions, customer decisions, payment state, and production details become unreliable when they live in separate tools.',
+    capabilities: [
+      { label: 'Guided quote building', description: 'Configure event details, menus, staffing, rentals, and terms.' },
+      { label: 'Scenario comparison', description: 'Shape Good, Better, and Best paths without losing the baseline.' },
+      { label: 'Customer decisions', description: 'Record a clear proposal review and approval path.' },
+      { label: 'Production checklist', description: 'Carry approved scope into event planning.' }
     ],
-    stages: ['Concept', 'World', 'Interface', 'Story', 'Launch'],
-    capabilities: ['Visual direction', 'Story-led product pages', 'Family-friendly interfaces', 'Brand system exploration'],
-    proofPoints: ['Dedicated local project', 'Reusable visual-system direction', 'Portfolio-ready product framing']
-  },
-  {
-    slug: 'league-lobby-design-canvas',
-    name: 'League Lobby Design Canvas',
-    shortName: 'LC',
-    category: 'Design simulator',
-    status: 'Design canvas',
-    tone: 'canvas',
-    icon: ClipboardCheck,
-    path: '/apps/league-lobby-design-canvas',
+    scenario: {
+      trigger: 'A proposal changes after a customer reviews the event scope.',
+      decision: 'Sales must preserve the approved baseline while making the next version clear to the customer and event team.',
+      systemResponse: 'QuoteFlow keeps quote versions, customer decisions, payment context, and production planning connected.',
+      authorityBoundary: 'Customer approval, provider-backed payment, and operational readiness remain separate facts.',
+      resultingClarity: 'Everyone can see the current commercial version and what still needs confirmation.'
+    },
+    screenshot: {
+      src: '/product-screens/quoteflow.png',
+      alt: 'QuoteFlow product surface showing the connected inquiry, proposal, decision, payment, and event-operations workflow.',
+      caption:
+        'This current product surface demonstrates the QuotePilot workflow model. The staff workspace requires authentication and tenant configuration.',
+      maturity: 'Authenticated staff workspace'
+    },
+    accentToken: 'amber',
+    icon: FileCheck2,
+    path: '/apps/quoteflow',
+    websiteUrl: 'https://tonicatering.web.app',
+    websiteLabel: 'Open QuoteFlow',
+    analyticsId: 'quoteflow',
+    status: 'Deployed staff application',
+    accessDescription: 'Staff sign-in required',
+    proofBoundary:
+      'Proposal approval, payment verification, booking, and production readiness remain distinct states with separate authority.',
     sourceRepository: {
-      label: 'TOTALLYMAJOR/LeagueLobbyDesignCanvas',
-      href: 'https://github.com/TOTALLYMAJOR/LeagueLobbyDesignCanvas'
+      label: 'TOTALLYMAJOR/quoteflow',
+      href: 'https://github.com/TOTALLYMAJOR/quoteflow'
     },
-    eyebrow: 'Interactive design canvas',
-    title: 'A visual playground for lobby, combat, and esports interface experiments before they become product surfaces.',
-    summary:
-      'League Lobby Design Canvas gives MBMApps a fast place to shape gaming UI concepts, champion panels, decision screens, and combat presentation.',
-    description:
-      'A Vite-based design canvas for iterating on league lobby and combat UI patterns with richer visual experimentation than a static mockup.',
-    audience: 'Product builders exploring esports, game-adjacent dashboards, simulations, and interactive visual prototypes.',
-    commerce: {
-      availability: 'Private preview',
-      actionLabel: 'Request a walkthrough',
-      actionHref: '/contact',
-      note: 'See the canvas and discuss a custom build'
-    },
-    primary: {
-      label: 'View project',
-      href: '/apps/league-lobby-design-canvas'
-    },
-    secondary: {
-      label: 'Discuss a canvas',
-      href: '/contact'
-    },
-    metrics: [
-      { label: 'Mode', value: 'Canvas', detail: 'interactive exploration', icon: ClipboardCheck },
-      { label: 'Domain', value: 'Esports', detail: 'lobby and combat UI', icon: Gamepad2 },
-      { label: 'Output', value: 'Signals', detail: 'patterns for apps', icon: Layers3 }
-    ],
-    stages: ['Explore', 'Preview', 'Tune', 'Validate', 'Reuse'],
-    capabilities: ['Lobby visualization', 'Combat screen exploration', 'Prototype iteration', 'Reusable UI signals'],
-    proofPoints: ['Active local project', 'Fast Vite workflow', 'Source for app-panel visual experiments']
+    visible: true
   }
-] satisfies [ProjectScreen, ...ProjectScreen[]];
+] satisfies [ProductRecord, ...ProductRecord[]];
+
+export const projectScreens = products.filter((product) => product.visible) as [ProductRecord, ...ProductRecord[]];
 
 export function getProjectBySlug(slug: string) {
-  return projectScreens.find((project) => project.slug === slug);
+  return projectScreens.find((product) => product.slug === slug);
 }

@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { TrackedLink } from '@/components/tracked-link';
 import { navigation } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
@@ -12,13 +11,12 @@ export function SiteHeader() {
   return (
     <header className="northstar-header sticky top-0 z-40">
       <div className="northstar-container flex items-center justify-between py-4">
-        <Link href="/" className="group flex items-center gap-3 font-display text-lg font-medium tracking-[-0.025em] text-white">
-          <span className="northstar-logo-mark" aria-hidden="true"><span /><span /><span /></span>
-          <span>MBMApps</span>
+        <Link href="/" className="group flex min-h-11 items-center gap-3 text-xl tracking-[-0.04em] text-white" aria-label="MBMApps home">
+          <span className="font-semibold">MBM</span><span className="-ml-3 font-light text-white/72">Apps</span>
         </Link>
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
           {navigation.map((item) => {
-            const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+            const active = item.href.startsWith('/#') ? false : pathname.startsWith(item.href);
 
             return (
               <Link
@@ -35,15 +33,8 @@ export function SiteHeader() {
           })}
         </nav>
         <div className="flex items-center gap-2">
-          <Link href="/services" className="northstar-header-link hidden sm:inline-flex">Build with us</Link>
-          <TrackedLink
-            href="/apps"
-            className="northstar-header-cta"
-            trackingEvent="cta_clicked"
-            trackingMetadata={{ surface: 'site-header', target: 'apps-catalog' }}
-          >
-            Browse apps
-          </TrackedLink>
+          <Link href="/contact" className="northstar-header-link hidden sm:inline-flex">Start a conversation</Link>
+          <Link href="/apps" className="northstar-header-cta">Browse apps</Link>
         </div>
       </div>
     </header>

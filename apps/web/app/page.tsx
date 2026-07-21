@@ -4,9 +4,9 @@ import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: 'App Panel',
+  title: 'Purpose-Built Software and Operating Systems',
   description:
-    'MBMApps presents each product as a dedicated app screen across operations, sports, youth leagues, studio work, and design canvases.'
+    'Explore MBMApps applications for catering operations, youth-sports management, and quote-to-event workflows, or start a conversation about a custom system.'
 };
 
 export default function HomePage() {
@@ -16,20 +16,13 @@ export default function HomePage() {
     name: siteConfig.legalName,
     url: siteConfig.url,
     email: siteConfig.email,
-    telephone: siteConfig.phone,
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Chicago',
-      addressRegion: 'IL',
-      addressCountry: 'US'
-    },
-    sameAs: [siteConfig.social.github, siteConfig.social.linkedin]
+    sameAs: [siteConfig.social.github]
   };
 
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'MBMApps app panel',
+    name: 'MBMApps applications',
     itemListElement: projectScreens.map((project, index) => ({
       '@type': 'ListItem',
       position: index + 1,
@@ -39,7 +32,7 @@ export default function HomePage() {
         applicationCategory: project.category,
         operatingSystem: 'Web',
         description: project.description,
-        url: `${siteConfig.url}${project.path}`
+        url: project.websiteUrl
       }
     }))
   };

@@ -1,8 +1,8 @@
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ArrowRight, CheckCircle2, ClipboardCheck, Lock, Package, ShieldCheck, Users } from 'lucide-react';
 import { QuietPilotCommandPreview } from '@/components/quietpilot-command-preview';
 import { QuietPilotWorkflowArchitecture } from '@/components/quietpilot-workflow-architecture';
-import { TrackedLink } from '@/components/tracked-link';
 import { quietPilotProduct, siteConfig } from '@/lib/site';
 
 const pageTitle = 'QuietPilot Service Operations Command Center';
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
   title: pageTitle,
   description: pageDescription,
   alternates: {
-    canonical: quietPilotProduct.path
+    canonical: 'https://www.quietpilot.us'
   },
   openGraph: {
     title: pageTitle,
     description: pageDescription,
-    url: `${siteConfig.url}${quietPilotProduct.path}`,
+    url: 'https://www.quietpilot.us',
     siteName: siteConfig.name,
     type: 'website'
   }
@@ -57,7 +57,7 @@ export default function QuietPilotPage() {
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     description: quietPilotProduct.description,
-    url: `${siteConfig.url}${quietPilotProduct.path}`,
+    url: 'https://www.quietpilot.us',
     publisher: {
       '@type': 'Organization',
       name: siteConfig.legalName,
@@ -80,23 +80,13 @@ export default function QuietPilotPage() {
                 QuietPilot gives service operators one calm place to watch leads, quotes, proposals, staffing, inventory, jobs, and payment risk without turning the business into a spreadsheet chase.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <TrackedLink
-                  href={quietPilotProduct.purchasePath}
-                  className="inline-flex items-center gap-2 rounded-md bg-indigo-950 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-800"
-                  trackingEvent="cta_clicked"
-                  trackingMetadata={{ surface: 'quietpilot-hero', target: 'quietpilot-purchase' }}
-                >
+                <Link href={quietPilotProduct.purchasePath} className="inline-flex items-center gap-2 rounded-md bg-indigo-950 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-800">
                   Purchase QuietPilot
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </TrackedLink>
-                <TrackedLink
-                  href={quietPilotProduct.demoPath}
-                  className="inline-flex items-center gap-2 rounded-md border border-indigo-200 bg-white px-4 py-3 text-sm font-semibold text-indigo-950 shadow-sm transition hover:bg-indigo-50"
-                  trackingEvent="cta_clicked"
-                  trackingMetadata={{ surface: 'quietpilot-hero', target: 'demo' }}
-                >
+                </Link>
+                <Link href={quietPilotProduct.demoPath} className="inline-flex items-center gap-2 rounded-md border border-indigo-200 bg-white px-4 py-3 text-sm font-semibold text-indigo-950 shadow-sm transition hover:bg-indigo-50">
                   View Demo
-                </TrackedLink>
+                </Link>
               </div>
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
                 {[
@@ -171,23 +161,13 @@ export default function QuietPilotPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <TrackedLink
-              href={quietPilotProduct.purchasePath}
-              className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-3 text-sm font-semibold text-indigo-950 transition hover:bg-cyan-50"
-              trackingEvent="cta_clicked"
-              trackingMetadata={{ surface: 'quietpilot-footer-cta', target: 'quietpilot-purchase' }}
-            >
+            <Link href={quietPilotProduct.purchasePath} className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-3 text-sm font-semibold text-indigo-950 transition hover:bg-cyan-50">
               Purchase QuietPilot
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </TrackedLink>
-            <TrackedLink
-              href="/contact"
-              className="inline-flex items-center rounded-md border border-white/20 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-              trackingEvent="cta_clicked"
-              trackingMetadata={{ surface: 'quietpilot-footer-cta', target: 'contact' }}
-            >
+            </Link>
+            <Link href="/contact" className="inline-flex items-center rounded-md border border-white/20 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
               Contact MBMApps
-            </TrackedLink>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { getCaseStudies, getInsights } from '@/lib/content';
 import { projectScreens } from '@/lib/projects';
-import { quietPilotProduct, siteConfig } from '@/lib/site';
+import { siteConfig } from '@/lib/site';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const insights = await getInsights();
@@ -11,19 +11,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '',
     '/apps',
     ...projectScreens.map((project) => project.path),
-    quietPilotProduct.path,
-    quietPilotProduct.purchasePath,
     '/services',
     '/case-studies',
     '/about',
     '/insights',
-    '/contact',
-    '/demo'
+    '/contact'
   ].map((path) => ({
     url: `${siteConfig.url}${path}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
-    priority: path === '' ? 1 : path === quietPilotProduct.path ? 0.9 : 0.7
+    priority: path === '' ? 1 : path === '/apps' ? 0.9 : 0.7
   }));
 
   const insightRoutes: MetadataRoute.Sitemap = insights.map((post) => ({
