@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowUpRight, CheckCircle2, ChevronRight, FolderGit2 } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, CheckCircle2, ChevronRight, FolderGit2, ShoppingBag } from 'lucide-react';
 import { getProjectBySlug, projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
 
@@ -89,10 +89,21 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <p className="text-mbm-muted mt-5 max-w-3xl text-lg leading-8">{project.description}</p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
+                    href={project.commerce.actionHref}
+                    className={`storefront-action ${project.commerce.availability === 'Available now' ? 'storefront-action--primary' : ''}`}
+                  >
+                    {project.commerce.actionLabel}
+                    {project.commerce.availability === 'Available now' ? (
+                      <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+                    ) : (
+                      <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                    )}
+                  </Link>
+                  <Link
                     href={project.primary.href}
                     target={project.primary.external ? '_blank' : undefined}
                     rel={project.primary.external ? 'noreferrer' : undefined}
-                    className="inline-flex items-center justify-center gap-2 rounded-md border border-white/14 bg-white px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-cyan-50"
+                    className="storefront-detail-link"
                   >
                     {project.primary.label}
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -101,7 +112,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     href={project.secondary.href}
                     target={project.secondary.external ? '_blank' : undefined}
                     rel={project.secondary.external ? 'noreferrer' : undefined}
-                    className="inline-flex items-center justify-center gap-2 rounded-md border border-white/16 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+                    className="storefront-detail-link"
                   >
                     {project.secondary.label}
                     <ChevronRight className="h-4 w-4" aria-hidden="true" />

@@ -107,9 +107,9 @@ export function LandingThreeStage() {
 
       const geometry = new THREE.IcosahedronGeometry(1.05, 1);
       const material = new THREE.MeshStandardMaterial({
-        color: '#dde6ff',
-        metalness: 0.2,
-        roughness: 0.3,
+        color: '#6669b8',
+        metalness: 0.12,
+        roughness: 0.52,
         flatShading: true
       });
       const fallback = new THREE.Mesh(geometry, material);
@@ -330,83 +330,8 @@ export function LandingThreeStage() {
       initScroll();
     };
 
-    const styleImportedModel = (object: THREE.Object3D) => {
-      object.scale.setScalar(0.9);
-      object.rotation.x = 0.2;
-      object.traverse((child) => {
-        const mesh = child as THREE.Mesh;
-        if (mesh.isMesh) {
-          mesh.material = new THREE.MeshStandardMaterial({
-            color: '#dfe7ff',
-            metalness: 0.22,
-            roughness: 0.3
-          });
-          mesh.castShadow = false;
-          mesh.receiveShadow = false;
-        }
-      });
-      model = object;
-      stageGroup.add(object);
-    };
-
-    const loadGlbModel = async (): Promise<boolean> => {
-      try {
-        const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
-        const loader = new GLTFLoader();
-
-        const loaded = await new Promise<boolean>((resolve) => {
-          loader.load(
-            '/Models/bit.glb',
-            (gltf) => {
-              styleImportedModel(gltf.scene);
-              resolve(true);
-            },
-            undefined,
-            () => {
-              resolve(false);
-            }
-          );
-        });
-
-        return loaded;
-      } catch {
-        return false;
-      }
-    };
-
-    const loadObjModel = async (): Promise<boolean> => {
-      try {
-        const { OBJLoader } = await import('three/addons/loaders/OBJLoader.js');
-        const loader = new OBJLoader();
-
-        const loaded = await new Promise<boolean>((resolve) => {
-          loader.load(
-            '/Models/bit.obj',
-            (object) => {
-              styleImportedModel(object);
-              resolve(true);
-            },
-            undefined,
-            () => {
-              resolve(false);
-            }
-          );
-        });
-
-        return loaded;
-      } catch {
-        return false;
-      }
-    };
-
     const loadModel = async () => {
-      const glbLoaded = await loadGlbModel();
-      const objLoaded = glbLoaded ? false : await loadObjModel();
-
-      if (!glbLoaded && !objLoaded) {
-        createFallbackModel();
-      }
-
+      createFallbackModel();
       await completeBoot();
     };
 

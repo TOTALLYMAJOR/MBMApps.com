@@ -29,4 +29,21 @@ describe('project catalog', () => {
     expect(getProjectBySlug('champion-coach-os')?.path).toBe('/apps/champion-coach-os');
     expect(getProjectBySlug('little-league-hq')?.category).toBe('Youth sports');
   });
+
+  it('exposes a truthful commerce action for every app', () => {
+    const availableProjects = projectScreens.filter((project) => project.commerce.availability === 'Available now');
+
+    expect(availableProjects).toHaveLength(1);
+    expect(availableProjects[0]?.slug).toBe('quietpilot');
+    expect(availableProjects[0]?.commerce).toMatchObject({
+      actionLabel: 'Buy QuietPilot',
+      actionHref: '/quietpilot/purchase'
+    });
+
+    for (const project of projectScreens) {
+      expect(project.commerce.actionHref).toMatch(/^\//);
+      expect(project.commerce.actionLabel.length).toBeGreaterThan(4);
+      expect(project.commerce.note.length).toBeGreaterThan(12);
+    }
+  });
 });

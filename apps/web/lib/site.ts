@@ -32,8 +32,8 @@ export const championCoachProduct = {
 };
 
 export const navigation = [
-  { href: '/', label: 'App Panel' },
-  { href: '/apps', label: 'Projects' },
+  { href: '/', label: 'Home' },
+  { href: '/apps', label: 'Apps' },
   { href: quietPilotProduct.path, label: quietPilotProduct.name },
   { href: '/services', label: 'Services' },
   { href: '/case-studies', label: 'Case Studies' },

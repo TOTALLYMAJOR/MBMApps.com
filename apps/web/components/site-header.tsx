@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { TrackedLink } from '@/components/tracked-link';
-import { navigation, quietPilotProduct } from '@/lib/site';
+import { navigation } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
 export function SiteHeader() {
@@ -12,7 +12,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-black/60 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 lg:px-8">
-        <Link href="/" className="font-display text-lg font-semibold tracking-tight text-ink">
+        <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight text-ink">
+          <span className="h-2.5 w-2.5 rounded-sm bg-indigo-400 shadow-[0_0_16px_rgba(129,140,248,0.75)]" aria-hidden="true" />
           MBMApps
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
@@ -34,12 +35,12 @@ export function SiteHeader() {
           })}
         </nav>
         <TrackedLink
-          href={quietPilotProduct.purchasePath}
-          className="btn-theme"
+          href="/apps"
+          className="btn-theme gap-2"
           trackingEvent="cta_clicked"
-          trackingMetadata={{ surface: 'site-header', target: 'quietpilot-purchase' }}
+          trackingMetadata={{ surface: 'site-header', target: 'apps-catalog' }}
         >
-          Purchase QuietPilot
+          Browse apps
         </TrackedLink>
       </div>
     </header>

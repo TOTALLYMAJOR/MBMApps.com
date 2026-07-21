@@ -15,6 +15,7 @@ import {
   Package,
   Search,
   Settings,
+  ShoppingBag,
   Sparkles,
   Trophy,
 } from 'lucide-react';
@@ -465,6 +466,46 @@ function ProductScreenPreview({ active }: { active: ProjectScreen }) {
   );
 }
 
+function StorefrontCard({ project, featured = false }: { project: ProjectScreen; featured?: boolean }) {
+  const Icon = project.icon;
+  const isAvailable = project.commerce.availability === 'Available now';
+
+  return (
+    <article className={cn('storefront-card group relative flex min-h-[24rem] flex-col overflow-hidden', featured && 'storefront-card--featured lg:col-span-2')}>
+      <div className="storefront-card__glow" aria-hidden="true" />
+      <div className="relative z-10 flex items-start justify-between gap-4">
+        <span className="storefront-icon">
+          <Icon className="h-5 w-5" aria-hidden="true" />
+        </span>
+        <span className={cn('availability-mark', isAvailable && 'availability-mark--live')}>
+          <span className="availability-mark__dot" aria-hidden="true" />
+          {project.commerce.availability}
+        </span>
+      </div>
+
+      <div className="relative z-10 mt-auto pt-16">
+        <p className="storefront-index">{project.shortName} / {project.category}</p>
+        <h3 className={cn('mt-4 max-w-2xl font-display font-medium tracking-[-0.045em] text-white', featured ? 'text-4xl sm:text-5xl' : 'text-3xl')}>
+          {project.name}
+        </h3>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62">{project.summary}</p>
+
+        <div className="mt-7 flex flex-wrap items-center gap-3">
+          <Link href={project.commerce.actionHref} className={cn('storefront-action', isAvailable && 'storefront-action--primary')}>
+            {project.commerce.actionLabel}
+            {isAvailable ? <ShoppingBag className="h-4 w-4" aria-hidden="true" /> : <ArrowUpRight className="h-4 w-4" aria-hidden="true" />}
+          </Link>
+          <Link href={project.path} className="storefront-detail-link">
+            Explore app
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+        <p className="mt-4 text-xs text-white/38">{project.commerce.note}</p>
+      </div>
+    </article>
+  );
+}
+
 export function AppPanelHome() {
   const [activeId, setActiveId] = useState<AppScreenId>('quietpilot');
   const active = useMemo(() => projectScreens.find((screen) => screen.slug === activeId) ?? projectScreens[0], [activeId]);
@@ -473,9 +514,69 @@ export function AppPanelHome() {
     <>
       <LandingThreeStage />
 
+      <section className="hero storefront-hero relative overflow-hidden border-b border-white/10">
+        <div className="storefront-orbit storefront-orbit--one" aria-hidden="true" />
+        <div className="storefront-orbit storefront-orbit--two" aria-hidden="true" />
+        <div className="ambient-grid pointer-events-none absolute inset-0 opacity-30" />
+        <div className="relative z-10 mx-auto grid min-h-[46rem] w-full max-w-[1480px] items-end gap-12 px-6 pb-20 pt-24 lg:grid-cols-[minmax(0,1fr)_24rem] lg:px-8 lg:pb-24">
+          <div>
+            <div className="intro-reveal inline-flex items-center gap-2 rounded-full border border-indigo-300/25 bg-indigo-300/10 px-3 py-1.5 text-xs font-medium text-indigo-100">
+              <span className="h-1.5 w-1.5 rounded-full bg-indigo-300 shadow-[0_0_14px_rgba(165,180,252,0.9)]" aria-hidden="true" />
+              Independent software, built in Chicago
+            </div>
+            <h1 className="intro-reveal mt-7 max-w-5xl font-display text-[clamp(3.4rem,8vw,7.8rem)] font-light leading-[0.91] tracking-[-0.065em] text-white">
+              Apps that make work <span className="storefront-gradient-text">move.</span>
+            </h1>
+            <p className="intro-reveal mt-7 max-w-2xl text-base leading-8 text-white/62 sm:text-lg">
+              Browse focused software for service operations, competitive coaching, youth sports, and creative production. Buy what is ready or get early access to what is next.
+            </p>
+            <div className="intro-reveal mt-9 flex flex-wrap gap-3">
+              <Link href="#shop-apps" className="storefront-hero-button storefront-hero-button--primary">
+                Shop apps
+                <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+              </Link>
+              <Link href="#app-panel" className="storefront-hero-button">
+                See how they work
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+
+          <aside className="intro-reveal storefront-signal-card">
+            <div className="flex items-center justify-between gap-4">
+              <p className="storefront-index">Portfolio signal</p>
+              <span className="font-mono text-xs text-indigo-200">0{projectScreens.length}</span>
+            </div>
+            <div className="mt-12">
+              <p className="font-display text-5xl font-light tracking-[-0.05em] text-white">One clear shelf.</p>
+              <p className="mt-4 text-sm leading-7 text-white/55">See availability, open the product page, and take the right next step without hunting through the site.</p>
+            </div>
+            <div className="mt-10 flex items-center gap-3 border-t border-white/10 pt-5 text-xs text-white/45">
+              <CheckCircle2 className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+              Purchase paths shown only when available
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="shop-apps" className="relative z-10 mx-auto w-full max-w-[1480px] px-6 py-20 lg:px-8 lg:py-28">
+        <div className="mb-10 grid gap-5 lg:grid-cols-[1fr_0.7fr] lg:items-end">
+          <div>
+            <p className="storefront-index">The app shelf</p>
+            <h2 className="mt-4 max-w-3xl font-display text-4xl font-light tracking-[-0.045em] text-white sm:text-6xl">Choose the software that fits the work.</h2>
+          </div>
+          <p className="max-w-xl text-sm leading-7 text-white/55 lg:justify-self-end">Available products link directly to checkout. Preview and in-development products connect you with MBMApps for access.</p>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-2">
+          {projectScreens.map((project, index) => (
+            <StorefrontCard key={project.slug} project={project} featured={index === 0} />
+          ))}
+        </div>
+      </section>
+
       <section
         id="app-panel"
-        className="hero scene-panel relative overflow-hidden border-b border-white/10"
+        className="scene-panel relative overflow-hidden border-y border-white/10"
         data-rot-y="0"
         data-cam-z="4.8"
         data-cam-y="0"
@@ -503,10 +604,10 @@ export function AppPanelHome() {
 
             <div className="grid min-w-0 gap-0 lg:grid-cols-[290px_minmax(0,1fr)]">
               <aside className="min-w-0 border-b border-white/10 p-4 lg:border-b-0 lg:border-r lg:p-5">
-                <p className="kicker">App stack</p>
-                <p className="mt-3 text-sm leading-6 text-white/60">
-                  Each MBMApps product gets its own operating screen, tuned to the work it controls.
-                </p>
+                  <p className="kicker">Product explorer</p>
+                  <p className="mt-3 text-sm leading-6 text-white/60">
+                  Select an app to inspect its workflow, operating signals, and next step.
+                  </p>
 
                 <div className="mt-5 grid w-full min-w-0 max-w-full gap-3">
                   {projectScreens.map((screen) => (

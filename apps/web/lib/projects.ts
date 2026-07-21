@@ -46,6 +46,12 @@ export type ProjectScreen = {
   summary: string;
   description: string;
   audience: string;
+  commerce: {
+    availability: 'Available now' | 'Private preview' | 'In development';
+    actionLabel: string;
+    actionHref: string;
+    note: string;
+  };
   primary: {
     label: string;
     href: string;
@@ -83,6 +89,12 @@ export const projectScreens: [ProjectScreen, ...ProjectScreen[]] = [
     description:
       'QuietPilot connects inquiry, quoting, proposal delivery, payment proof, staffing, inventory, readiness, and audit history so operators can see what is commercially true before work moves forward.',
     audience: 'Caterers, rentals teams, field-service operators, and service businesses that need quote-to-ready control.',
+    commerce: {
+      availability: 'Available now',
+      actionLabel: 'Buy QuietPilot',
+      actionHref: quietPilotProduct.purchasePath,
+      note: 'Secure checkout and organization activation'
+    },
     primary: {
       label: 'View QuietPilot',
       href: quietPilotProduct.path
@@ -121,6 +133,12 @@ export const projectScreens: [ProjectScreen, ...ProjectScreen[]] = [
     description:
       'A coaching cockpit for competitive play that turns prep, draft context, lane signals, item timing, and replay notes into a repeatable training workflow.',
     audience: 'Players, coaches, and creators who want structured practice plans instead of scattered notes.',
+    commerce: {
+      availability: 'Private preview',
+      actionLabel: 'Request access',
+      actionHref: '/contact',
+      note: 'Talk with MBMApps about preview access'
+    },
     primary: {
       label: 'View Champion Coach OS',
       href: championCoachProduct.path
@@ -158,6 +176,12 @@ export const projectScreens: [ProjectScreen, ...ProjectScreen[]] = [
     description:
       'A youth league app direction for 4 to 6 year olds that emphasizes parent safety, coach announcements, team coordination, schedules, rosters, and cheerful clubhouse presentation.',
     audience: 'Youth leagues, coaches, parents, and organizers running early-childhood sports seasons.',
+    commerce: {
+      availability: 'In development',
+      actionLabel: 'Join the interest list',
+      actionHref: '/contact',
+      note: 'Tell us about your league and season'
+    },
     primary: {
       label: 'View project',
       href: '/apps/little-league-hq'
@@ -195,6 +219,12 @@ export const projectScreens: [ProjectScreen, ...ProjectScreen[]] = [
     description:
       'A studio project for packaging creative experiments, character-led interfaces, and family-friendly product worlds with a polished digital presence.',
     audience: 'Brands, families, creators, and product teams that need a warmer storytelling layer around software.',
+    commerce: {
+      availability: 'Private preview',
+      actionLabel: 'Start a studio brief',
+      actionHref: '/contact',
+      note: 'Commission a story-led digital experience'
+    },
     primary: {
       label: 'View project',
       href: '/apps/little-legend-studios'
@@ -232,6 +262,12 @@ export const projectScreens: [ProjectScreen, ...ProjectScreen[]] = [
     description:
       'A Vite-based design canvas for iterating on league lobby and combat UI patterns with richer visual experimentation than a static mockup.',
     audience: 'Product builders exploring esports, game-adjacent dashboards, simulations, and interactive visual prototypes.',
+    commerce: {
+      availability: 'Private preview',
+      actionLabel: 'Request a walkthrough',
+      actionHref: '/contact',
+      note: 'See the canvas and discuss a custom build'
+    },
     primary: {
       label: 'View project',
       href: '/apps/league-lobby-design-canvas'
