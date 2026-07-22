@@ -166,10 +166,10 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     visible: true
   },
   {
-    id: 'quoteflow',
-    slug: 'quoteflow',
-    name: 'QuoteFlow',
-    shortName: 'QF',
+    id: 'quotepilot',
+    slug: 'quotepilot',
+    name: 'QuotePilot',
+    shortName: 'QP',
     parentLabel: 'An MBMApps product',
     category: 'Quote-to-event operations',
     audience: ['Catering sales teams', 'Administrators', 'Event teams'],
@@ -178,7 +178,7 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     supportingStatement:
       'Guided quotes, customer decisions, payment state, and event production—with their boundaries intact.',
     description:
-      'QuoteFlow is the product system behind the QuotePilot workspace, connecting quote configuration, proposals, customer decisions, payment context, and event-production planning.',
+      'QuotePilot connects quote configuration, proposals, customer decisions, payment context, and event-production planning in one accountable workspace.',
     problemStatement:
       'Quote revisions, customer decisions, payment state, and production details become unreliable when they live in separate tools.',
     capabilities: [
@@ -190,23 +190,23 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     scenario: {
       trigger: 'A proposal changes after a customer reviews the event scope.',
       decision: 'Sales must preserve the approved baseline while making the next version clear to the customer and event team.',
-      systemResponse: 'QuoteFlow keeps quote versions, customer decisions, payment context, and production planning connected.',
+      systemResponse: 'QuotePilot keeps quote versions, customer decisions, payment context, and production planning connected.',
       authorityBoundary: 'Customer approval, provider-backed payment, and operational readiness remain separate facts.',
       resultingClarity: 'Everyone can see the current commercial version and what still needs confirmation.'
     },
     screenshot: {
       src: '/product-screens/quoteflow.png',
-      alt: 'QuoteFlow product surface showing the connected inquiry, proposal, decision, payment, and event-operations workflow.',
+      alt: 'QuotePilot product surface showing the connected inquiry, proposal, decision, payment, and event-operations workflow.',
       caption:
         'This current product surface demonstrates the QuotePilot workflow model. The staff workspace requires authentication and tenant configuration.',
       maturity: 'Authenticated staff workspace'
     },
     accentToken: 'amber',
     icon: FileCheck2,
-    path: '/apps/quoteflow',
+    path: '/apps/quotepilot',
     websiteUrl: 'https://tonicatering.web.app',
-    websiteLabel: 'Open QuoteFlow',
-    analyticsId: 'quoteflow',
+    websiteLabel: 'Open QuotePilot',
+    analyticsId: 'quotepilot',
     status: 'Deployed staff application',
     accessDescription: 'Staff sign-in required',
     proofBoundary:

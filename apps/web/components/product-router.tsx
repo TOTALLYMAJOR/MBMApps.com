@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { projectScreens } from '@/lib/projects';
 
-type RouterSelection = 'quietpilot' | 'leaguepilot' | 'quoteflow' | 'studio';
+type RouterSelection = 'quietpilot' | 'leaguepilot' | 'quotepilot' | 'studio';
 
 const choices: { id: RouterSelection; label: string }[] = [
   { id: 'quietpilot', label: 'Catering sales, events, and operational readiness' },
   { id: 'leaguepilot', label: 'Youth league, team, coach, and parent coordination' },
-  { id: 'quoteflow', label: 'Guided quoting, proposals, and event handoff' },
+  { id: 'quotepilot', label: 'Guided quoting, proposals, and event handoff' },
   { id: 'studio', label: 'A specialized workflow that needs custom software' }
 ];
 
@@ -18,7 +18,8 @@ export function ProductRouter() {
   const [selection, setSelection] = useState<RouterSelection>('quietpilot');
 
   useEffect(() => {
-    const candidate = new URLSearchParams(window.location.search).get('path') as RouterSelection | null;
+    const requestedPath = new URLSearchParams(window.location.search).get('path');
+    const candidate = (requestedPath === 'quoteflow' ? 'quotepilot' : requestedPath) as RouterSelection | null;
     if (candidate && choices.some((choice) => choice.id === candidate)) setSelection(candidate);
   }, []);
 

@@ -4,7 +4,7 @@ import { getProjectBySlug, projectScreens } from '@/lib/projects';
 describe('project catalog', () => {
   it('lists exactly the three approved MBMApps applications', () => {
     expect(projectScreens).toHaveLength(3);
-    expect(projectScreens.map((project) => project.slug)).toEqual(['quietpilot', 'leaguepilot', 'quoteflow']);
+    expect(projectScreens.map((project) => project.slug)).toEqual(['quietpilot', 'leaguepilot', 'quotepilot']);
 
     const slugs = new Set(projectScreens.map((project) => project.slug));
     const paths = new Set(projectScreens.map((project) => project.path));
@@ -33,7 +33,7 @@ describe('project catalog', () => {
   it('resolves project subpages by slug', () => {
     expect(getProjectBySlug('quietpilot')?.name).toBe('QuietPilot');
     expect(getProjectBySlug('leaguepilot')?.websiteUrl).toBe('https://www.leaguepilot.us');
-    expect(getProjectBySlug('quoteflow')?.category).toBe('Quote-to-event operations');
+    expect(getProjectBySlug('quotepilot')?.category).toBe('Quote-to-event operations');
   });
 
   it('exposes evidence and access context for every app', () => {
