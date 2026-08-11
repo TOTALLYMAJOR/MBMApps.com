@@ -192,17 +192,17 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
   {
     id: 'quoteflow',
     slug: 'quoteflow',
-    name: 'QuoteFlow',
-    shortName: 'QF',
+    name: 'QuotePilot',
+    shortName: 'QU',
     parentLabel: 'An MBMApps product',
     category: 'Quote-to-event operations',
     audience: ['Catering sales teams', 'Administrators', 'Event teams'],
     operatingEnvironment: 'Guided quoting, customer decisions, and event handoff',
     headline: 'From first inquiry to a signed, staffed, kitchen-ready event.',
     supportingStatement:
-      'The QuotePilot workspace: guided quotes, immutable versions, customer decisions, payment state, and event production—with their boundaries intact.',
+      'Guided quotes, immutable versions, customer decisions, payment state, and event production—with their boundaries intact.',
     description:
-      'QuoteFlow powers the QuotePilot workspace—a multi-tenant quote-to-event platform where sales builds guided quotes with server-authoritative pricing, customers decide through an exact-token proposal portal, and approved scope flows into messaging, scheduling, reporting, and kitchen-ready production receipts.',
+      'QuotePilot is a multi-tenant quote-to-event platform where sales builds guided quotes with server-authoritative pricing, customers decide through an exact-token proposal portal, and approved scope flows into messaging, scheduling, reporting, and kitchen-ready production receipts.',
     problemStatement:
       'Quote revisions, customer decisions, payment state, and production details become unreliable when they live in separate tools.',
     capabilities: [
@@ -222,7 +222,7 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     scenario: {
       trigger: 'A proposal changes after a customer reviews the event scope.',
       decision: 'Sales must preserve the approved baseline while making the next version clear to the customer and event team.',
-      systemResponse: 'QuoteFlow keeps quote versions, customer decisions, payment context, and production planning connected.',
+      systemResponse: 'QuotePilot keeps quote versions, customer decisions, payment context, and production planning connected.',
       authorityBoundary: 'Customer approval, provider-backed payment, and operational readiness remain separate facts.',
       resultingClarity: 'Everyone can see the current commercial version and what still needs confirmation.'
     },

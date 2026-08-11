@@ -7,7 +7,7 @@ import { siteConfig } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Applications',
-  description: 'Explore QuietPilot, LeaguePilot, and QuoteFlow—the three focused operating applications built by MBMApps.',
+  description: 'Explore QuietPilot, LeaguePilot, and QuotePilot—the three focused operating applications built by MBMApps.',
   alternates: { canonical: '/apps' }
 };
 
