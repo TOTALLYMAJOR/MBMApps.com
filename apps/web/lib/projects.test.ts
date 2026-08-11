@@ -17,6 +17,11 @@ describe('project catalog', () => {
       expect(project.name.length).toBeGreaterThan(2);
       expect(project.description.length).toBeGreaterThan(40);
       expect(project.capabilities.length).toBeGreaterThanOrEqual(3);
+      expect(project.signals.length).toBeGreaterThanOrEqual(3);
+      for (const signal of project.signals) {
+        expect(signal.value.length).toBeGreaterThan(0);
+        expect(signal.label.length).toBeGreaterThan(10);
+      }
       expect(project.proofBoundary.length).toBeGreaterThan(30);
       expect(project.websiteUrl).toMatch(/^https:\/\//);
       expect(project.websiteLabel.length).toBeGreaterThan(4);

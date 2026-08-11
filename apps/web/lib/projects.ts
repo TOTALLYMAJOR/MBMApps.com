@@ -8,6 +8,11 @@ export type ProductCapability = {
   description: string;
 };
 
+export type ProductSignal = {
+  value: string;
+  label: string;
+};
+
 export type ProductScenario = {
   trigger: string;
   decision: string;
@@ -30,6 +35,7 @@ export type ProductRecord = {
   description: string;
   problemStatement: string;
   capabilities: ProductCapability[];
+  signals: ProductSignal[];
   scenario: ProductScenario;
   screenshot: {
     src: string;
@@ -78,6 +84,12 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
       { label: 'Payment verification', description: 'Separate payment context from provider-backed proof.' },
       { label: 'Staffing and inventory', description: 'Surface coverage gaps and missing stock evidence.' },
       { label: 'Readiness review', description: 'Show blockers and the next responsible action.' }
+    ],
+    signals: [
+      { value: 'Live', label: 'read-only public demo, open right now' },
+      { value: '1', label: 'connected view from accepted work to readiness' },
+      { value: 'Proof-first', label: 'payment context kept separate from provider evidence' },
+      { value: 'Direct', label: 'purchase and provisioning flow on this site' }
     ],
     scenario: {
       trigger: 'A customer accepts a proposal for an upcoming catered event.',
@@ -135,6 +147,12 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
       { label: 'Team communication', description: 'Center coach and parent updates in one team home.' },
       { label: 'Role-aware access', description: 'Respect team, family, coach, and administrator scope.' }
     ],
+    signals: [
+      { value: '4', label: 'distinct roles—family, coach, admin, volunteer—each with their own scope' },
+      { value: '1', label: 'private team home instead of scattered texts and inboxes' },
+      { value: 'RSVP', label: 'attendance state visible before game day' },
+      { value: 'Replay', label: 'Parent Replay keeps missed moments recoverable' }
+    ],
     scenario: {
       trigger: 'A schedule change affects players, parents, coaches, and volunteers.',
       decision: 'The league must determine who is affected, who has responded, and what remains unresolved.',
@@ -174,18 +192,26 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     category: 'Quote-to-event operations',
     audience: ['Catering sales teams', 'Administrators', 'Event teams'],
     operatingEnvironment: 'Guided quoting, customer decisions, and event handoff',
-    headline: 'Move from first inquiry to a clearer event.',
+    headline: 'From first inquiry to a signed, staffed, kitchen-ready event.',
     supportingStatement:
-      'Guided quotes, customer decisions, payment state, and event production—with their boundaries intact.',
+      'The QuotePilot workspace: guided quotes, immutable versions, customer decisions, payment state, and event production—with their boundaries intact.',
     description:
-      'QuoteFlow is the product system behind the QuotePilot workspace, connecting quote configuration, proposals, customer decisions, payment context, and event-production planning.',
+      'QuoteFlow powers the QuotePilot workspace—a multi-tenant quote-to-event platform where sales builds guided quotes with server-authoritative pricing, customers decide through an exact-token proposal portal, and approved scope flows into messaging, scheduling, reporting, and kitchen-ready production receipts.',
     problemStatement:
       'Quote revisions, customer decisions, payment state, and production details become unreliable when they live in separate tools.',
     capabilities: [
-      { label: 'Guided quote building', description: 'Configure event details, menus, staffing, rentals, and terms.' },
-      { label: 'Scenario comparison', description: 'Shape Good, Better, and Best paths without losing the baseline.' },
-      { label: 'Customer decisions', description: 'Record a clear proposal review and approval path.' },
-      { label: 'Production checklist', description: 'Carry approved scope into event planning.' }
+      { label: 'Guided quote building', description: 'Configure event details, menus, staffing, rentals, and terms—priced server-side, versioned immutably.' },
+      { label: 'Scenario comparison', description: 'Shape Good, Better, and Best paths without losing the approved baseline.' },
+      { label: 'Customer proposal portal', description: 'Exact-token review, acceptance, change requests, and decline paths—no customer account required.' },
+      { label: 'Event Messaging Station', description: 'Quote-scoped staff and customer conversations, segregated by canonical event.' },
+      { label: 'Kitchen-ready production', description: 'Trusted Kitchen BEO receipts that go stale—and say so—when the commercial scope changes.' },
+      { label: 'Command Center workspace', description: 'Customer 360, workflow attention, schedule, reporting, catalog, and diagnostics in one staff home.' }
+    ],
+    signals: [
+      { value: 'v0.6.0', label: 'live in production, promoted from tagged, CI-gated releases' },
+      { value: '75', label: 'deployed backend functions behind the workspace' },
+      { value: '13', label: 'connected staff surfaces, from Command Center to Diagnostics' },
+      { value: '16', label: 'tagged production releases shipped in 2026' }
     ],
     scenario: {
       trigger: 'A proposal changes after a customer reviews the event scope.',
@@ -204,8 +230,8 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     accentToken: 'amber',
     icon: FileCheck2,
     path: '/apps/quoteflow',
-    websiteUrl: 'https://tonicatering.web.app',
-    websiteLabel: 'Open QuoteFlow',
+    websiteUrl: 'https://quotepilot.mbmapps.com',
+    websiteLabel: 'Open QuotePilot',
     analyticsId: 'quoteflow',
     status: 'Deployed staff application',
     accessDescription: 'Staff sign-in required',
