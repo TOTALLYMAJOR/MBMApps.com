@@ -79,6 +79,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <Image src={product.screenshot.src} alt={product.screenshot.alt} fill priority sizes="(max-width: 900px) 92vw, 54vw" />
             </div>
             <div className="portfolio-evidence"><span>{product.screenshot.maturity}</span><p>{product.screenshot.caption}</p></div>
+            {product.designSnapshot ? (
+              <div className="portfolio-spotlight__snapshot">
+                <div className="portfolio-product-page__image">
+                  <Image src={product.designSnapshot.src} alt={product.designSnapshot.alt} fill sizes="(max-width: 900px) 92vw, 54vw" />
+                </div>
+                <div className="portfolio-evidence"><span>{product.designSnapshot.maturity}</span><p>{product.designSnapshot.caption}</p></div>
+              </div>
+            ) : null}
           </div>
         </div>
       </header>

@@ -17,6 +17,11 @@ describe('project catalog', () => {
       expect(project.name.length).toBeGreaterThan(2);
       expect(project.description.length).toBeGreaterThan(40);
       expect(project.capabilities.length).toBeGreaterThanOrEqual(3);
+      expect(project.signals.length).toBeGreaterThanOrEqual(3);
+      for (const signal of project.signals) {
+        expect(signal.value.length).toBeGreaterThan(0);
+        expect(signal.label.length).toBeGreaterThan(10);
+      }
       expect(project.proofBoundary.length).toBeGreaterThan(30);
       expect(project.websiteUrl).toMatch(/^https:\/\//);
       expect(project.websiteLabel.length).toBeGreaterThan(4);
@@ -34,6 +39,7 @@ describe('project catalog', () => {
     expect(getProjectBySlug('quietpilot')?.name).toBe('QuietPilot');
     expect(getProjectBySlug('leaguepilot')?.websiteUrl).toBe('https://www.leaguepilot.us');
     expect(getProjectBySlug('quoteflow')?.category).toBe('Quote-to-event operations');
+    expect(getProjectBySlug('quoteflow')?.designSnapshot?.src).toBe('/product-screens/quoteflow-workspace.png');
   });
 
   it('exposes evidence and access context for every app', () => {
@@ -41,6 +47,12 @@ describe('project catalog', () => {
       expect(project.status.length).toBeGreaterThan(8);
       expect(project.accessDescription.length).toBeGreaterThan(8);
       expect(project.screenshot.caption.length).toBeGreaterThan(30);
+      if (project.designSnapshot) {
+        expect(project.designSnapshot.src).toMatch(/^\/product-screens\/.+\.png$/);
+        expect(project.designSnapshot.alt.length).toBeGreaterThan(25);
+        expect(project.designSnapshot.caption.length).toBeGreaterThan(30);
+        expect(project.designSnapshot.maturity.length).toBeGreaterThan(5);
+      }
       expect(JSON.stringify(project).toLowerCase()).not.toContain('coming soon');
       expect(JSON.stringify(project).toLowerCase()).not.toContain('app three');
     }
