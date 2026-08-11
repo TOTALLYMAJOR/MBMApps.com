@@ -2443,6 +2443,10 @@ a {
   min-width: 0;
 }
 
+.portfolio-spotlight__snapshot {
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
 /*
  * Product accent tokens. These must come after every component rule that
  * declares a --product-accent fallback: at equal specificity the later

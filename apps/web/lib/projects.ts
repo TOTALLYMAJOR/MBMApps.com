@@ -43,6 +43,12 @@ export type ProductRecord = {
     caption: string;
     maturity: string;
   };
+  designSnapshot?: {
+    src: string;
+    alt: string;
+    caption: string;
+    maturity: string;
+  };
   accentToken: ProductAccent;
   icon: LucideIcon;
   path: string;
@@ -221,10 +227,17 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
       resultingClarity: 'Everyone can see the current commercial version and what still needs confirmation.'
     },
     screenshot: {
-      src: '/product-screens/quoteflow.png',
-      alt: 'QuoteFlow product surface showing the connected inquiry, proposal, decision, payment, and event-operations workflow.',
+      src: '/product-screens/quotepilot-landing.png',
+      alt: 'QuotePilot public landing page inviting catering teams to build confident quotes without the spreadsheet chase.',
       caption:
-        'This current product surface demonstrates the QuotePilot workflow model. The staff workspace requires authentication and tenant configuration.',
+        'The QuotePilot public landing surface as shipped in v0.6.0. The staff workspace behind it requires authentication and tenant configuration.',
+      maturity: 'Live public landing'
+    },
+    designSnapshot: {
+      src: '/product-screens/quoteflow-workspace.png',
+      alt: 'QuotePilot staff Event Workspace showing an accepted event record with deterministic decision support and quote lifecycle progress.',
+      caption:
+        'Inside the authenticated Event Workspace: bounded decision support, event-context shortcuts, sold scope, and lifecycle progress from the current workspace design system.',
       maturity: 'Authenticated staff workspace'
     },
     accentToken: 'amber',

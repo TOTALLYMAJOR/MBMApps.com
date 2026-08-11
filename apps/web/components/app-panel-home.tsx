@@ -280,6 +280,17 @@ function Spotlights() {
                   </div>
                 </Reveal>
               </Parallax>
+              {product.designSnapshot ? (
+                <Reveal y={30} delay={0.1} className="portfolio-spotlight__snapshot">
+                  <div className="portfolio-spotlight__image portfolio-sheen">
+                    <Image src={product.designSnapshot.src} alt={product.designSnapshot.alt} fill sizes="(max-width: 900px) 92vw, 50vw" />
+                  </div>
+                  <div className="portfolio-evidence">
+                    <span>{product.designSnapshot.maturity}</span>
+                    <p>{product.designSnapshot.caption}</p>
+                  </div>
+                </Reveal>
+              ) : null}
               <MomentTimeline product={product} />
             </div>
             <div className="portfolio-spotlight__copy">
