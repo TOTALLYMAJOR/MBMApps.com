@@ -320,6 +320,55 @@ body::after {
 
 .northstar-rule-list > * + * { border-top: 1px solid rgba(255, 255, 255, 0.08); }
 
+.northstar-portrait {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.25rem;
+  background: rgba(9, 9, 18, 0.78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 24px 70px rgba(2, 2, 12, 0.22);
+}
+
+.northstar-portrait__frame {
+  position: relative;
+  aspect-ratio: 5 / 4;
+}
+
+.northstar-portrait__frame img {
+  object-fit: cover;
+  object-position: 30% center;
+}
+
+.northstar-portrait__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 58%, rgba(7, 7, 17, 0.5) 100%);
+}
+
+.northstar-portrait__caption {
+  display: grid;
+  gap: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.25rem 1.35rem;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.48);
+  text-wrap: pretty;
+}
+
+@media (min-width: 768px) {
+  .northstar-portrait__frame { aspect-ratio: 16 / 7; }
+  .northstar-portrait__frame img { object-position: center; }
+
+  .northstar-portrait__caption {
+    grid-template-columns: 11rem 1fr;
+    align-items: baseline;
+    gap: 1.75rem;
+    padding: 1.45rem 1.85rem;
+  }
+}
+
 .northstar-number {
   font-family: var(--font-ibm-plex-mono), monospace;
   font-variant-numeric: tabular-nums;
