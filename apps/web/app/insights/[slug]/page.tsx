@@ -68,9 +68,12 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
           primary_outcome: post.frontmatter.primaryOutcome
         }}
       />
-      <p className="kicker">Insight</p>
-      <h1 className="mt-3 font-display text-5xl text-white">{post.frontmatter.title}</h1>
+      <p className="northstar-kicker">{post.frontmatter.industry} / Insight</p>
+      <h1 className="mt-3 font-display text-5xl font-light tracking-[-0.04em] text-white">{post.frontmatter.title}</h1>
       <p className="text-mbm-muted mt-4 text-lg">{post.frontmatter.summary}</p>
+      <span className="instrument-chip instrument-chip--ember mt-4">
+        {new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+      </span>
       <div className="mbm-prose mt-10">
         <MDXRemote source={post.content} />
       </div>

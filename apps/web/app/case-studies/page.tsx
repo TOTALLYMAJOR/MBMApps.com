@@ -38,7 +38,19 @@ export default async function CaseStudiesPage() {
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-white/48">{caseStudy.frontmatter.summary}</p>
                 <p className="mt-5 border-l border-indigo-300/40 pl-4 text-sm leading-7 text-white/76">{caseStudy.frontmatter.outcome}</p>
               </div>
-              <Link href={`/case-studies/${caseStudy.slug}`} className="storefront-detail-link lg:justify-self-end">Read story <ArrowUpRight className="h-4 w-4" /></Link>
+              <div className="flex flex-col items-start gap-3 lg:items-end">
+                <Link href={`/case-studies/${caseStudy.slug}`} className="storefront-detail-link">Read story <ArrowUpRight className="h-4 w-4" /></Link>
+                {caseStudy.frontmatter.liveUrl ? (
+                  <a
+                    href={caseStudy.frontmatter.liveUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-white/48 transition-colors hover:text-indigo-200"
+                  >
+                    Visit live site ↗
+                  </a>
+                ) : null}
+              </div>
             </article>
           ))}
         </div>

@@ -185,7 +185,8 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
       { label: 'Guided quote building', description: 'Configure event details, menus, staffing, rentals, and terms.' },
       { label: 'Scenario comparison', description: 'Shape Good, Better, and Best paths without losing the baseline.' },
       { label: 'Customer decisions', description: 'Record a clear proposal review and approval path.' },
-      { label: 'Production checklist', description: 'Carry approved scope into event planning.' }
+      { label: 'Production checklist', description: 'Carry approved scope into event planning.' },
+      { label: 'Event messaging', description: 'Keep customer and team communication tied to the right quote or event, not scattered threads.' }
     ],
     scenario: {
       trigger: 'A proposal changes after a customer reviews the event scope.',

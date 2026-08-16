@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { LandingThreeStage } from '@/components/landing-three-stage';
+import { QuietPilotCommandShowcase } from '@/components/quietpilot-command-showcase';
 import { TestimonialsSignalSection } from '@/components/testimonials-signal-section';
 import { TrackedLink } from '@/components/tracked-link';
 import { quietPilotProduct } from '@/lib/site';
@@ -89,7 +90,7 @@ const signalTape = [
   { stage: 'Leads Captured', value: 128, tint: 'from-[#6f94ff]/85 to-[#3f5db9]/40' },
   { stage: 'Quotes Active', value: 74, tint: 'from-[#8eadff]/80 to-[#5f7fd8]/35' },
   { stage: 'Proposals Viewed', value: 39, tint: 'from-[#b5c9ff]/75 to-[#6f92eb]/35' },
-  { stage: 'Jobs Ready', value: 22, tint: 'from-[#d4e2ff]/70 to-[#84a1f0]/30' }
+  { stage: 'Jobs Ready', value: 22, tint: 'from-[#e8a024]/85 to-[#b9791a]/40' }
 ];
 
 const maxPipelineValue = signalTape[0]?.value ?? 1;
@@ -156,7 +157,7 @@ export function HomeImmersive() {
 
         <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-12 px-6 pb-20 pt-16 lg:grid-cols-[1.2fr_0.8fr] lg:px-8 lg:pt-24">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <p className="kicker intro-reveal">{'// MBMApps Operating Thesis'}</p>
+            <p className="northstar-kicker intro-reveal">{'// MBMApps Operating Thesis'}</p>
             <h1 className="intro-reveal mt-5 max-w-4xl font-display text-5xl font-semibold leading-[1.05] text-white md:text-6xl lg:text-7xl">
               QUIETPILOT IS THE FLAGSHIP SERVICE OPERATIONS SYSTEM FROM MBMAPPS.
             </h1>
@@ -193,8 +194,8 @@ export function HomeImmersive() {
             className="surface-panel intro-reveal relative overflow-hidden p-6 backdrop-blur"
           >
             <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-electric/25 blur-3xl" />
-            <div className="absolute -bottom-16 -left-12 h-44 w-44 rounded-full bg-signal/20 blur-3xl" />
-            <p className="kicker text-white/65">Signal Feed</p>
+            <div className="absolute -bottom-16 -left-12 h-44 w-44 rounded-full bg-ember/15 blur-3xl" />
+            <p className="northstar-kicker text-white/65">Signal Feed</p>
             <div className="mt-5 space-y-4">
               {signalTape.map((row, index) => (
                 <div key={row.stage}>
@@ -213,12 +214,17 @@ export function HomeImmersive() {
               ))}
             </div>
             <div className="surface-card mt-6 p-4">
-              <p className="kicker text-white/80">Now Shipping</p>
-              <p className="mt-2 text-sm text-white/85">QuietPilot command-center workflows for lead-to-job service operations.</p>
+              <span className="instrument-chip instrument-chip--ember instrument-chip--live">
+                <span className="instrument-chip__dot" aria-hidden="true" />
+                Now shipping
+              </span>
+              <p className="mt-3 text-sm text-white/85">QuietPilot command-center workflows for lead-to-job service operations.</p>
             </div>
           </motion.aside>
         </div>
       </section>
+
+      <QuietPilotCommandShowcase />
 
       <section
         className="scene-panel mx-auto grid w-full max-w-6xl gap-5 px-6 py-14 md:grid-cols-3 lg:px-8"
@@ -240,7 +246,7 @@ export function HomeImmersive() {
         data-cam-x="-0.06"
       >
         <div className="section-shell p-8 md:p-10">
-          <p className="kicker reveal">Operating Tracks</p>
+          <p className="northstar-kicker reveal">Operating Tracks</p>
           <h2 className="reveal mt-4 font-display text-3xl text-white md:text-4xl">Pick the track and inspect the execution model.</h2>
 
           <div className="mt-7 flex flex-wrap gap-3">
@@ -282,7 +288,7 @@ export function HomeImmersive() {
               </div>
             </div>
             <div className="surface-card p-5">
-              <p className="kicker text-white/65">Tech Fit</p>
+              <p className="northstar-kicker text-white/65">Tech Fit</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {activeTrack.stack.map((item) => (
                   <span key={item} className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.12em] text-white/80">
@@ -291,7 +297,7 @@ export function HomeImmersive() {
                 ))}
               </div>
               <div className="mt-6 rounded-xl border border-electric/35 bg-electric/10 p-4">
-                <p className="kicker text-white/80">Implementation Note</p>
+                <p className="northstar-kicker text-white/80">Implementation Note</p>
                 <p className="mt-2 text-sm leading-6 text-white/90">
                   Delivery is orchestrated around typed boundaries and measurable thresholds, so scaling does not erode quality.
                 </p>
@@ -311,7 +317,7 @@ export function HomeImmersive() {
         data-cam-x="0.1"
       >
         <div className="section-shell p-8 md:p-10">
-          <p className="kicker reveal">Execution Rail</p>
+          <p className="northstar-kicker reveal">Execution Rail</p>
           <h2 className="reveal mt-4 font-display text-3xl text-white md:text-4xl">The delivery cadence is explicit, testable, and repeatable.</h2>
           <div className="mt-8 grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
             <div className="rounded-2xl border border-white/15 bg-black/55 p-5">
@@ -328,8 +334,8 @@ export function HomeImmersive() {
                 </motion.p>
               ))}
             </div>
-            <div className="rounded-2xl border border-electric/35 bg-electric/10 p-5">
-              <p className="kicker text-white/80">Outcome</p>
+            <div className="rounded-2xl border border-ember/35 bg-ember/10 p-5">
+              <p className="northstar-kicker text-white/80">Outcome</p>
               <p className="mt-3 text-sm leading-7 text-white/90">
                 Shipping quality is designed into the system: product experience, engineering, infrastructure, and observability operate as a single production instrument.
               </p>

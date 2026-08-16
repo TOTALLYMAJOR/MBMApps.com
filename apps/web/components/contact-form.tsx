@@ -78,6 +78,88 @@ const constraintOptions: Array<{ value: ContactSubmission['topConstraint']; labe
   { value: 'none', label: 'No major blocker' }
 ];
 
+type FieldDef =
+  | { kind: 'text' | 'email'; name: string; label: string; required?: boolean; placeholder?: string }
+  | { kind: 'number'; name: string; label: string; required?: boolean; placeholder?: string; min?: number }
+  | { kind: 'select'; name: string; label: string; required?: boolean; options: Array<{ value: string; label: string }> }
+  | { kind: 'textarea'; name: string; label: string; required?: boolean; placeholder?: string; minLength?: number };
+
+type StepDef = {
+  id: string;
+  prompt: string;
+  fields: FieldDef[];
+};
+
+const STEPS: StepDef[] = [
+  {
+    id: 'identity',
+    prompt: "Let's start with the basics. Who am I speaking with?",
+    fields: [
+      { kind: 'text', name: 'name', label: 'Name', required: true, placeholder: 'Avery Morgan' },
+      { kind: 'email', name: 'email', label: 'Work email', required: true, placeholder: 'avery@company.com' }
+    ]
+  },
+  {
+    id: 'company',
+    prompt: 'Tell me about the company.',
+    fields: [
+      { kind: 'text', name: 'company', label: 'Company', required: true, placeholder: 'Northline Foods' },
+      { kind: 'text', name: 'industry', label: 'Industry', required: true, placeholder: 'Events, catering, field services...' },
+      { kind: 'select', name: 'serviceCategory', label: 'Service category', required: true, options: serviceCategoryOptions }
+    ]
+  },
+  {
+    id: 'shape',
+    prompt: "What's the shape of the operation?",
+    fields: [
+      { kind: 'select', name: 'companySize', label: 'Company size', required: true, options: companySizeOptions },
+      { kind: 'number', name: 'locationCount', label: 'Locations', required: true, min: 1 },
+      { kind: 'number', name: 'teamSize', label: 'Team size', placeholder: '24', min: 0 }
+    ]
+  },
+  {
+    id: 'commercial',
+    prompt: "Let's talk budget and timing.",
+    fields: [
+      { kind: 'select', name: 'budget', label: 'Budget range', required: true, options: budgetOptions },
+      { kind: 'select', name: 'timeline', label: 'Timeline', required: true, options: timelineOptions },
+      { kind: 'select', name: 'decisionRole', label: 'Decision role', required: true, options: decisionRoleOptions }
+    ]
+  },
+  {
+    id: 'context',
+    prompt: "What's already in motion?",
+    fields: [
+      { kind: 'number', name: 'monthlyQuoteVolume', label: 'Monthly quote volume', placeholder: '60', min: 0 },
+      { kind: 'text', name: 'currentCrmOrOpsSystem', label: 'Current CRM / ops system', placeholder: 'HubSpot, Salesforce, spreadsheets...' },
+      { kind: 'text', name: 'currentTools', label: 'Current tools', placeholder: 'Comma-separated tools' }
+    ]
+  },
+  {
+    id: 'friction',
+    prompt: "Where's the friction?",
+    fields: [
+      { kind: 'select', name: 'operationalMaturity', label: 'Operating maturity', required: true, options: maturityOptions },
+      { kind: 'select', name: 'primaryBusinessPain', label: 'Primary pain', required: true, options: painOptions },
+      { kind: 'select', name: 'topConstraint', label: 'Top constraint', required: true, options: constraintOptions }
+    ]
+  },
+  {
+    id: 'brief',
+    prompt: 'Last thing — what does success look like?',
+    fields: [
+      {
+        kind: 'textarea',
+        name: 'message',
+        label: 'Project goals',
+        required: true,
+        minLength: 20,
+        placeholder: 'Share outcomes you need: conversion lift, quoting speed, automation, reliability, etc.'
+      }
+    ]
+  }
+];
+
 type FormState = {
   status: 'idle' | 'loading' | 'success' | 'error';
   message: string;
@@ -88,52 +170,130 @@ const initialState: FormState = {
   message: ''
 };
 
-function optionalNumber(value: FormDataEntryValue | null) {
-  const normalized = String(value ?? '').trim();
+function optionalNumber(value: string | undefined) {
+  const normalized = (value ?? '').trim();
   return normalized.length > 0 ? Number(normalized) : undefined;
 }
 
-function splitTools(value: FormDataEntryValue | null) {
-  return String(value ?? '')
+function splitTools(value: string | undefined) {
+  return (value ?? '')
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean)
     .slice(0, 12);
 }
 
+function summarizeValue(field: FieldDef, raw: string) {
+  if (!raw.trim()) {
+    return null;
+  }
+  if (field.kind === 'select') {
+    return field.options.find((option) => option.value === raw)?.label ?? raw;
+  }
+  return raw;
+}
+
+function summarizeStep(stepDef: StepDef, values: Record<string, string>) {
+  return stepDef.fields
+    .map((field) => summarizeValue(field, values[field.name] ?? ''))
+    .filter(Boolean)
+    .join(' · ');
+}
+
+function isStepValid(stepDef: StepDef, values: Record<string, string>) {
+  return stepDef.fields.every((field) => {
+    if (!field.required) {
+      return true;
+    }
+    const raw = (values[field.name] ?? '').trim();
+    if (field.kind === 'textarea') {
+      return raw.length >= (field.minLength ?? 1);
+    }
+    return raw.length > 0;
+  });
+}
+
 export function ContactForm() {
+  const [values, setValues] = useState<Record<string, string>>({ locationCount: '1' });
+  const [consent, setConsent] = useState({ dataProcessingAccepted: false, marketingOptIn: false });
+  const [step, setStep] = useState(0);
+  const [attempted, setAttempted] = useState(false);
   const [state, setState] = useState<FormState>(initialState);
   const [startedAt] = useState(Date.now());
-  const [messageLength, setMessageLength] = useState(0);
+
+  const stepDef = (STEPS[step] ?? STEPS[0])!;
+  const isLastStep = step === STEPS.length - 1;
+  const canAdvance = isStepValid(stepDef, values);
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+    const { name, value } = event.target;
+    setValues((prev) => ({ ...prev, [name]: value }));
+  }
+
+  function handleNext() {
+    if (!canAdvance) {
+      setAttempted(true);
+      return;
+    }
+    setAttempted(false);
+    setStep((current) => Math.min(current + 1, STEPS.length - 1));
+  }
+
+  function handleBack(target?: number) {
+    setAttempted(false);
+    setStep((current) => target ?? Math.max(current - 1, 0));
+  }
+
+  function handleFormKeyDown(event: React.KeyboardEvent<HTMLFormElement>) {
+    if (event.key !== 'Enter') {
+      return;
+    }
+    const target = event.target as HTMLElement;
+    if (target.tagName === 'TEXTAREA' || isLastStep) {
+      return;
+    }
+    event.preventDefault();
+    handleNext();
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!isLastStep) {
+      handleNext();
+      return;
+    }
+
+    if (!canAdvance || !consent.dataProcessingAccepted) {
+      setAttempted(true);
+      return;
+    }
+
     setState({ status: 'loading', message: 'Submitting your request...' });
 
-    const formData = new FormData(event.currentTarget);
     const payload = {
-      name: String(formData.get('name') ?? ''),
-      email: String(formData.get('email') ?? ''),
-      company: String(formData.get('company') ?? ''),
-      website: String(formData.get('website') ?? ''),
-      message: String(formData.get('message') ?? ''),
-      budget: String(formData.get('budget') ?? ''),
-      timeline: String(formData.get('timeline') ?? ''),
-      decisionRole: String(formData.get('decisionRole') ?? ''),
-      industry: String(formData.get('industry') ?? ''),
-      companySize: String(formData.get('companySize') ?? ''),
-      locationCount: Number(formData.get('locationCount') ?? 1),
-      teamSize: optionalNumber(formData.get('teamSize')),
-      monthlyQuoteVolume: optionalNumber(formData.get('monthlyQuoteVolume')),
-      serviceCategory: String(formData.get('serviceCategory') ?? ''),
-      currentTools: splitTools(formData.get('currentTools')),
-      currentCrmOrOpsSystem: String(formData.get('currentCrmOrOpsSystem') ?? ''),
-      operationalMaturity: String(formData.get('operationalMaturity') ?? ''),
-      primaryBusinessPain: String(formData.get('primaryBusinessPain') ?? ''),
-      topConstraint: String(formData.get('topConstraint') ?? ''),
+      name: values.name ?? '',
+      email: values.email ?? '',
+      company: values.company ?? '',
+      website: values.website ?? '',
+      message: values.message ?? '',
+      budget: values.budget ?? '',
+      timeline: values.timeline ?? '',
+      decisionRole: values.decisionRole ?? '',
+      industry: values.industry ?? '',
+      companySize: values.companySize ?? '',
+      locationCount: Number(values.locationCount || 1),
+      teamSize: optionalNumber(values.teamSize),
+      monthlyQuoteVolume: optionalNumber(values.monthlyQuoteVolume),
+      serviceCategory: values.serviceCategory ?? '',
+      currentTools: splitTools(values.currentTools),
+      currentCrmOrOpsSystem: values.currentCrmOrOpsSystem ?? '',
+      operationalMaturity: values.operationalMaturity ?? '',
+      primaryBusinessPain: values.primaryBusinessPain ?? '',
+      topConstraint: values.topConstraint ?? '',
       consent: {
-        dataProcessingAccepted: formData.get('dataProcessingAccepted') === 'on',
-        marketingOptIn: formData.get('marketingOptIn') === 'on',
+        dataProcessingAccepted: consent.dataProcessingAccepted,
+        marketingOptIn: consent.marketingOptIn,
         acceptedAt: new Date().toISOString(),
         policyVersion: '2026-05-05'
       },
@@ -160,8 +320,10 @@ export function ContactForm() {
         return;
       }
 
-      event.currentTarget.reset();
-      setMessageLength(0);
+      setValues({ locationCount: '1' });
+      setConsent({ dataProcessingAccepted: false, marketingOptIn: false });
+      setStep(0);
+      setAttempted(false);
       setState({
         status: 'success',
         message: 'Thanks. Your request is in. Use the scheduling link below to pick a discovery call slot.'
@@ -174,340 +336,159 @@ export function ContactForm() {
     }
   }
 
-  return (
-    <form onSubmit={onSubmit} className="northstar-card space-y-6 p-6 md:p-8">
-      <div className="border-b border-white/10 pb-5">
-        <p className="northstar-kicker">Intake Readiness</p>
-        <div className="mt-3 grid gap-2 text-xs text-white/80 md:grid-cols-3">
-          {['Scope clarity', 'Budget alignment', 'Timeline commitment'].map((item) => (
-            <p key={item} className="border-l border-indigo-300/30 py-1 pl-2 text-white/48">
-              {item}
-            </p>
-          ))}
-        </div>
-      </div>
+  function renderField(field: FieldDef) {
+    const value = values[field.name] ?? '';
+    const showError = attempted && field.required && !value.trim();
+    const fieldClassName = `northstar-input${showError ? ' border-rose-400/60' : ''}`;
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <label className="space-y-2 text-sm text-white/90">
-          Name
-          <input
-            required
-            name="name"
-            className="northstar-input"
-            placeholder="Avery Morgan"
-          />
-        </label>
-        <label className="space-y-2 text-sm text-white/90">
-          Work email
-          <input
-            required
-            type="email"
-            name="email"
-            className="northstar-input"
-            placeholder="avery@company.com"
-          />
-        </label>
-      </div>
-
-      <div className="grid gap-5 md:grid-cols-2">
-        <label className="space-y-2 text-sm text-white/90">
-          Company
-          <input
-            required
-            name="company"
-            className="northstar-input"
-            placeholder="Northline Foods"
-          />
-        </label>
-        <label className="space-y-2 text-sm text-white/90">
-          Budget range
-          <select
-            required
-            name="budget"
-            className="northstar-input"
-            defaultValue=""
-          >
+    if (field.kind === 'select') {
+      return (
+        <label key={field.name} className="space-y-2 text-sm text-white/90">
+          {field.label}
+          <select name={field.name} value={value} onChange={handleChange} className={fieldClassName}>
             <option value="" disabled>
-              Select budget
+              Select {field.label.toLowerCase()}
             </option>
-            {budgetOptions.map((option) => (
+            {field.options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
           </select>
         </label>
-      </div>
+      );
+    }
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <label className="space-y-2 text-sm text-white/90">
-          Timeline
-          <select
-            required
-            name="timeline"
-            className="northstar-input"
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Select timeline
-            </option>
-            {timelineOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="space-y-2 text-sm text-white/90">
-          Decision role
-          <select
-            required
-            name="decisionRole"
-            className="northstar-input"
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Select role
-            </option>
-            {decisionRoleOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-
-      <div className="space-y-5 border-y border-white/10 py-6">
-        <div>
-          <p className="northstar-kicker">Champion Signals</p>
-          <p className="mt-2 text-xs leading-5 text-white/65">
-            These details help us benchmark fit, urgency, operating complexity, and outcome potential.
-          </p>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-2">
-          <label className="space-y-2 text-sm text-white/90">
-            Industry
-            <input
-              required
-              name="industry"
-              className="northstar-input"
-              placeholder="Events, catering, field services..."
-            />
-          </label>
-
-          <label className="space-y-2 text-sm text-white/90">
-            Service category
-            <select
-              required
-              name="serviceCategory"
-              className="northstar-input"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select category
-              </option>
-              {serviceCategoryOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-3">
-          <label className="space-y-2 text-sm text-white/90">
-            Company size
-            <select
-              required
-              name="companySize"
-              className="northstar-input"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select size
-              </option>
-              {companySizeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="space-y-2 text-sm text-white/90">
-            Locations
-            <input
-              required
-              min={1}
-              type="number"
-              name="locationCount"
-              className="northstar-input"
-              defaultValue={1}
-            />
-          </label>
-
-          <label className="space-y-2 text-sm text-white/90">
-            Team size
-            <input
-              min={0}
-              type="number"
-              name="teamSize"
-              className="northstar-input"
-              placeholder="24"
-            />
-          </label>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-2">
-          <label className="space-y-2 text-sm text-white/90">
-            Monthly quote volume
-            <input
-              min={0}
-              type="number"
-              name="monthlyQuoteVolume"
-              className="northstar-input"
-              placeholder="60"
-            />
-          </label>
-
-          <label className="space-y-2 text-sm text-white/90">
-            Current CRM / ops system
-            <input
-              name="currentCrmOrOpsSystem"
-              className="northstar-input"
-              placeholder="HubSpot, Salesforce, spreadsheets..."
-            />
-          </label>
-        </div>
-
-        <label className="space-y-2 text-sm text-white/90">
-          Current tools
-          <input
-            name="currentTools"
-            className="northstar-input"
-            placeholder="Comma-separated tools"
+    if (field.kind === 'textarea') {
+      return (
+        <label key={field.name} className="space-y-2 text-sm text-white/90 md:col-span-2">
+          {field.label}
+          <textarea
+            name={field.name}
+            rows={5}
+            value={value}
+            onChange={handleChange}
+            className={fieldClassName}
+            placeholder={field.placeholder}
           />
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs text-mist">
+              <span>Brief quality signal</span>
+              <span>{value.length} chars</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-white/10">
+              <div
+                className="h-1.5 rounded-full bg-gradient-to-r from-electric via-signal to-ember transition-all"
+                style={{ width: `${Math.min((value.length / 140) * 100, 100)}%` }}
+              />
+            </div>
+          </div>
         </label>
+      );
+    }
 
-        <div className="grid gap-5 md:grid-cols-3">
-          <label className="space-y-2 text-sm text-white/90">
-            Operating maturity
-            <select
-              required
-              name="operationalMaturity"
-              className="northstar-input"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select maturity
-              </option>
-              {maturityOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="space-y-2 text-sm text-white/90">
-            Primary pain
-            <select
-              required
-              name="primaryBusinessPain"
-              className="northstar-input"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select pain
-              </option>
-              {painOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="space-y-2 text-sm text-white/90">
-            Top constraint
-            <select
-              required
-              name="topConstraint"
-              className="northstar-input"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select constraint
-              </option>
-              {constraintOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-      </div>
-
-      <label className="space-y-2 text-sm text-white/90">
-        Project goals
-        <textarea
-          required
-          minLength={20}
-          name="message"
-          rows={5}
-          onChange={(event) => setMessageLength(event.target.value.length)}
-          className="northstar-input"
-          placeholder="Share outcomes you need: conversion lift, quoting speed, automation, reliability, etc."
+    return (
+      <label key={field.name} className="space-y-2 text-sm text-white/90">
+        {field.label}
+        <input
+          type={field.kind === 'number' ? 'number' : field.kind}
+          name={field.name}
+          value={value}
+          onChange={handleChange}
+          min={field.kind === 'number' ? field.min : undefined}
+          placeholder={field.placeholder}
+          className={fieldClassName}
         />
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs text-mist">
-            <span>Brief quality signal</span>
-            <span>{messageLength} chars</span>
-          </div>
-          <div className="h-1.5 rounded-full bg-white/10">
-            <div
-              className="h-1.5 rounded-full bg-gradient-to-r from-electric via-signal to-warning transition-all"
-              style={{ width: `${Math.min((messageLength / 140) * 100, 100)}%` }}
-            />
-          </div>
-        </div>
       </label>
+    );
+  }
 
-      <input
-        name="website"
-        autoComplete="off"
-        tabIndex={-1}
-        className="hidden"
-        aria-hidden="true"
-      />
-
-      <div className="space-y-3 text-xs leading-5 text-white/70">
-        <label className="flex gap-3">
-          <input required type="checkbox" name="dataProcessingAccepted" className="mt-1 h-4 w-4 rounded border-white/20 bg-black/45" />
-          <span>MBMApps may process this information to qualify fit and respond with relevant next steps.</span>
-        </label>
-        <label className="flex gap-3">
-          <input type="checkbox" name="marketingOptIn" className="mt-1 h-4 w-4 rounded border-white/20 bg-black/45" />
-          <span>Send occasional product and operations insights.</span>
-        </label>
+  return (
+    <form onSubmit={onSubmit} onKeyDown={handleFormKeyDown} className="northstar-card space-y-6 p-6 md:p-8">
+      <div className="flex items-center justify-between border-b border-white/10 pb-5">
+        <p className="northstar-kicker">Project intake</p>
+        <span className="instrument-chip instrument-chip--ember instrument-chip--live">
+          <span className="instrument-chip__dot" aria-hidden="true" />
+          Step {step + 1} / {STEPS.length}
+        </span>
       </div>
 
-      <button
-        type="submit"
-        disabled={state.status === 'loading'}
-        className="storefront-action storefront-action--primary w-full justify-center disabled:cursor-not-allowed disabled:opacity-70"
-      >
-        {state.status === 'loading' ? 'Submitting...' : 'Request Discovery Call'}
-      </button>
+      <input name="website" autoComplete="off" tabIndex={-1} value={values.website ?? ''} onChange={handleChange} className="hidden" aria-hidden="true" />
 
-      {state.status !== 'idle' ? (
-        <p className={state.status === 'error' ? 'text-sm text-rose-300' : 'text-sm text-signal'}>{state.message}</p>
-      ) : null}
+      {STEPS.slice(0, step).map((pastStep, index) => {
+        const summary = summarizeStep(pastStep, values);
+        if (!summary) {
+          return null;
+        }
+        return (
+          <div key={pastStep.id} className="space-y-2">
+            <p className="text-sm text-white/40">{pastStep.prompt}</p>
+            <button
+              type="button"
+              onClick={() => handleBack(index)}
+              className="northstar-input flex w-full items-center justify-between gap-3 text-left text-sm text-white/85 transition hover:border-indigo-300/40"
+            >
+              <span>{summary}</span>
+              <span className="shrink-0 text-xs text-indigo-300/70">Edit</span>
+            </button>
+          </div>
+        );
+      })}
+
+      <div key={stepDef.id} className="animate-rise space-y-5">
+        <p className="text-base leading-6 text-white/90">{stepDef.prompt}</p>
+        <div className="grid gap-5 md:grid-cols-2">{stepDef.fields.map((field) => renderField(field))}</div>
+        {attempted && !canAdvance ? <p className="text-xs text-rose-300">Fill in the highlighted fields to continue.</p> : null}
+
+        {isLastStep ? (
+          <>
+            <div className="space-y-3 text-xs leading-5 text-white/70">
+              <label className="flex gap-3">
+                <input
+                  type="checkbox"
+                  checked={consent.dataProcessingAccepted}
+                  onChange={(event) => setConsent((prev) => ({ ...prev, dataProcessingAccepted: event.target.checked }))}
+                  className="mt-1 h-4 w-4 rounded border-white/20 bg-black/45"
+                />
+                <span>MBMApps may process this information to qualify fit and respond with relevant next steps.</span>
+              </label>
+              <label className="flex gap-3">
+                <input
+                  type="checkbox"
+                  checked={consent.marketingOptIn}
+                  onChange={(event) => setConsent((prev) => ({ ...prev, marketingOptIn: event.target.checked }))}
+                  className="mt-1 h-4 w-4 rounded border-white/20 bg-black/45"
+                />
+                <span>Send occasional product and operations insights.</span>
+              </label>
+              {attempted && !consent.dataProcessingAccepted ? <p className="text-rose-300">Consent is required to submit.</p> : null}
+            </div>
+
+            <button
+              type="submit"
+              disabled={state.status === 'loading'}
+              className="storefront-action storefront-action--primary w-full justify-center disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {state.status === 'loading' ? 'Submitting...' : 'Send'}
+            </button>
+          </>
+        ) : (
+          <div className="flex items-center justify-between gap-3 pt-1">
+            {step > 0 ? (
+              <button type="button" onClick={() => handleBack()} className="text-sm text-white/48 transition hover:text-white/80">
+                Back
+              </button>
+            ) : (
+              <span />
+            )}
+            <button type="button" onClick={handleNext} className="storefront-action storefront-action--primary">
+              Continue
+            </button>
+          </div>
+        )}
+      </div>
+
+      {state.status !== 'idle' ? <p className={state.status === 'error' ? 'text-sm text-rose-300' : 'text-sm text-signal'}>{state.message}</p> : null}
     </form>
   );
 }

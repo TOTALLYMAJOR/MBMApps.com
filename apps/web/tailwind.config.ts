@@ -19,7 +19,8 @@ const config: Config = {
         mist: 'rgb(var(--mbm-mist) / <alpha-value>)',
         signal: 'rgb(var(--mbm-signal) / <alpha-value>)',
         electric: 'rgb(var(--mbm-electric) / <alpha-value>)',
-        warning: 'rgb(var(--mbm-warning) / <alpha-value>)'
+        warning: 'rgb(var(--mbm-warning) / <alpha-value>)',
+        ember: 'rgb(var(--mbm-ember) / <alpha-value>)'
       },
       boxShadow: {
         panel: '0 10px 40px rgba(10, 30, 70, 0.35)',

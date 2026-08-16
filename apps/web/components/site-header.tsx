@@ -32,7 +32,11 @@ export function SiteHeader() {
             );
           })}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <span className="availability-mark availability-mark--live hidden lg:inline-flex">
+            <span className="availability-mark__dot" aria-hidden="true" />
+            Open for new engagements
+          </span>
           <Link href="/contact" className="northstar-header-link hidden sm:inline-flex">Start a conversation</Link>
           <Link href="/apps" className="northstar-header-cta">Browse apps</Link>
         </div>

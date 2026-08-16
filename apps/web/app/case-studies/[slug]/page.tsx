@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { ArrowUpRight } from 'lucide-react';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { ContentReadBeacon } from '@/components/content-read-beacon';
 import { EventBeacon } from '@/components/event-beacon';
@@ -80,12 +81,25 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
           primary_outcome: caseStudy.frontmatter.primaryOutcome
         }}
       />
-      <p className="kicker">{caseStudy.frontmatter.industry}</p>
-      <h1 className="mt-3 font-display text-5xl text-white">{caseStudy.frontmatter.title}</h1>
+      <p className="northstar-kicker">{caseStudy.frontmatter.industry}</p>
+      <h1 className="mt-3 font-display text-5xl font-light tracking-[-0.04em] text-white">{caseStudy.frontmatter.title}</h1>
       <p className="text-mbm-muted mt-4 text-lg">{caseStudy.frontmatter.summary}</p>
-      <p className="surface-card mt-4 inline-flex rounded-full px-3 py-1 text-xs text-white/80">
-        Outcome: {caseStudy.frontmatter.outcome}
-      </p>
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <span className="instrument-chip instrument-chip--ember instrument-chip--live">
+          <span className="instrument-chip__dot" aria-hidden="true" />
+          Outcome: {caseStudy.frontmatter.outcome}
+        </span>
+        {caseStudy.frontmatter.liveUrl ? (
+          <a
+            href={caseStudy.frontmatter.liveUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="storefront-detail-link"
+          >
+            Visit live site <ArrowUpRight className="h-4 w-4" />
+          </a>
+        ) : null}
+      </div>
       <div className="mbm-prose mt-10">
         <MDXRemote source={caseStudy.content} />
       </div>

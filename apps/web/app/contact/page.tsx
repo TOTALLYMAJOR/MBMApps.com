@@ -1,8 +1,8 @@
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ArrowUpRight, Check } from 'lucide-react';
 import { ContactForm } from '@/components/contact-form';
 import { NorthstarPageHero } from '@/components/northstar-page-hero';
-import { TrackedLink } from '@/components/tracked-link';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -19,16 +19,7 @@ export default function ContactPage() {
         title="Tell us what needs to work better."
         description="Share the outcome, the constraint, and what is already in motion. We’ll respond with a scoped technical approach, an architecture recommendation, and a realistic path to launch."
         signal="INTAKE / OPEN"
-        actions={(
-          <TrackedLink
-            href={schedulingUrl}
-            className="storefront-hero-button storefront-hero-button--primary"
-            trackingEvent="scheduling_started"
-            trackingMetadata={{ surface: 'contact-page', target: 'discovery-call' }}
-          >
-            Book a discovery call <ArrowUpRight className="h-4 w-4" />
-          </TrackedLink>
-        )}
+        actions={<Link href={schedulingUrl} className="storefront-hero-button storefront-hero-button--primary" target="_blank" rel="noreferrer">Book a discovery call <ArrowUpRight className="h-4 w-4" /></Link>}
         aside={(
           <div>
             <p className="font-display text-3xl font-light tracking-[-0.04em] text-white">Practical next steps, not a generic discovery script.</p>

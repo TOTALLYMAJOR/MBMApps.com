@@ -24,3 +24,8 @@ firebase-debug.log
 .vscode/
 npm-debug.log*
 .vercel
+
+# test/tool output
+test-results/
+output/
+.playwright-cli/

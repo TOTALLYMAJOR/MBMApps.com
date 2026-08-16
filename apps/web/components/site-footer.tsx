@@ -31,9 +31,15 @@ export function SiteFooter() {
             <a href={`mailto:${siteConfig.email}`} className="northstar-footer-link mt-6 inline-flex">{siteConfig.email}</a>
           </div>
         </div>
-        <div className="flex flex-col gap-3 pt-6 text-xs text-white/36 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 pt-6 text-xs text-white/36 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} {siteConfig.legalName}</p>
-          <a href={siteConfig.social.github} className="northstar-footer-link">GitHub / TOTALLYMAJOR</a>
+          <div className="instrument-strip">
+            <span className="instrument-chip instrument-chip--ember instrument-chip--live">
+              <span className="instrument-chip__dot" aria-hidden="true" />
+              {projectScreens.length} products live
+            </span>
+            <a href={siteConfig.social.github} className="northstar-footer-link">GitHub / TOTALLYMAJOR</a>
+          </div>
         </div>
       </div>
     </footer>

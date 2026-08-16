@@ -41,7 +41,13 @@ export function AppPanelHome() {
         <div className="portfolio-grid" aria-hidden="true" />
         <div className="northstar-container portfolio-hero__layout">
           <div className="portfolio-hero__copy">
-            <p className="portfolio-eyebrow">Independent software studio</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="portfolio-eyebrow">Independent software studio</p>
+              <span className="instrument-chip instrument-chip--ember instrument-chip--live">
+                <span className="instrument-chip__dot" aria-hidden="true" />
+                {projectScreens.length} products live
+              </span>
+            </div>
             <h1 id="portfolio-hero-title" className="portfolio-display">
               Purpose-built software for work that cannot run on guesswork.
             </h1>

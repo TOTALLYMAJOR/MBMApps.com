@@ -10,6 +10,7 @@
   --mbm-signal: 185 206 255;
   --mbm-electric: 117 151 255;
   --mbm-warning: 214 227 255;
+  --mbm-ember: 232 160 36;
 }
 
 * {
@@ -203,6 +204,54 @@ body::after {
   color: rgba(199, 210, 254, 0.72);
 }
 
+/* Instrumentation motif: mono-spaced live-data readouts, ember/indigo duotone */
+.instrument-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.instrument-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.4rem 0.75rem;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+
+.instrument-chip--ember {
+  border-color: rgba(232, 160, 36, 0.28);
+  background: rgba(232, 160, 36, 0.08);
+  color: rgba(252, 211, 138, 0.92);
+}
+
+.instrument-chip__dot {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.instrument-chip--live .instrument-chip__dot {
+  background: #e8a024;
+  box-shadow: 0 0 10px rgba(232, 160, 36, 0.65);
+  animation: northstar-live-pulse-ember 2.4s ease-in-out infinite;
+}
+
+@keyframes northstar-live-pulse-ember {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 160, 36, 0.18), 0 0 10px rgba(232, 160, 36, 0.6); }
+  50% { box-shadow: 0 0 0 0.3rem rgba(232, 160, 36, 0.06), 0 0 18px rgba(232, 160, 36, 0.9); }
+}
+
 .northstar-page-hero {
   position: relative;
   overflow: hidden;
@@ -233,6 +282,11 @@ body::after {
   right: 6rem;
   bottom: -7rem;
   animation: northstar-orbit-drift-small 10s ease-in-out infinite alternate-reverse;
+}
+
+.northstar-page-hero__orbit--ember {
+  border-color: rgba(232, 160, 36, 0.16);
+  box-shadow: inset 0 0 70px rgba(232, 160, 36, 0.05);
 }
 
 .northstar-page-title {
@@ -333,6 +387,7 @@ body::after {
   border-radius: 1.5rem;
   background:
     radial-gradient(circle at 86% 10%, rgba(99, 102, 241, 0.2), transparent 35%),
+    radial-gradient(circle at 6% 96%, rgba(232, 160, 36, 0.12), transparent 40%),
     rgba(10, 10, 20, 0.86);
   padding: clamp(2rem, 5vw, 4.5rem);
 }
@@ -360,10 +415,10 @@ body::after {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-.northstar-page-hero .northstar-kicker { animation: northstar-enter 720ms cubic-bezier(0.16, 1, 0.3, 1) both; }
-.northstar-page-title { animation: northstar-enter 820ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both; }
-.northstar-page-copy { animation: northstar-enter 820ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both; }
-.northstar-page-hero .storefront-hero-button { animation: northstar-enter 760ms cubic-bezier(0.16, 1, 0.3, 1) 220ms both; }
+.northstar-page-hero .northstar-kicker { animation: northstar-enter 520ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.northstar-page-title { animation: northstar-enter 600ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both; }
+.northstar-page-copy { animation: northstar-enter 600ms cubic-bezier(0.16, 1, 0.3, 1) 110ms both; }
+.northstar-page-hero .storefront-hero-button { animation: northstar-enter 560ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both; }
 
 .storefront-action--primary,
 .storefront-hero-button--primary {
@@ -1268,6 +1323,17 @@ a {
   box-shadow: 0 0 100px rgba(87, 60, 178, 0.1);
 }
 
+.portfolio-hero::after {
+  content: '';
+  position: absolute;
+  right: -8rem;
+  top: -10rem;
+  width: 22rem;
+  height: 22rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 160, 36, 0.1), transparent 70%);
+}
+
 .portfolio-hero__layout {
   position: relative;
   z-index: 1;
@@ -1963,6 +2029,7 @@ a {
   text-align: center;
   background:
     radial-gradient(circle at 50% 100%, rgba(104, 70, 193, 0.3), transparent 34rem),
+    radial-gradient(circle at 85% 15%, rgba(232, 160, 36, 0.1), transparent 28rem),
     #050711;
 }
 
