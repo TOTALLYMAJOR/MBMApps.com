@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { Bricolage_Grotesque, IBM_Plex_Mono, Instrument_Serif, Space_Grotesk } from 'next/font/google';
+import { Bricolage_Grotesque, IBM_Plex_Mono, Inter, Instrument_Serif, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
+import { FireflyField } from '@/components/firefly-field';
 import { NorthstarMotion } from '@/components/northstar-motion';
 import { StartupLoader } from '@/components/startup-loader';
 import { WebVitalsReporter } from '@/components/web-vitals-reporter';
@@ -11,6 +12,12 @@ import { siteConfig } from '@/lib/site';
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   variable: '--font-space-grotesk',
+  display: 'swap'
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
   display: 'swap'
 });
 
@@ -62,10 +69,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${bricolageGrotesk.variable} ${ibmPlexMono.variable} ${instrumentSerif.variable}`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${bricolageGrotesk.variable} ${ibmPlexMono.variable} ${instrumentSerif.variable}`}>
       <body className="text-ink antialiased">
         <a href="#main-content" className="skip-link">Skip to content</a>
         <StartupLoader />
+        <FireflyField />
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main id="main-content" className="flex-1">{children}</main>

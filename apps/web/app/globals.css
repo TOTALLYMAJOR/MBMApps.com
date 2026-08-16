@@ -4,13 +4,14 @@
 
 :root {
   color-scheme: dark;
-  --mbm-canvas: 4 6 14;
+  --mbm-canvas: 8 8 8;
   --mbm-ink: 245 247 251;
   --mbm-mist: 145 160 201;
   --mbm-signal: 185 206 255;
-  --mbm-electric: 117 151 255;
+  --mbm-electric: 94 106 210;
   --mbm-warning: 214 227 255;
   --mbm-ember: 232 160 36;
+  --mbm-slate: 138 143 152;
 }
 
 * {
@@ -29,11 +30,11 @@ html {
 
 body {
   background:
-    radial-gradient(circle at 12% 8%, rgba(114, 149, 255, 0.22), transparent 34%),
-    radial-gradient(circle at 86% 4%, rgba(174, 202, 255, 0.16), transparent 36%),
-    linear-gradient(180deg, #04060e 0%, #060914 46%, #03040a 100%);
+    radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.1), transparent 34%),
+    radial-gradient(circle at 86% 4%, rgba(255, 255, 255, 0.07), transparent 36%),
+    linear-gradient(180deg, #080808 0%, #0c0c0c 46%, #060606 100%);
   color: rgb(var(--mbm-ink));
-  font-family: var(--font-space-grotesk), sans-serif;
+  font-family: var(--font-inter), var(--font-space-grotesk), sans-serif;
   overflow-x: hidden;
 }
 
@@ -65,7 +66,7 @@ body::after {
   border-radius: 0.6rem;
   background: #fff;
   padding: 0.65rem 1rem;
-  color: #090910;
+  color: #0c0c0c;
   transition: transform 180ms ease;
 }
 
@@ -176,8 +177,8 @@ body::after {
   overflow: hidden;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   background:
-    radial-gradient(circle at 8% 8%, rgba(99, 102, 241, 0.1), transparent 30%),
-    #07070e;
+    radial-gradient(circle at 8% 8%, rgba(255, 255, 255, 0.05), transparent 30%),
+    #0a0a0a;
 }
 
 .northstar-footer-link {
@@ -193,6 +194,45 @@ body::after {
 .northstar-footer-link:hover {
   color: #fff;
   transform: translateX(3px);
+}
+
+.firefly-field {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.firefly-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: rgb(var(--mbm-electric));
+  box-shadow:
+    0 0 6px 1px rgba(var(--mbm-electric), 0.85),
+    0 0 16px 4px rgba(var(--mbm-electric), 0.35);
+  opacity: 0;
+  animation-name: firefly-glow;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes firefly-glow {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: var(--firefly-max-opacity, 0.7);
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .firefly-field {
+    display: none;
+  }
 }
 
 .northstar-kicker {
@@ -257,8 +297,8 @@ body::after {
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background:
-    radial-gradient(ellipse 55% 65% at 18% 45%, rgba(99, 102, 241, 0.18), transparent 68%),
-    linear-gradient(180deg, #090910 0%, #070711 100%);
+    radial-gradient(ellipse 55% 65% at 18% 45%, rgba(255, 255, 255, 0.08), transparent 68%),
+    linear-gradient(180deg, #0c0c0c 0%, #0b0b0b 100%);
 }
 
 .northstar-page-hero__orbit {
@@ -526,10 +566,10 @@ body.is-locked {
   gap: 0.9rem;
   pointer-events: auto;
   background:
-    radial-gradient(circle at center, rgba(164, 191, 255, 0.16), transparent 42%),
-    radial-gradient(circle at 18% 22%, rgba(112, 146, 244, 0.22), transparent 30%),
-    radial-gradient(circle at 76% 14%, rgba(95, 121, 214, 0.18), transparent 34%),
-    linear-gradient(170deg, #02040b 0%, #040916 54%, #02030a 100%);
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 42%),
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.1), transparent 30%),
+    radial-gradient(circle at 76% 14%, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(170deg, #060606 0%, #0c0c0c 54%, #050505 100%);
 }
 
 .landing-loader__brand {
@@ -551,8 +591,8 @@ body.is-locked {
 
 .scene-wash {
   background:
-    radial-gradient(circle at 14% 10%, rgba(137, 172, 255, 0.18), transparent 36%),
-    radial-gradient(circle at 72% 4%, rgba(186, 210, 255, 0.12), transparent 30%),
+    radial-gradient(circle at 14% 10%, rgba(255, 255, 255, 0.08), transparent 36%),
+    radial-gradient(circle at 72% 4%, rgba(255, 255, 255, 0.06), transparent 30%),
     linear-gradient(176deg, rgba(3, 4, 10, 0.1) 0%, rgba(4, 7, 16, 0.36) 44%, rgba(3, 5, 10, 0.5) 100%);
 }
 
@@ -619,9 +659,9 @@ a {
 
 .hero-mesh {
   background:
-    radial-gradient(ellipse 55% 70% at 14% 36%, rgba(99, 102, 241, 0.18), transparent 68%),
-    radial-gradient(circle at 88% 8%, rgba(165, 180, 252, 0.08), transparent 30%),
-    linear-gradient(180deg, #090910 0%, #070711 100%);
+    radial-gradient(ellipse 55% 70% at 14% 36%, rgba(255, 255, 255, 0.08), transparent 68%),
+    radial-gradient(circle at 88% 8%, rgba(255, 255, 255, 0.04), transparent 30%),
+    linear-gradient(180deg, #0c0c0c 0%, #0b0b0b 100%);
 }
 
 .section-shell {
@@ -707,9 +747,9 @@ a {
 
 .storefront-hero {
   background:
-    radial-gradient(ellipse 58% 52% at 24% 42%, rgba(99, 102, 241, 0.22), transparent 68%),
-    radial-gradient(ellipse 42% 38% at 79% 34%, rgba(165, 180, 252, 0.12), transparent 70%),
-    linear-gradient(180deg, #090910 0%, #080812 62%, #05060d 100%);
+    radial-gradient(ellipse 58% 52% at 24% 42%, rgba(255, 255, 255, 0.1), transparent 68%),
+    radial-gradient(ellipse 42% 38% at 79% 34%, rgba(255, 255, 255, 0.06), transparent 70%),
+    linear-gradient(180deg, #0c0c0c 0%, #0c0c0c 62%, #080808 100%);
 }
 
 .storefront-hero::after {
@@ -855,7 +895,7 @@ a {
   background:
     radial-gradient(circle at 78% 18%, rgba(99, 102, 241, 0.2), transparent 35%),
     linear-gradient(145deg, rgba(99, 102, 241, 0.12), rgba(255, 255, 255, 0.025) 55%),
-    #0a0a15;
+    #0e0e0e;
 }
 
 .storefront-card__glow {
@@ -954,8 +994,8 @@ a {
   background:
     radial-gradient(circle, rgba(255, 255, 255, 0.85) 1px, transparent 1.5px) 0 0 / 34px 34px,
     radial-gradient(circle, rgba(186, 206, 255, 0.55) 1px, transparent 1.4px) 12px 18px / 48px 48px,
-    radial-gradient(circle at 30% 35%, rgba(110, 146, 255, 0.22), transparent 35%),
-    linear-gradient(172deg, #03040b 0%, #050713 42%, #020205 100%);
+    radial-gradient(circle at 30% 35%, rgba(255, 255, 255, 0.1), transparent 35%),
+    linear-gradient(172deg, #060606 0%, #0b0b0b 42%, #030303 100%);
 }
 
 .intro-space::before {
@@ -963,8 +1003,8 @@ a {
   position: absolute;
   inset: -10%;
   background:
-    radial-gradient(circle at 12% 26%, rgba(169, 194, 255, 0.2), transparent 24%),
-    radial-gradient(circle at 43% 60%, rgba(133, 162, 255, 0.16), transparent 22%);
+    radial-gradient(circle at 12% 26%, rgba(255, 255, 255, 0.09), transparent 24%),
+    radial-gradient(circle at 43% 60%, rgba(255, 255, 255, 0.07), transparent 22%);
   animation: intro-nebula 9s ease-in-out infinite alternate;
 }
 
@@ -1072,9 +1112,9 @@ a {
 
 .testimonial-signal__backdrop {
   background:
-    radial-gradient(circle at 50% 0%, rgba(94, 146, 255, 0.14), transparent 56%),
-    radial-gradient(circle at 18% 18%, rgba(93, 136, 238, 0.14), transparent 32%),
-    radial-gradient(circle at 82% 12%, rgba(167, 193, 255, 0.1), transparent 36%),
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.07), transparent 56%),
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.07), transparent 32%),
+    radial-gradient(circle at 82% 12%, rgba(255, 255, 255, 0.05), transparent 36%),
     linear-gradient(178deg, rgba(5, 8, 19, 0.4) 0%, rgba(4, 7, 17, 0.16) 56%, rgba(4, 6, 14, 0.42) 100%);
 }
 
@@ -1275,16 +1315,16 @@ a {
 /* MBMApps multi-product portfolio */
 .portfolio-home {
   --portfolio-line: rgba(255, 255, 255, 0.1);
-  --portfolio-muted: rgba(237, 239, 248, 0.61);
+  --portfolio-muted: rgb(138, 143, 152);
   --portfolio-violet: 160 121 255;
   --portfolio-field: 119 176 83;
   --portfolio-amber: 232 160 36;
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at 6% 12%, rgba(95, 70, 170, 0.15), transparent 25rem),
-    radial-gradient(circle at 95% 7%, rgba(44, 65, 124, 0.13), transparent 28rem),
-    #04060d;
+    radial-gradient(circle at 6% 12%, rgba(255, 255, 255, 0.05), transparent 25rem),
+    radial-gradient(circle at 95% 7%, rgba(255, 255, 255, 0.04), transparent 28rem),
+    #080808;
 }
 
 .portfolio-home a,
@@ -1309,6 +1349,21 @@ a {
   min-height: min(54rem, calc(100svh - 4.75rem));
   border-bottom: 1px solid var(--portfolio-line);
   isolation: isolate;
+}
+
+.hero-banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1584 / 396;
+  max-height: 20rem;
+  border-bottom: 1px solid var(--portfolio-line);
+}
+
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(8, 9, 10, 0.92) 100%);
 }
 
 .portfolio-hero::before {
@@ -1351,33 +1406,33 @@ a {
 }
 
 .portfolio-eyebrow {
-  font-family: var(--font-ibm-plex-mono), monospace;
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.3em;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 510;
+  letter-spacing: -0.006em;
   line-height: 1.5;
-  text-transform: uppercase;
-  color: rgba(187, 163, 255, 0.88);
+  color: rgb(var(--mbm-slate));
 }
 
 .portfolio-display {
-  max-width: 48rem;
+  max-width: 52rem;
   margin-top: 1.45rem;
-  font-family: var(--font-instrument-serif), Georgia, serif;
-  font-size: clamp(4.25rem, 6.3vw, 7.9rem);
-  font-weight: 400;
-  line-height: 0.88;
-  letter-spacing: -0.045em;
-  color: #f4f0ee;
+  font-family: var(--font-inter), sans-serif;
+  font-size: clamp(3rem, 5.4vw, 4.5rem);
+  font-weight: 510;
+  line-height: 1;
+  letter-spacing: -0.022em;
+  color: rgb(247, 248, 248);
   text-wrap: balance;
 }
 
 .portfolio-lede {
-  max-width: 42rem;
+  max-width: 38rem;
   margin-top: 1.75rem;
-  font-size: clamp(1rem, 1.4vw, 1.15rem);
-  line-height: 1.75;
-  color: var(--portfolio-muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+  color: rgb(var(--mbm-slate));
   text-wrap: pretty;
 }
 
@@ -1474,10 +1529,6 @@ a {
   transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.portfolio-accent--violet { --product-accent: var(--portfolio-violet); }
-.portfolio-accent--field { --product-accent: var(--portfolio-field); }
-.portfolio-accent--amber { --product-accent: var(--portfolio-amber); }
-
 .portfolio-window:hover {
   transform: translateY(-0.45rem);
 }
@@ -1496,7 +1547,7 @@ a {
   overflow: hidden;
   aspect-ratio: 16 / 10;
   border: 1px solid rgba(var(--product-accent), 0.48);
-  background: #090b12;
+  background: #0d0d0d;
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -1573,7 +1624,7 @@ a {
   border-bottom: 1px solid var(--portfolio-line);
   background:
     linear-gradient(125deg, rgba(91, 63, 169, 0.08), transparent 36%),
-    #050711;
+    #0a0a0a;
 }
 
 .portfolio-product-grid {
@@ -1648,7 +1699,47 @@ a {
   aspect-ratio: 16 / 10;
   margin-top: 2rem;
   border: 1px solid rgba(var(--product-accent), 0.3);
-  background: #080a11;
+  background: #0c0c0c;
+}
+
+.abstract-art {
+  width: 100%;
+  height: 100%;
+}
+
+.abstract-art-fill {
+  fill: rgb(var(--product-accent));
+}
+
+.abstract-art-stroke {
+  stroke: rgb(var(--product-accent));
+  fill: none;
+}
+
+.abstract-pulse {
+  animation: abstract-art-pulse 2.6s ease-in-out infinite;
+}
+
+.abstract-pulse-slow {
+  animation: abstract-art-pulse 3.2s ease-in-out infinite;
+}
+
+@keyframes abstract-art-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .abstract-pulse,
+  .abstract-pulse-slow {
+    animation: none;
+    opacity: 0.75;
+  }
 }
 
 .portfolio-product-card__image img {
@@ -1726,7 +1817,7 @@ a {
 
 .portfolio-router {
   border-bottom: 1px solid var(--portfolio-line);
-  background: #03050b;
+  background: #070707;
 }
 
 .portfolio-router__layout {
@@ -1862,7 +1953,7 @@ a {
   overflow: hidden;
   aspect-ratio: 16 / 10;
   border: 1px solid rgba(var(--product-accent), 0.42);
-  background: #080a11;
+  background: #0c0c0c;
   box-shadow: 0 35px 90px rgba(0, 0, 0, 0.42);
 }
 
@@ -2013,7 +2104,7 @@ a {
 
 .portfolio-paths {
   border-top: 1px solid var(--portfolio-line);
-  background: #03050b;
+  background: #070707;
 }
 
 .portfolio-paths h2 { max-width: 49rem; }
@@ -2030,7 +2121,7 @@ a {
   background:
     radial-gradient(circle at 50% 100%, rgba(104, 70, 193, 0.3), transparent 34rem),
     radial-gradient(circle at 85% 15%, rgba(232, 160, 36, 0.1), transparent 28rem),
-    #050711;
+    #0a0a0a;
 }
 
 .portfolio-final h2 { max-width: 65rem; margin-inline: auto; }
@@ -2087,7 +2178,7 @@ a {
 .portfolio-catalog-card:first-child { padding-top: 0; }
 .portfolio-catalog-card:nth-child(even) .portfolio-catalog-card__visual { order: 2; }
 .portfolio-catalog-card__visual { min-width: 0; }
-.portfolio-catalog-card__image { position: relative; overflow: hidden; aspect-ratio: 16 / 10; border: 1px solid rgba(var(--product-accent), 0.4); background: #070910; box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4); }
+.portfolio-catalog-card__image { position: relative; overflow: hidden; aspect-ratio: 16 / 10; border: 1px solid rgba(var(--product-accent), 0.4); background: #0b0b0b; box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4); }
 .portfolio-catalog-card__image img { object-fit: cover; object-position: top left; }
 .portfolio-catalog-card__copy { min-width: 0; }
 .portfolio-catalog-card__copy .portfolio-product-card__monogram { margin-top: 2.5rem; }
@@ -2099,6 +2190,13 @@ a {
 .portfolio-catalog-card__access svg { width: 0.8rem; height: 0.8rem; color: rgb(var(--product-accent)); }
 
 .portfolio-product-page { --product-accent: var(--portfolio-violet); }
+
+/* Must come after every rule above that sets a default --product-accent,
+   so a card's actual accent token always wins regardless of specificity ties. */
+.portfolio-accent--violet { --product-accent: var(--portfolio-violet); }
+.portfolio-accent--field { --product-accent: var(--portfolio-field); }
+.portfolio-accent--amber { --product-accent: var(--portfolio-amber); }
+
 .portfolio-product-page__hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--portfolio-line); }
 .portfolio-product-page__hero-layout { position: relative; z-index: 1; display: grid; min-height: 49rem; grid-template-columns: minmax(24rem, 0.82fr) minmax(34rem, 1.18fr); align-items: center; gap: clamp(3rem, 7vw, 8rem); padding-block: clamp(4rem, 8vw, 7rem); }
 .portfolio-product-page__hero .portfolio-eyebrow { margin-top: 4rem; }
@@ -2108,7 +2206,7 @@ a {
 .portfolio-product-page__hero h2 { max-width: 35rem; margin-top: 1.4rem; font-size: clamp(1.35rem, 2.3vw, 1.9rem); font-weight: 400; line-height: 1.35; letter-spacing: -0.025em; color: rgba(255, 255, 255, 0.9); }
 .portfolio-product-page__hero-layout > div:first-child > p:not(.portfolio-eyebrow, .portfolio-product-page__category, .portfolio-catalog-card__access) { max-width: 37rem; margin-top: 1.25rem; font-size: 0.88rem; line-height: 1.75; color: var(--portfolio-muted); }
 .portfolio-product-page__visual { min-width: 0; }
-.portfolio-product-page__image { position: relative; overflow: hidden; aspect-ratio: 16 / 10; border: 1px solid rgba(var(--product-accent), 0.42); background: #080a11; box-shadow: 0 38px 100px rgba(0, 0, 0, 0.48); }
+.portfolio-product-page__image { position: relative; overflow: hidden; aspect-ratio: 16 / 10; border: 1px solid rgba(var(--product-accent), 0.42); background: #0c0c0c; box-shadow: 0 38px 100px rgba(0, 0, 0, 0.48); }
 .portfolio-product-page__image img { object-fit: cover; object-position: top left; }
 
 .portfolio-product-page__capabilities,

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, CircleDot } from 'lucide-react';
+import { ProductAbstractArt } from '@/components/product-abstract-art';
 import { ProductRouter } from '@/components/product-router';
 import { projectScreens } from '@/lib/projects';
 
@@ -38,6 +39,9 @@ export function AppPanelHome() {
   return (
     <div className="portfolio-home">
       <section className="portfolio-hero" aria-labelledby="portfolio-hero-title">
+        <div className="hero-banner">
+          <Image src="/hero-banner.png" alt="QuietPilot and QuotePilot" fill priority sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'center 35%' }} />
+        </div>
         <div className="portfolio-grid" aria-hidden="true" />
         <div className="northstar-container portfolio-hero__layout">
           <div className="portfolio-hero__copy">
@@ -110,7 +114,7 @@ export function AppPanelHome() {
                   </div>
                 </div>
                 <div className="portfolio-product-card__image">
-                  <Image src={product.screenshot.src} alt={product.screenshot.alt} fill sizes="(max-width: 760px) 92vw, (max-width: 1100px) 45vw, 29vw" />
+                  <ProductAbstractArt slug={product.slug} />
                 </div>
                 <p className="portfolio-product-card__headline">{product.headline}</p>
                 <p className="portfolio-product-card__summary">{product.description}</p>
