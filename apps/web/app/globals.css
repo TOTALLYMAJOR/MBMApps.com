@@ -2255,7 +2255,12 @@ a {
 
 .ledger-signal svg { width: 0.85rem; height: 0.85rem; flex: none; margin-left: auto; }
 
-.ledger-hero { padding-block: clamp(3.5rem, 8vw, 6.5rem) clamp(2.5rem, 6vw, 4.5rem); }
+.ledger-hero {
+  padding-block: clamp(3.5rem, 8vw, 6.5rem) clamp(2.5rem, 6vw, 4.5rem);
+  background:
+    radial-gradient(ellipse 60% 70% at 14% 30%, rgba(111, 123, 255, 0.1), transparent 65%),
+    radial-gradient(ellipse 40% 50% at 90% 90%, rgba(64, 150, 160, 0.07), transparent 70%);
+}
 
 .ledger-hero__layout {
   display: grid;
@@ -2361,7 +2366,73 @@ a {
   font-family: var(--font-ibm-plex-mono), monospace;
   font-variant-numeric: tabular-nums;
   font-size: 1.35rem;
-  color: rgba(199, 210, 254, 0.9);
+  color: #9fe8dd;
+}
+
+.ledger-proof {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: radial-gradient(ellipse 50% 80% at 85% 20%, rgba(64, 150, 160, 0.08), transparent 65%);
+}
+
+.ledger-proof__layout {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.ledger-proof__layout h2 {
+  margin-top: 0.9rem;
+  max-width: 30rem;
+  font-family: var(--font-bricolage-grotesk), sans-serif;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.ledger-proof__source {
+  margin-top: 1.1rem;
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ledger-proof__stats {
+  display: flex;
+  gap: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.9rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ledger-proof__stats > div {
+  flex: 1;
+  padding: 1.8rem 1.7rem;
+  background: rgba(10, 14, 22, 0.92);
+}
+
+.ledger-proof__stats strong {
+  display: block;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  font-size: 2.4rem;
+  color: #9fe8dd;
+}
+
+.ledger-proof__stats p {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (min-width: 900px) {
+  .ledger-proof__layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center; }
 }
 
 .ledger-section { padding-block: clamp(3rem, 7vw, 5.5rem); }

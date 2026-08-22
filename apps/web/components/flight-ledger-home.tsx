@@ -123,6 +123,31 @@ export async function FlightLedgerHome() {
         </div>
       </section>
 
+      <section className="ledger-section ledger-proof" aria-labelledby="ledger-proof-title">
+        <div className="northstar-container ledger-proof__layout">
+          <div>
+            <p className="northstar-kicker">Why speed is the thesis</p>
+            <h2 id="ledger-proof-title">The operator who answers first, wins.</h2>
+            <p className="ledger-lede">
+              Businesses that contact a new inquiry within an hour are seven times likelier to qualify it
+              than those an hour later—and most take nearly two days. Our systems are built so the answer
+              is ready while the inquiry is still warm.
+            </p>
+            <p className="ledger-proof__source">Source: Harvard Business Review, 1.25M-lead study.</p>
+          </div>
+          <div className="ledger-proof__stats">
+            <div>
+              <strong>7&times;</strong>
+              <p>likelier to qualify a lead answered within the hour</p>
+            </div>
+            <div>
+              <strong>42h</strong>
+              <p>the average business&rsquo;s first response to a new inquiry</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="ledger-section" aria-labelledby="ledger-panel-title">
         <div className="northstar-container">
           <header className="ledger-section__heading">
