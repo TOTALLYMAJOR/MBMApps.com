@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { NorthstarPageHero } from '@/components/northstar-page-hero';
@@ -43,6 +44,25 @@ export default function AboutPage() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="northstar-container northstar-section--tight" aria-label="Inside the studio">
+        <figure className="northstar-portrait">
+          <div className="northstar-portrait__frame">
+            <Image
+              src="/media/hero.png"
+              alt="An MBMApps operator reviewing the QuietPilot and LeaguePilot product surfaces on a studio display."
+              fill
+              sizes="(max-width: 1280px) 92vw, 1200px"
+            />
+          </div>
+          <figcaption className="northstar-portrait__caption">
+            <p className="northstar-kicker">In practice</p>
+            <p>
+              We stay close enough to the operation to see where judgment still belongs—then build the system around it.
+            </p>
+          </figcaption>
+        </figure>
       </section>
 
       <section className="northstar-container grid gap-4 lg:grid-cols-[1.25fr_0.75fr]">
