@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { FlightLedgerHome } from '@/components/flight-ledger-home';
+import { TerminalPortfolioHome } from '@/components/terminal-portfolio-home';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
 
@@ -39,7 +39,7 @@ export default function HomePage() {
 
   return (
     <>
-      <FlightLedgerHome />
+      <TerminalPortfolioHome />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
     </>
