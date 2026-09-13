@@ -4,6 +4,7 @@ import {
   deriveChampionProfile,
   deriveChampionScore,
   operationalOutcomeSnapshotSchema,
+  type ChatLeadSubmission,
   type ContactSubmission,
   type ChampionCohort,
   type DemoMetric,
@@ -18,6 +19,38 @@ import {
 import { randomUUID } from 'node:crypto';
 import { Timestamp } from 'firebase-admin/firestore';
 import { getFirestoreDb } from './firebase.js';
+
+export class LeadPersistenceUnavailableError extends Error {
+  constructor(message = 'Lead persistence is unavailable.', options?: ErrorOptions) {
+    super(message, options);
+    this.name = 'LeadPersistenceUnavailableError';
+  }
+}
+
+type LeadPersistenceDb = {
+  collection: (name: string) => {
+    doc: (id: string) => {
+      set: (record: Record<string, unknown>) => Promise<unknown>;
+    };
+  };
+};
+
+export async function persistLead(
+  collection: string,
+  id: string,
+  record: Record<string, unknown>,
+  db: LeadPersistenceDb | null = getFirestoreDb()
+) {
+  if (db === null) {
+    throw new LeadPersistenceUnavailableError();
+  }
+
+  try {
+    await db.collection(collection).doc(id).set(record);
+  } catch (error) {
+    throw new LeadPersistenceUnavailableError('Lead persistence failed.', { cause: error });
+  }
+}
 
 export async function loadMetrics(): Promise<DemoMetric[]> {
   const db = getFirestoreDb();
@@ -89,13 +122,36 @@ export function buildContactRecord(submission: ContactSubmission, createdAt: Tim
 
 export async function storeContact(submission: ContactSubmission): Promise<string> {
   const id = `contact_${randomUUID()}`;
-  const db = getFirestoreDb();
+  await persistLead('contactSubmissions', id, buildContactRecord(submission));
 
-  if (db === null) {
-    return id;
-  }
+  return id;
+}
 
-  await db.collection('contactSubmissions').doc(id).set(buildContactRecord(submission));
+export function buildChatLeadRecord(submission: ChatLeadSubmission, createdAt: Timestamp = Timestamp.now()) {
+  return {
+    ...submission,
+    schemaVersion: 1,
+    channel: 'guided-chat',
+    createdAt,
+    status: 'new',
+    lifecycleStatus: 'new',
+    lifecycle: {
+      status: 'new',
+      updatedAt: createdAt,
+      lossReason: null,
+      measuredOutcome: null
+    },
+    dataQuality: {
+      piiBoundary: 'guided-chat-lead',
+      retentionPolicy: 'sales-intelligence-24-months',
+      sourceSchemaVersion: 1
+    }
+  };
+}
+
+export async function storeChatLead(submission: ChatLeadSubmission): Promise<string> {
+  const id = `chat_${randomUUID()}`;
+  await persistLead('leadSubmissions', id, buildChatLeadRecord(submission));
 
   return id;
 }

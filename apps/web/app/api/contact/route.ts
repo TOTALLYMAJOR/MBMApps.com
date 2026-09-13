@@ -1,15 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
-import { contactSubmissionSchema, type EventTelemetryPayload } from '@mbm/contracts';
-import { z } from 'zod';
-
-const requestSchema = contactSubmissionSchema.extend({
-  startedAt: z.number().int().optional().default(0)
-});
-
-function backendBaseUrl() {
-  return process.env.BACKEND_API_URL ?? 'http://localhost:4000';
-}
+import {
+  contactResponseSchema,
+  contactSubmissionSchema,
+  leadFilteredResponseSchema,
+  type EventTelemetryPayload
+} from '@mbm/contracts';
+import { backendBaseUrl, PublicIntakeRequestError, readPublicIntakePayload } from '@/lib/public-intake';
 
 type TelemetryMetadata = Record<string, string | number | boolean | null>;
 
@@ -39,67 +36,63 @@ async function forwardTelemetry(event: EventTelemetryPayload['event'], metadata:
 }
 
 export async function POST(request: Request) {
-  const payload = await request.json().catch(() => null);
-  const parsed = requestSchema.safeParse(payload);
+  let payload: unknown;
+
+  try {
+    payload = await readPublicIntakePayload(request);
+  } catch (error) {
+    if (error instanceof PublicIntakeRequestError) {
+      return NextResponse.json({ ok: false, message: error.message }, { status: error.status });
+    }
+    return NextResponse.json({ ok: false, message: 'Invalid request payload.' }, { status: 400 });
+  }
+
+  const parsed = contactSubmissionSchema.safeParse(payload);
 
   if (!parsed.success) {
     return NextResponse.json({ ok: false, message: 'Invalid request payload.' }, { status: 400 });
   }
 
-  const { startedAt, ...submission } = parsed.data;
-  const elapsed = Date.now() - startedAt;
+  if (parsed.data.website.trim().length > 0) {
+    void forwardTelemetry('contact_filtered', { filter_reason: 'honeypot' });
 
-  if (submission.website.trim().length > 0 || elapsed < 1500) {
-    void forwardTelemetry('contact_filtered', {
-      filter_reason: submission.website.trim().length > 0 ? 'honeypot' : 'elapsed_under_threshold',
-      elapsed_ms: elapsed
-    });
-
-    return NextResponse.json({
+    return NextResponse.json(leadFilteredResponseSchema.parse({
       ok: true,
       submissionId: `filtered_${randomUUID()}`,
-      queued: true
-    });
+      receivedAt: new Date().toISOString(),
+      state: 'filtered'
+    }));
   }
 
   try {
     const response = await fetch(`${backendBaseUrl()}/v1/contact`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
-      body: JSON.stringify(submission)
+      body: JSON.stringify(parsed.data)
     });
+    const result = await response.json().catch(() => null);
+    const receipt = contactResponseSchema.safeParse(result);
 
-    if (!response.ok) {
-      throw new Error(`Backend failed: ${response.status}`);
+    if (!response.ok || !receipt.success) {
+      return NextResponse.json(
+        { ok: false, message: 'We could not save this request. Please try again or use the direct email option.' },
+        { status: 503 }
+      );
     }
 
     void forwardTelemetry('contact_submitted', {
-      budget: submission.budget,
-      timeline: submission.timeline,
-      decision_role: submission.decisionRole,
-      service_category: submission.serviceCategory,
-      primary_business_pain: submission.primaryBusinessPain
+      budget: parsed.data.budget,
+      timeline: parsed.data.timeline,
+      decision_role: parsed.data.decisionRole,
+      service_category: parsed.data.serviceCategory,
+      primary_business_pain: parsed.data.primaryBusinessPain
     });
-    const result = (await response.json()) as unknown;
-    return NextResponse.json(result, { status: 200 });
+    return NextResponse.json(receipt.data);
   } catch {
-    void forwardTelemetry('contact_queued', {
-      queue_reason: 'backend_unavailable',
-      budget: submission.budget,
-      timeline: submission.timeline
-    });
-
     return NextResponse.json(
-      {
-        ok: true,
-        submissionId: `queued_${randomUUID()}`,
-        queued: true,
-        message: 'Submission queued while we reconnect services. We will follow up at the email provided.'
-      },
-      { status: 200 }
+      { ok: false, message: 'We could not save this request. Please try again or use the direct email option.' },
+      { status: 503 }
     );
   }
 }

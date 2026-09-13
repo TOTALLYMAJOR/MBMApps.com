@@ -1,11 +1,19 @@
 import request from 'supertest';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Timestamp } from 'firebase-admin/firestore';
-import { contactSubmissionSchema, eventTelemetrySchema } from '@mbm/contracts';
+import { chatLeadSubmissionSchema, contactSubmissionSchema, eventTelemetrySchema } from '@mbm/contracts';
 import { createApp } from '../src/app.js';
-import { buildContactRecord, buildTelemetryRecord } from '../src/repository.js';
+import {
+  buildChatLeadRecord,
+  buildContactRecord,
+  buildTelemetryRecord,
+  LeadPersistenceUnavailableError,
+  persistLead
+} from '../src/repository.js';
 
-const app = createApp();
+const storeContact = vi.fn(async () => 'contact_test');
+const storeChatLead = vi.fn(async () => 'chat_test');
+const app = createApp({ leadRepository: { storeContact, storeChatLead } });
 
 const enrichedContactPayload = {
   name: 'Jordan Lee',
@@ -36,6 +44,10 @@ const enrichedContactPayload = {
 };
 
 describe('MBM API', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('serves health check', async () => {
     const response = await request(app).get('/healthz');
 
@@ -79,6 +91,88 @@ describe('MBM API', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.ok).toBe(true);
+    expect(response.body.state).toBe('persisted');
+    expect(storeContact).toHaveBeenCalled();
+  });
+
+  it('persists guided-chat leads through the same intake seam', async () => {
+    const response = await request(app).post('/v1/chat').send({
+      replyTo: 'visitor@example.com',
+      transcript: 'Visitor: We need a workflow review with durable delivery evidence.',
+      consent: {
+        dataProcessingAccepted: true,
+        marketingOptIn: false,
+        acceptedAt: new Date().toISOString(),
+        policyVersion: '2026-05-05'
+      }
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.state).toBe('persisted');
+    expect(storeChatLead).toHaveBeenCalled();
+  });
+
+  it('reports persistence outages instead of accepting a lead', async () => {
+    const unavailableApp = createApp({
+      leadRepository: {
+        storeContact: async () => { throw new LeadPersistenceUnavailableError(); },
+        storeChatLead: async () => { throw new LeadPersistenceUnavailableError(); }
+      }
+    });
+    const response = await request(unavailableApp).post('/v1/contact').send(enrichedContactPayload);
+
+    expect(response.status).toBe(503);
+    expect(response.body.ok).toBe(false);
+    expect(response.body.code).toBe('LEAD_PERSISTENCE_UNAVAILABLE');
+  });
+
+  it('reports chat persistence outages instead of accepting a lead', async () => {
+    const unavailableApp = createApp({
+      leadRepository: {
+        storeContact: async () => { throw new LeadPersistenceUnavailableError(); },
+        storeChatLead: async () => { throw new LeadPersistenceUnavailableError(); }
+      }
+    });
+    const response = await request(unavailableApp).post('/v1/chat').send({
+      replyTo: 'visitor@example.com',
+      transcript: 'Visitor: We need a workflow review with durable delivery evidence.',
+      consent: {
+        dataProcessingAccepted: true,
+        acceptedAt: new Date().toISOString()
+      }
+    });
+
+    expect(response.status).toBe(503);
+    expect(response.body.code).toBe('LEAD_PERSISTENCE_UNAVAILABLE');
+  });
+
+  it('filters honeypots without persisting them', async () => {
+    const response = await request(app).post('/v1/chat').send({
+      replyTo: 'visitor@example.com',
+      transcript: 'Visitor: We need a workflow review with durable delivery evidence.',
+      website: 'https://spam.example',
+      consent: {
+        dataProcessingAccepted: true,
+        acceptedAt: new Date().toISOString()
+      }
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.state).toBe('filtered');
+    expect(storeChatLead).not.toHaveBeenCalled();
+  });
+
+  it('fails closed when lead persistence is missing or rejects a write', async () => {
+    await expect(persistLead('leadSubmissions', 'chat_test', {}, null)).rejects.toBeInstanceOf(LeadPersistenceUnavailableError);
+
+    const rejectingDb = {
+      collection: () => ({
+        doc: () => ({
+          set: async () => { throw new Error('Firestore unavailable'); }
+        })
+      })
+    };
+    await expect(persistLead('leadSubmissions', 'chat_test', {}, rejectingDb)).rejects.toBeInstanceOf(LeadPersistenceUnavailableError);
   });
 
   it('accepts telemetry payloads', async () => {
@@ -110,6 +204,22 @@ describe('MBM API', () => {
     expect(record.championProfile.primaryBusinessPain).toBe('quote-speed');
     expect(record.championScore.total).toBeGreaterThan(60);
     expect(record.dataQuality.retentionPolicy).toBe('sales-intelligence-24-months');
+  });
+
+  it('builds governed chat lead records without polluting champion cohorts', () => {
+    const submission = chatLeadSubmissionSchema.parse({
+      replyTo: 'visitor@example.com',
+      transcript: 'Visitor: We need a workflow review with durable delivery evidence.',
+      consent: {
+        dataProcessingAccepted: true,
+        acceptedAt: new Date().toISOString()
+      }
+    });
+    const record = buildChatLeadRecord(submission, Timestamp.fromDate(new Date('2026-09-13T12:00:00.000Z')));
+
+    expect(record.channel).toBe('guided-chat');
+    expect(record.lifecycleStatus).toBe('new');
+    expect(record.dataQuality.piiBoundary).toBe('guided-chat-lead');
   });
 
   it('builds telemetry records with governance metadata', () => {

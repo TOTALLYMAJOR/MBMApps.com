@@ -4,10 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Check, ChevronDown, Layers3, Mail, MessageSquare, Moon, Send, Sun, X } from 'lucide-react';
+import { currentConsentPolicyVersion, type ChatLeadDeliveryResponse } from '@mbm/contracts';
+import { SelectedWorkRail } from '@/components/selected-work-rail';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
 
 type ChatLine = { from: 'studio' | 'visitor'; text: string };
+type ChatDeliveryState = { status: 'idle' | 'sending' | 'saved' | 'sent' | 'error'; message: string };
 
 const capabilities = [
   'Next.js',
@@ -26,25 +29,6 @@ const prompts = [
   'I want to discuss a partnership'
 ];
 
-const commerceProjects = [
-  {
-    name: 'Wake for Warriors',
-    type: 'Ecommerce storefront / Shopify integration / mission-driven brand',
-    description: 'A purpose-driven commerce concept that keeps the storefront experience connected to the Wake for Warriors mission before shoppers continue into Shopify.',
-    href: 'https://wakeforwarriorsshopify.netlify.app/',
-    image: '/product-screens/wake-for-warriors.png',
-    alt: 'Wake for Warriors ecommerce storefront concept with mission-led merchandise and Shopify shopping actions.'
-  },
-  {
-    name: 'Jour et Nuit Concierge',
-    type: 'Business website / strategy / professional services',
-    description: 'A conversion-focused website for a concierge consultancy, helping entrepreneurs understand the offer and move into a structured consultation.',
-    href: 'https://www.jouretnuitconcierge.com/',
-    image: '/product-screens/jour-et-nuit.png',
-    alt: 'Jour et Nuit Concierge website presenting business readiness and growth consulting services.'
-  }
-];
-
 export function TerminalPortfolioHome() {
   const [light, setLight] = useState(false);
   const [showAll, setShowAll] = useState(false);
@@ -52,8 +36,11 @@ export function TerminalPortfolioHome() {
   const [studioOpen, setStudioOpen] = useState(false);
   const [studioLoaded, setStudioLoaded] = useState(false);
   const [draft, setDraft] = useState('');
+  const [replyEmail, setReplyEmail] = useState('');
+  const [chatConsent, setChatConsent] = useState(false);
+  const [chatDelivery, setChatDelivery] = useState<ChatDeliveryState>({ status: 'idle', message: '' });
   const [lines, setLines] = useState<ChatLine[]>([
-    { from: 'studio', text: 'Hi — tell me what you are trying to improve. I can point you toward an MBMApps product or prepare an email for the studio.' }
+    { from: 'studio', text: 'Hi. Tell me what you are trying to improve. I can point you toward an MBMApps product or prepare an email for the studio.' }
   ]);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const studioDialogRef = useRef<HTMLDialogElement>(null);
@@ -118,24 +105,8 @@ export function TerminalPortfolioHome() {
     }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
     revealItems.forEach((item) => observer.observe(item));
 
-    let animationFrame = 0;
-    const updateParallax = () => {
-      animationFrame = 0;
-      document.querySelectorAll<HTMLElement>('.terminal-commerce__media[data-parallax]').forEach((item) => {
-        const rect = item.getBoundingClientRect();
-        const offset = Math.max(-12, Math.min(12, (window.innerHeight / 2 - (rect.top + rect.height / 2)) * 0.025));
-        item.style.setProperty('--commerce-drift', `${offset}px`);
-      });
-    };
-    const onScroll = () => {
-      if (!animationFrame) animationFrame = window.requestAnimationFrame(updateParallax);
-    };
-    updateParallax();
-    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       observer.disconnect();
-      window.removeEventListener('scroll', onScroll);
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
     };
   }, []);
 
@@ -170,12 +141,61 @@ export function TerminalPortfolioHome() {
     } else if (lower.includes('partner')) {
       reply = 'Partnership conversations are welcome. The fastest next step is an email with the audience, distribution idea, and the outcome you want to create.';
     }
-    setLines((current) => [...current, { from: 'visitor', text: value }, { from: 'studio', text: reply }]);
+    setLines((current) => [
+      ...current,
+      { from: 'visitor' as const, text: value },
+      { from: 'studio' as const, text: reply }
+    ].slice(-20));
+    setChatDelivery({ status: 'idle', message: '' });
     setDraft('');
   }
 
-  const transcript = lines.slice(-8).map((line) => `${line.from === 'visitor' ? 'Visitor' : 'MBMApps'}: ${line.text}`).join('\n').slice(0, 4000);
+  const transcript = lines.map((line) => `${line.from === 'visitor' ? 'Visitor' : 'MBMApps'}: ${line.text}`).join('\n').slice(-4000);
   const mailto = `mailto:${siteConfig.email}?subject=${encodeURIComponent('MBMApps project conversation')}&body=${encodeURIComponent(`Hello MBMApps,\n\nHere is the context from the website chat:\n\n${transcript}\n\nMy name and preferred contact details:`)}`;
+  const hasVisitorMessage = lines.some((line) => line.from === 'visitor');
+
+  async function sendTranscript(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!hasVisitorMessage || !replyEmail.trim() || !chatConsent || chatDelivery.status === 'sending') return;
+
+    const website = new FormData(event.currentTarget).get('website');
+    setChatDelivery({ status: 'sending', message: 'Saving your transcript...' });
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          replyTo: replyEmail.trim(),
+          transcript,
+          source: 'mbmapps-guided-chat',
+          website: typeof website === 'string' ? website : '',
+          consent: {
+            dataProcessingAccepted: true,
+            marketingOptIn: false,
+            acceptedAt: new Date().toISOString(),
+            policyVersion: currentConsentPolicyVersion
+          }
+        })
+      });
+      const result = (await response.json().catch(() => null)) as Partial<ChatLeadDeliveryResponse> & { message?: string } | null;
+
+      if (!response.ok || !result?.ok || result.state !== 'persisted' || !result.notification) {
+        setChatDelivery({
+          status: 'error',
+          message: result?.message ?? 'Direct delivery is unavailable. Use the email-app handoff below.'
+        });
+        return;
+      }
+
+      setChatDelivery({
+        status: result.notification === 'provider-accepted' ? 'sent' : 'saved',
+        message: result.message ?? 'Your transcript is saved.'
+      });
+    } catch {
+      setChatDelivery({ status: 'error', message: 'Network issue. Use the email-app handoff below.' });
+    }
+  }
 
   return (
     <div className={`terminal-home ${light ? 'terminal-home--light' : ''}`}>
@@ -186,9 +206,10 @@ export function TerminalPortfolioHome() {
             <a href="#apps"><span>[a]</span> apps</a>
             <a href="#commerce"><span>[e]</span> commerce</a>
             <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog"><span>[u]</span> studio</button>
+            <button type="button" onClick={openChat}><span>[m]</span> chat</button>
+            <a href="#contact"><span>[c]</span> contact</a>
             <a href="#systems"><span>[s]</span> systems</a>
             <a href="#notes"><span>[n]</span> notes</a>
-            <a href="#contact"><span>[c]</span> contact</a>
           </div>
           <button type="button" onClick={toggleTheme} aria-label={`Switch to ${light ? 'dark' : 'light'} theme`}>
             {light ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
@@ -203,7 +224,7 @@ export function TerminalPortfolioHome() {
             <p className="terminal-command"><span>~/mbmapps</span> $ whoami</p>
             <h1>MBMApps<span aria-hidden="true" /></h1>
             <p className="terminal-subline">independent software studio · chicago · proof-driven products</p>
-            <p className="terminal-lede">We build focused operating systems for catering, youth sports, and quote-to-event work—so teams can see what is known, what is blocked, and what needs a human decision.</p>
+            <p className="terminal-lede">We build focused operating systems for catering, youth sports, and quote-to-event work. Teams can see what is known, what is blocked, and what needs a human decision.</p>
             <div className="terminal-links">
               <a href="#apps">[browse apps]</a>
               <Link href="/about">[about]</Link>
@@ -264,35 +285,7 @@ export function TerminalPortfolioHome() {
           </div>
         </section>
 
-        <section id="commerce" className="terminal-section terminal-shell terminal-commerce" aria-labelledby="commerce-title" data-reveal>
-          <div className="terminal-commerce__heading">
-            <div>
-              <p className="terminal-command"><span>04</span> / selected work</p>
-              <h2 id="commerce-title"><span>*</span> ecommerce + client work</h2>
-              <p>Real businesses. Live websites. Clear paths to action.</p>
-            </div>
-            <p className="terminal-commerce__command">$ ls --commerce --client-sites</p>
-          </div>
-          <div className="terminal-commerce__gallery">
-            {commerceProjects.map((project, index) => (
-              <article key={project.name} className="terminal-commerce__project">
-                <a href={project.href} className="terminal-commerce__media" data-parallax aria-label={`Visit ${project.name}`}>
-                  <Image src={project.image} alt={project.alt} fill sizes={index === 0 ? '(min-width: 900px) 62vw, 100vw' : '(min-width: 900px) 38vw, 100vw'} />
-                  <span><ArrowUpRight aria-hidden="true" /></span>
-                </a>
-                <div className="terminal-commerce__copy">
-                  <span className="terminal-commerce__index">0{index + 1}</span>
-                  <div>
-                    <h3>{project.name}</h3>
-                    <p className="terminal-commerce__type">{project.type}</p>
-                    <p>{project.description}</p>
-                    <a href={project.href}>[{index === 0 ? 'visit storefront' : 'visit site'}] <ArrowUpRight aria-hidden="true" /></a>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+        <SelectedWorkRail />
 
         <section id="systems" className="terminal-section terminal-shell" aria-labelledby="systems-title" data-reveal>
           <h2 id="systems-title"><span>*</span> systems</h2>
@@ -346,13 +339,28 @@ export function TerminalPortfolioHome() {
             <div ref={chatEndRef} />
           </div>
           {lines.length < 3 ? <div className="terminal-chat__prompts">{prompts.map((prompt) => <button key={prompt} type="button" onClick={() => sendMessage(prompt)}>{prompt}</button>)}</div> : null}
-          <form onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
+          <form className="terminal-chat__composer" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
             <label htmlFor="chat-message">Message</label>
-            <input id="chat-message" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Describe the workflow or product..." autoFocus />
+            <input id="chat-message" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Describe the workflow or product..." maxLength={600} autoFocus />
             <button type="submit" aria-label="Send message"><Send aria-hidden="true" /></button>
           </form>
-          <a className="terminal-chat__handoff" href={mailto}>Continue by email with transcript <ArrowUpRight aria-hidden="true" /></a>
-          <p className="terminal-chat__note">This guided chat stays in your browser. Email sends only when you choose the handoff.</p>
+          <form className="terminal-chat__delivery" onSubmit={sendTranscript}>
+            <input className="terminal-chat__honeypot" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+            <label htmlFor="chat-reply-email">Your email for a reply</label>
+            <div className="terminal-chat__delivery-row">
+              <input id="chat-reply-email" type="email" value={replyEmail} onChange={(event) => { setReplyEmail(event.target.value); setChatDelivery({ status: 'idle', message: '' }); }} placeholder="you@example.com" autoComplete="email" required />
+              <button type="submit" disabled={!hasVisitorMessage || !chatConsent || ['sending', 'saved', 'sent'].includes(chatDelivery.status)}>
+                {chatDelivery.status === 'sending' ? 'Saving...' : ['saved', 'sent'].includes(chatDelivery.status) ? 'Transcript saved' : 'Send transcript'}
+              </button>
+            </div>
+            <label className="terminal-chat__consent">
+              <input type="checkbox" checked={chatConsent} onChange={(event) => { setChatConsent(event.target.checked); setChatDelivery({ status: 'idle', message: '' }); }} />
+              <span>MBMApps may use this email and transcript to reply.</span>
+            </label>
+            {chatDelivery.message ? <p className={`terminal-chat__delivery-status terminal-chat__delivery-status--${chatDelivery.status}`} role="status">{chatDelivery.message}</p> : null}
+          </form>
+          <a className="terminal-chat__handoff" href={mailto}>Open transcript in my email app <ArrowUpRight aria-hidden="true" /></a>
+          <p className="terminal-chat__note">Nothing is sent until you choose direct delivery or send from your email app.</p>
       </dialog>
 
       <dialog id="component-studio-dialog" ref={studioDialogRef} className="terminal-studio" aria-labelledby="studio-title" aria-describedby="studio-description" onCancel={(event) => { event.preventDefault(); setStudioOpen(false); }}>

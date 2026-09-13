@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import type { ContactSubmission } from '@mbm/contracts';
+import { currentConsentPolicyVersion, type ContactResponse, type ContactSubmission } from '@mbm/contracts';
+import { siteConfig } from '@/lib/site';
 
 const budgetOptions: Array<{ value: ContactSubmission['budget']; label: string }> = [
   { value: 'under-10k', label: 'Under $10K' },
@@ -219,8 +220,6 @@ export function ContactForm() {
   const [step, setStep] = useState(0);
   const [attempted, setAttempted] = useState(false);
   const [state, setState] = useState<FormState>(initialState);
-  const [startedAt] = useState(Date.now());
-
   const stepDef = (STEPS[step] ?? STEPS[0])!;
   const isLastStep = step === STEPS.length - 1;
   const canAdvance = isStepValid(stepDef, values);
@@ -295,10 +294,9 @@ export function ContactForm() {
         dataProcessingAccepted: consent.dataProcessingAccepted,
         marketingOptIn: consent.marketingOptIn,
         acceptedAt: new Date().toISOString(),
-        policyVersion: '2026-05-05'
+        policyVersion: currentConsentPolicyVersion
       },
-      source: 'mbmapps-contact-form',
-      startedAt
+      source: 'mbmapps-contact-form'
     };
 
     try {
@@ -310,12 +308,12 @@ export function ContactForm() {
         body: JSON.stringify(payload)
       });
 
-      const result = (await response.json()) as { ok: boolean; message?: string };
+      const result = (await response.json()) as Partial<ContactResponse> & { message?: string };
 
-      if (!response.ok || !result.ok) {
+      if (!response.ok || !result.ok || result.state !== 'persisted') {
         setState({
           status: 'error',
-          message: result.message ?? 'Unable to submit right now. Please email sales@mbmapps.com.'
+          message: result.message ?? `Unable to save right now. Please email ${siteConfig.email}.`
         });
         return;
       }
@@ -326,12 +324,12 @@ export function ContactForm() {
       setAttempted(false);
       setState({
         status: 'success',
-        message: 'Thanks. Your request is in. Use the scheduling link below to pick a discovery call slot.'
+        message: 'Thanks. Your request is saved. Use the scheduling link below to pick a discovery call slot.'
       });
     } catch {
       setState({
         status: 'error',
-        message: 'Network issue detected. Please try again or email sales@mbmapps.com.'
+        message: `Network issue detected. Please try again or email ${siteConfig.email}.`
       });
     }
   }

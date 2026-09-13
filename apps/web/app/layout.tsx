@@ -5,7 +5,6 @@ import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { FireflyField } from '@/components/firefly-field';
 import { NorthstarMotion } from '@/components/northstar-motion';
-import { StartupLoader } from '@/components/startup-loader';
 import { WebVitalsReporter } from '@/components/web-vitals-reporter';
 import { siteConfig } from '@/lib/site';
 
@@ -52,18 +51,33 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/'
   },
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml', sizes: 'any' }],
+    shortcut: '/icon.svg'
+  },
   openGraph: {
     title: 'MBMApps',
     description: siteConfig.description,
     type: 'website',
     url: siteConfig.url,
-    images: [`${siteConfig.url}/api/og?title=MBMApps%20Engineering%20at%20Scale`]
+    siteName: 'MBMApps',
+    locale: 'en_US',
+    images: [{
+      url: '/api/og',
+      width: 1200,
+      height: 630,
+      alt: 'MBMApps purpose-built software and operating systems',
+      type: 'image/png'
+    }]
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MBMApps',
     description: siteConfig.description,
-    images: [`${siteConfig.url}/api/og?title=MBMApps%20Engineering%20at%20Scale`]
+    images: [{
+      url: '/api/og',
+      alt: 'MBMApps purpose-built software and operating systems'
+    }]
   }
 };
 
@@ -72,7 +86,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${bricolageGrotesk.variable} ${ibmPlexMono.variable} ${instrumentSerif.variable}`}>
       <body className="text-ink antialiased">
         <a href="#main-content" className="skip-link">Skip to content</a>
-        <StartupLoader />
         <FireflyField />
         <div className="flex min-h-screen flex-col">
           <SiteHeader />

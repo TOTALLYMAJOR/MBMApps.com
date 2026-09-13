@@ -146,11 +146,13 @@ export const championScoreSchema = z.object({
 
 export type ChampionScore = z.infer<typeof championScoreSchema>;
 
+export const currentConsentPolicyVersion = '2026-05-05' as const;
+
 export const consentMetadataSchema = z.object({
   dataProcessingAccepted: z.boolean().default(false),
   marketingOptIn: z.boolean().default(false),
   acceptedAt: z.string().datetime({ offset: true }).optional(),
-  policyVersion: z.string().max(40).default('2026-05-05')
+  policyVersion: z.string().max(40).default(currentConsentPolicyVersion)
 });
 
 export type ConsentMetadata = z.infer<typeof consentMetadataSchema>;
@@ -181,13 +183,52 @@ export const contactSubmissionSchema = z.object({
 
 export type ContactSubmission = z.infer<typeof contactSubmissionSchema>;
 
-export const contactResponseSchema = z.object({
+export const leadPersistenceResponseSchema = z.object({
   ok: z.literal(true),
   submissionId: z.string(),
-  receivedAt: z.string().datetime({ offset: true })
+  receivedAt: z.string().datetime({ offset: true }),
+  state: z.literal('persisted')
 });
 
+export const leadFilteredResponseSchema = z.object({
+  ok: z.literal(true),
+  submissionId: z.string(),
+  receivedAt: z.string().datetime({ offset: true }),
+  state: z.literal('filtered')
+});
+
+export const leadReceiptResponseSchema = z.discriminatedUnion('state', [
+  leadPersistenceResponseSchema,
+  leadFilteredResponseSchema
+]);
+
+export const contactResponseSchema = leadPersistenceResponseSchema;
+
 export type ContactResponse = z.infer<typeof contactResponseSchema>;
+
+export const chatLeadSubmissionSchema = z.object({
+  replyTo: z.string().trim().email().max(320),
+  transcript: z.string().trim().min(20).max(4000),
+  source: z.string().min(2).max(120).default('mbmapps-guided-chat'),
+  website: z.string().max(200).optional().default(''),
+  consent: consentMetadataSchema.extend({
+    dataProcessingAccepted: z.literal(true),
+    marketingOptIn: z.boolean().default(false),
+    acceptedAt: z.string().datetime({ offset: true }),
+    policyVersion: z.string().max(40).default(currentConsentPolicyVersion)
+  })
+});
+
+export type ChatLeadSubmission = z.infer<typeof chatLeadSubmissionSchema>;
+
+export type LeadPersistenceResponse = z.infer<typeof leadPersistenceResponseSchema>;
+
+export const chatLeadDeliveryResponseSchema = leadPersistenceResponseSchema.extend({
+  notification: z.enum(['provider-accepted', 'unavailable', 'failed']),
+  message: z.string().min(2)
+});
+
+export type ChatLeadDeliveryResponse = z.infer<typeof chatLeadDeliveryResponseSchema>;
 
 export const apiErrorSchema = z.object({
   ok: z.literal(false),
@@ -222,7 +263,6 @@ export type TelemetryContext = z.infer<typeof telemetryContextSchema>;
 export const telemetryEventNameSchema = z.enum([
   'contact_submitted',
   'contact_filtered',
-  'contact_queued',
   'demo_login',
   'demo_role_resolved',
   'demo_started',

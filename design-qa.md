@@ -2,6 +2,8 @@
 
 **Final result: passed**
 
+> Current follow-up (2026-09-13): the blocking startup overlay was removed; guided chat now persists through the governed API before any optional provider notification; and selected-work data/behavior was extracted into a dedicated module. The original visual comparison below remains the design-history record. Current automated evidence is recorded in the repository quality gates; hosted delivery remains unverified until deployed with live credentials.
+
 ## Comparison target
 
 - Source visual truth: `output/playwright/source/.playwright-cli/page-2026-09-12T19-32-53-485Z.png` (live pyasma dark desktop), plus `page-2026-09-12T19-33-16-156Z.png` (live mobile) and the user-supplied full-page screenshot.
@@ -78,7 +80,7 @@ No actionable P0, P1, or P2 differences remain for the requested "similar format
 
 ## Open questions
 
-None blocking. The guided chat is deliberately frontend-only; persistence or live-agent delivery would require a separately authorized backend/integration scope.
+None blocking for the rendered experience. Guided chat now persists through `/v1/chat` and can notify the studio through Resend when configured. Local validation does not prove hosted Firestore persistence or provider acceptance.
 
 ## Implementation checklist
 
@@ -86,7 +88,8 @@ None blocking. The guided chat is deliberately frontend-only; persistence or liv
 - [x] Responsive MBMApps implementation captured and compared.
 - [x] Product links and truthful access states preserved.
 - [x] Theme, disclosure, guided chat, focus behavior, email handoff, reveal motion, ecommerce parallax, and Component Studio tested.
-- [x] Typecheck, 16 web tests, production build, and browser console passed.
+- [x] Original typecheck, 16 web tests, production build, and browser console passed.
+- [x] Follow-up lead-intake contract, outage, filtering, and notification-state tests passed locally.
 
 ## Follow-up polish
 

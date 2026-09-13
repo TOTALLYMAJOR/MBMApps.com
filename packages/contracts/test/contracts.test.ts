@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  chatLeadDeliveryResponseSchema,
+  chatLeadSubmissionSchema,
   championScoreSchema,
   contactSubmissionSchema,
   deriveChampionProfile,
@@ -55,6 +57,42 @@ describe('contracts', () => {
     expect(parsed.company).toBe('MBM Foods');
     expect(parsed.locationCount).toBe(14);
     expect(parsed.currentTools).toContain('HubSpot');
+  });
+
+  it('requires governed consent for guided-chat leads', () => {
+    const acceptedAt = new Date().toISOString();
+    const parsed = chatLeadSubmissionSchema.parse({
+      replyTo: 'visitor@example.com',
+      transcript: 'Visitor: We need a workflow review with delivery evidence.',
+      consent: {
+        dataProcessingAccepted: true,
+        acceptedAt
+      }
+    });
+
+    expect(parsed.source).toBe('mbmapps-guided-chat');
+    expect(parsed.consent.acceptedAt).toBe(acceptedAt);
+    expect(parsed.consent.policyVersion).toBe('2026-05-05');
+    expect(chatLeadSubmissionSchema.safeParse({
+      ...parsed,
+      consent: { ...parsed.consent, dataProcessingAccepted: false }
+    }).success).toBe(false);
+  });
+
+  it('separates persistence evidence from provider notification state', () => {
+    expect(chatLeadDeliveryResponseSchema.parse({
+      ok: true,
+      submissionId: 'chat_123',
+      receivedAt: new Date().toISOString(),
+      state: 'persisted',
+      notification: 'unavailable',
+      message: 'Transcript saved.'
+    }).notification).toBe('unavailable');
+    expect(eventTelemetrySchema.safeParse({
+      event: 'contact_queued',
+      path: '/contact',
+      at: new Date().toISOString()
+    }).success).toBe(false);
   });
 
   it('derives champion profile and score from enriched submissions', () => {

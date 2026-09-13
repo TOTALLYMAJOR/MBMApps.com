@@ -1,6 +1,6 @@
 # MBMApps.com
 
-Production-ready company site and technical showcase for `MBMapps.com`, built as a monorepo with:
+Company site and product showcase for `MBMapps.com`, built as a monorepo with:
 
 - `apps/web`: Next.js App Router marketing + demo experience
 - `apps/api`: Dockerized TypeScript API for demo metrics, pipeline, outcome snapshots, champion cohorts, contact intake, and telemetry
@@ -15,7 +15,7 @@ Production-ready company site and technical showcase for `MBMapps.com`, built as
 - SEO: metadata, JSON-LD schema, OG image route, robots, and sitemap
 - Lead funnel: enriched contact form with anti-spam honeypot, champion profile signals, consent metadata, and server-side submission route
 - Observability: web vitals + intent telemetry with session, anonymous visitor, attribution, device class, schema version, and data quality context
-- Homepage: animated testimonials signal section integrated into `HomeImmersive`
+- Homepage: terminal-style product portfolio with a governed guided-chat handoff and a reusable selected-work rail
 - Demo media: `/demo` QuietPilot preview autoplays muted, loops, and uses top-focused crop for above-the-fold context
 
 ### API (`apps/api`)
@@ -27,15 +27,18 @@ Production-ready company site and technical showcase for `MBMapps.com`, built as
   - `GET /v1/demo/outcomes`
   - `GET /v1/champion/cohorts`
   - `POST /v1/contact`
+  - `POST /v1/chat`
   - `POST /v1/events`
 - Rate limiting + helmet + CORS + structured logging
-- Firebase Admin integration with synthetic fallback data when credentials are absent
+- Firebase Admin integration. Read-only demo endpoints may use labeled synthetic fallback data when credentials are absent; lead writes fail closed and return `503` when persistence is unavailable.
 
 ### Shared Contracts (`packages/contracts`)
 - `DemoMetric`
 - `PipelineSnapshot`
 - `OperationalOutcomeSnapshot`
 - `ContactSubmission`
+- `ChatLeadSubmission`
+- `LeadPersistenceResponse`
 - `ChampionProfile`
 - `ChampionScore`
 - `ChampionCohort`
@@ -96,6 +99,27 @@ These files are local tooling artifacts and may vary by org; keep them out of co
 If Firebase Admin env vars are configured, seed demo data:
 
 - `npm run seed:firebase`
+
+## Lead Intake and Delivery
+
+Contact and guided-chat submissions are accepted only after the API has persisted them to Firestore. A successful receipt has `state: "persisted"`; the web layer does not claim an in-memory or synthetic queue.
+
+Guided chat stores its lead record first, then attempts the optional Resend notification. Notification state is reported separately as `provider-accepted`, `unavailable`, or `failed`, so a notification outage does not cause duplicate lead submissions.
+
+Required runtime configuration for lead persistence:
+
+- `BACKEND_API_URL`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY`
+
+Optional guided-chat notification configuration:
+
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `CHAT_FORWARD_TO`
+
+Public intake routes enforce same-origin browser requests, a 16 KiB body limit, shared contract validation, honeypot filtering, and an aggregate API intake rate limit. The current Next-to-API topology does not provide a trusted per-visitor identity to the Express limiter.
 
 ## Quality Gates
 

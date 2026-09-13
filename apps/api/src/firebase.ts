@@ -15,7 +15,7 @@ export function getFirebaseApp(): App | null {
     config.FIREBASE_CLIENT_EMAIL === undefined ||
     config.FIREBASE_PRIVATE_KEY === undefined
   ) {
-    logger.warn('Firebase Admin credentials missing. API will use synthetic fallback data.');
+    logger.warn('Firebase Admin credentials missing. Read endpoints may use synthetic fallback data; write endpoints are unavailable.');
     return null;
   }
 

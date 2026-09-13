@@ -3,27 +3,51 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import {
+  chatLeadSubmissionSchema,
   championCohortsResponseSchema,
+  contactResponseSchema,
   contactSubmissionSchema,
   demoMetricsResponseSchema,
   demoPipelineResponseSchema,
   eventTelemetrySchema,
+  leadFilteredResponseSchema,
+  leadPersistenceResponseSchema,
   operationalOutcomeResponseSchema,
   telemetryResponseSchema,
   type ApiError,
+  type ChatLeadSubmission,
   type ContactSubmission
 } from '@mbm/contracts';
 import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
 import { config } from './config.js';
 import { logger } from './logger.js';
-import { loadChampionCohorts, loadMetrics, loadOperationalOutcomes, loadPipeline, storeContact, storeTelemetry } from './repository.js';
+import {
+  LeadPersistenceUnavailableError,
+  loadChampionCohorts,
+  loadMetrics,
+  loadOperationalOutcomes,
+  loadPipeline,
+  storeChatLead,
+  storeContact,
+  storeTelemetry
+} from './repository.js';
 
 const messageSchema = z.object({
   message: z.string().min(2)
 });
 
-export function createApp() {
+export type LeadRepository = {
+  storeContact: (submission: ContactSubmission) => Promise<string>;
+  storeChatLead: (submission: ChatLeadSubmission) => Promise<string>;
+};
+
+const firestoreLeadRepository: LeadRepository = {
+  storeContact,
+  storeChatLead
+};
+
+export function createApp({ leadRepository = firestoreLeadRepository }: { leadRepository?: LeadRepository } = {}) {
   const app = express();
 
   app.set('trust proxy', 1);
@@ -46,7 +70,7 @@ export function createApp() {
     next();
   });
 
-  const limiter = rateLimit({
+  const createLimiter = () => rateLimit({
     windowMs: config.RATE_LIMIT_WINDOW_MS,
     max: config.RATE_LIMIT_MAX,
     standardHeaders: true,
@@ -57,12 +81,14 @@ export function createApp() {
       message: 'Too many requests. Please try again shortly.'
     }
   });
+  const generalLimiter = createLimiter();
+  const intakeLimiter = createLimiter();
 
   app.get('/healthz', (_req, res) => {
     res.status(200).json({ ok: true, service: 'mbmapps-api' });
   });
 
-  app.get('/v1/demo/metrics', limiter, async (_req, res, next) => {
+  app.get('/v1/demo/metrics', generalLimiter, async (_req, res, next) => {
     try {
       const metrics = await loadMetrics();
       const payload = demoMetricsResponseSchema.parse({ ok: true, metrics });
@@ -72,7 +98,7 @@ export function createApp() {
     }
   });
 
-  app.get('/v1/demo/pipeline', limiter, async (_req, res, next) => {
+  app.get('/v1/demo/pipeline', generalLimiter, async (_req, res, next) => {
     try {
       const pipeline = await loadPipeline();
       const payload = demoPipelineResponseSchema.parse({ ok: true, pipeline });
@@ -82,7 +108,7 @@ export function createApp() {
     }
   });
 
-  app.get('/v1/demo/outcomes', limiter, async (_req, res, next) => {
+  app.get('/v1/demo/outcomes', generalLimiter, async (_req, res, next) => {
     try {
       const outcomes = await loadOperationalOutcomes();
       const payload = operationalOutcomeResponseSchema.parse({ ok: true, outcomes });
@@ -92,7 +118,7 @@ export function createApp() {
     }
   });
 
-  app.get('/v1/champion/cohorts', limiter, async (_req, res, next) => {
+  app.get('/v1/champion/cohorts', generalLimiter, async (_req, res, next) => {
     try {
       const cohorts = await loadChampionCohorts();
       const payload = championCohortsResponseSchema.parse({ ok: true, cohorts, generatedAt: new Date().toISOString() });
@@ -102,13 +128,18 @@ export function createApp() {
     }
   });
 
-  app.post('/v1/contact', limiter, async (req, res, next) => {
+  app.post('/v1/contact', intakeLimiter, async (req, res, next) => {
     try {
       const parsed = contactSubmissionSchema.parse(req.body);
 
       if (parsed.website.trim().length > 0) {
         // Honeypot field silently treated as accepted to avoid bot feedback loops.
-        res.status(200).json({ ok: true, submissionId: `spam_${randomUUID()}`, receivedAt: new Date().toISOString() });
+        res.status(200).json(leadFilteredResponseSchema.parse({
+          ok: true,
+          submissionId: `filtered_${randomUUID()}`,
+          receivedAt: new Date().toISOString(),
+          state: 'filtered'
+        }));
         return;
       }
 
@@ -117,20 +148,47 @@ export function createApp() {
         source: parsed.source || 'mbmapps.com'
       } satisfies ContactSubmission;
 
-      const submissionId = await storeContact(submission);
+      const submissionId = await leadRepository.storeContact(submission);
 
       logger.info({ submissionId, to: config.CONTACT_FORWARD_TO }, 'Contact submission received');
-      res.status(200).json({
+      res.status(200).json(contactResponseSchema.parse({
         ok: true,
         submissionId,
-        receivedAt: new Date().toISOString()
-      });
+        receivedAt: new Date().toISOString(),
+        state: 'persisted'
+      }));
     } catch (error) {
       next(error);
     }
   });
 
-  app.post('/v1/events', limiter, async (req, res, next) => {
+  app.post('/v1/chat', intakeLimiter, async (req, res, next) => {
+    try {
+      const parsed = chatLeadSubmissionSchema.parse(req.body);
+
+      if (parsed.website.trim().length > 0) {
+        res.status(200).json(leadFilteredResponseSchema.parse({
+          ok: true,
+          submissionId: `filtered_${randomUUID()}`,
+          receivedAt: new Date().toISOString(),
+          state: 'filtered'
+        }));
+        return;
+      }
+
+      const submissionId = await leadRepository.storeChatLead(parsed);
+      res.status(200).json(leadPersistenceResponseSchema.parse({
+        ok: true,
+        submissionId,
+        receivedAt: new Date().toISOString(),
+        state: 'persisted'
+      }));
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post('/v1/events', generalLimiter, async (req, res, next) => {
     try {
       const payload = eventTelemetrySchema.parse(req.body);
       await storeTelemetry(payload);
@@ -156,6 +214,17 @@ export function createApp() {
         ok: false,
         code: 'VALIDATION_ERROR',
         message: error.issues.map((issue) => issue.message).join('; '),
+        requestId
+      });
+      return;
+    }
+
+    if (error instanceof LeadPersistenceUnavailableError) {
+      logger.error({ error, requestId }, 'Lead persistence unavailable');
+      res.status(503).json({
+        ok: false,
+        code: 'LEAD_PERSISTENCE_UNAVAILABLE',
+        message: 'We could not save this request. Please try again or use the direct email option.',
         requestId
       });
       return;
