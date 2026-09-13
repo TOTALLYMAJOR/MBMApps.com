@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { ContentReadBeacon } from '@/components/content-read-beacon';
@@ -24,7 +25,16 @@ export async function generateMetadata({ params }: InsightPageProps): Promise<Me
 
   return {
     title: post.frontmatter.title,
-    description: post.frontmatter.summary
+    description: post.frontmatter.summary,
+    openGraph: post.frontmatter.heroImage
+      ? {
+          title: post.frontmatter.title,
+          description: post.frontmatter.summary,
+          type: 'article',
+          publishedTime: post.frontmatter.publishedAt,
+          images: [{ url: post.frontmatter.heroImage, alt: post.frontmatter.heroAlt }]
+        }
+      : undefined
   };
 }
 
@@ -49,11 +59,12 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
     publisher: {
       '@type': 'Organization',
       name: siteConfig.legalName
-    }
+    },
+    image: post.frontmatter.heroImage ? `${siteConfig.url}${post.frontmatter.heroImage}` : undefined
   };
 
   return (
-    <article className="mx-auto w-full max-w-3xl px-6 py-16 lg:px-8">
+    <article className="mx-auto w-full max-w-5xl px-6 py-16 lg:px-8">
       <ContentReadBeacon
         section="insight"
         slug={slug}
@@ -68,14 +79,26 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
           primary_outcome: post.frontmatter.primaryOutcome
         }}
       />
-      <p className="northstar-kicker">{post.frontmatter.industry} / Insight</p>
-      <h1 className="mt-3 font-display text-5xl font-light tracking-[-0.04em] text-white">{post.frontmatter.title}</h1>
-      <p className="text-mbm-muted mt-4 text-lg">{post.frontmatter.summary}</p>
-      <span className="instrument-chip instrument-chip--ember mt-4">
-        {new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-      </span>
-      <div className="mbm-prose mt-10">
-        <MDXRemote source={post.content} />
+      <div className="mx-auto max-w-3xl">
+        <p className="northstar-kicker">{post.frontmatter.industry} / Article</p>
+        <h1 className="mt-3 font-display text-5xl font-light tracking-[-0.04em] text-white md:text-6xl">{post.frontmatter.title}</h1>
+        <p className="text-mbm-muted mt-4 text-lg leading-8">{post.frontmatter.summary}</p>
+      </div>
+      {post.frontmatter.heroImage ? (
+        <figure className="mt-10">
+          <div className="relative aspect-[16/9] overflow-hidden border border-white/10 bg-black">
+            <Image src={post.frontmatter.heroImage} alt={post.frontmatter.heroAlt ?? ''} fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover" priority />
+          </div>
+          <figcaption className="mt-3 font-mono text-[0.68rem] leading-5 text-white/38">A useful intelligence loop: observe the world, retain context, reason within policy, act, and verify the consequence.</figcaption>
+        </figure>
+      ) : null}
+      <div className="mx-auto max-w-3xl">
+        <span className="instrument-chip instrument-chip--ember mt-4">
+          {new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })}
+        </span>
+        <div className="mbm-prose mt-10">
+          <MDXRemote source={post.content} />
+        </div>
       </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
     </article>

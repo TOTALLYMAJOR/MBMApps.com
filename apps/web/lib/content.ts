@@ -17,7 +17,9 @@ const frontmatterSchema = z.object({
   capability: z.string().min(2),
   championSignal: z.string().min(2),
   primaryOutcome: z.string().min(2),
-  liveUrl: z.string().url().optional()
+  liveUrl: z.string().url().optional(),
+  heroImage: z.string().startsWith('/').optional(),
+  heroAlt: z.string().min(10).optional()
 });
 
 export type ContentFrontmatter = z.infer<typeof frontmatterSchema>;

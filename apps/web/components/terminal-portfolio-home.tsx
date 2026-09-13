@@ -209,7 +209,7 @@ export function TerminalPortfolioHome() {
             <button type="button" onClick={openChat}><span>[m]</span> chat</button>
             <a href="#contact"><span>[c]</span> contact</a>
             <a href="#systems"><span>[s]</span> systems</a>
-            <a href="#notes"><span>[n]</span> notes</a>
+            <a href="#articles"><span>[r]</span> articles</a>
           </div>
           <button type="button" onClick={toggleTheme} aria-label={`Switch to ${light ? 'dark' : 'light'} theme`}>
             {light ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
@@ -303,9 +303,26 @@ export function TerminalPortfolioHome() {
           </button>
         </section>
 
-        <section id="notes" className="terminal-section terminal-shell" aria-labelledby="notes-title" data-reveal>
-          <h2 id="notes-title"><span>*</span> field notes</h2>
-          <div className="terminal-notes">
+        <section id="articles" className="terminal-section terminal-shell" aria-labelledby="articles-title" data-reveal>
+          <div className="terminal-section__head">
+            <div>
+              <h2 id="articles-title"><span>*</span> articles</h2>
+              <p><span>$</span> cat --ideas --systems</p>
+            </div>
+            <Link href="/insights">view all articles →</Link>
+          </div>
+          <article className="terminal-article-feature">
+            <Link href="/insights/the-intelligence-improves-your-world-remains" className="terminal-article-feature__image">
+              <Image src="/articles/the-intelligence-improves-your-world-remains.webp" alt="A wedding represented as a living operational system connected to observation, policy, action, and verified outcomes" fill sizes="(min-width: 900px) 56vw, 100vw" />
+            </Link>
+            <div className="terminal-article-feature__copy">
+              <p><span>NEW</span> · 2026 · AI SYSTEMS</p>
+              <h3><Link href="/insights/the-intelligence-improves-your-world-remains">The Intelligence Improves. Your World Remains.</Link></h3>
+              <p>AI&apos;s durable advantage is not a clever prompt or agent diagram. It is a faithful operating world with observation, memory, authority, feedback, and proof.</p>
+              <Link href="/insights/the-intelligence-improves-your-world-remains">[read the article] <ArrowUpRight aria-hidden="true" /></Link>
+            </div>
+          </article>
+          <div className="terminal-notes terminal-notes--articles">
             <Link href="/insights/the-proof-register"><strong>The Proof Register</strong><span>Authority, evidence, and the claims software is allowed to make.</span><time>2026</time></Link>
             <Link href="/insights/choosing-cloud-combinations"><strong>Choosing cloud combinations</strong><span>How to assemble infrastructure without hiding operational boundaries.</span><time>2025</time></Link>
           </div>
