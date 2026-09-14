@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, ArrowUpRight, CircleDot } from 'lucide-react';
+import { ArrowUpRight, Check } from 'lucide-react';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
 
@@ -18,74 +18,50 @@ export default function AppsPage() {
     name: 'MBMApps applications',
     numberOfItems: projectScreens.length,
     itemListElement: projectScreens.map((product, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'SoftwareApplication',
-        name: product.name,
-        applicationCategory: product.category,
-        operatingSystem: 'Web',
-        description: product.description,
-        url: product.websiteUrl,
+      '@type': 'ListItem', position: index + 1, item: {
+        '@type': 'SoftwareApplication', name: product.name, applicationCategory: product.category,
+        operatingSystem: 'Web', description: product.description, url: product.websiteUrl,
         sameAs: `${siteConfig.url}${product.path}`
       }
     }))
   };
 
   return (
-    <div className="portfolio-home portfolio-catalog">
-      <header className="portfolio-catalog__hero">
-        <div className="portfolio-grid" aria-hidden="true" />
-        <div className="northstar-container">
-          <Link href="/" className="portfolio-text-link"><ArrowLeft aria-hidden="true" /> MBMApps home</Link>
-          <p className="portfolio-eyebrow">Application portfolio / 03</p>
-          <h1>Focused software for distinct operating environments.</h1>
-          <p>Each product has its own audience, workflow, authority model, and dedicated destination. Choose the one closest to the work you need to run.</p>
-        </div>
-      </header>
+    <div className="terminal-home terminal-page">
+      <section className="terminal-shell terminal-pagehead">
+        <p className="terminal-command"><span>~/mbmapps/apps</span> $ ls --products --available</p>
+        <h1>applications<span className="terminal-cursor" aria-hidden="true" /></h1>
+        <p className="terminal-lede">Three purpose-built systems, each with a narrow job: make the state of the work visible, keep claims tied to evidence, and route the right decision to a human.</p>
+        <div className="terminal-links"><Link href="/">[back home]</Link><Link href="/contact">[ask which fits]</Link></div>
+      </section>
 
-      <main className="northstar-container portfolio-catalog__list">
-        {projectScreens.map((product, index) => (
-          <article key={product.slug} className={`portfolio-catalog-card portfolio-accent--${product.accentToken}`}>
-            <div className="portfolio-catalog-card__visual">
-              <div className="portfolio-catalog-card__image">
-                <Image src={product.screenshot.src} alt={product.screenshot.alt} fill priority={index === 0} sizes="(max-width: 900px) 92vw, 51vw" />
-              </div>
-              <div className="portfolio-evidence">
-                <span>{product.screenshot.maturity}</span>
-                <p>{product.screenshot.caption}</p>
-              </div>
-            </div>
-            <div className="portfolio-catalog-card__copy">
-              <div className="portfolio-product-card__topline"><span>0{index + 1}</span><span>{product.parentLabel}</span></div>
-              <span className="portfolio-product-card__monogram">{product.shortName}</span>
-              <h2>{product.name}</h2>
-              <p className="portfolio-catalog-card__category">{product.category}</p>
-              <h3>{product.supportingStatement}</h3>
-              <p>{product.description}</p>
-              <div className="portfolio-chip-row">
-                {product.capabilities.map((capability) => <span key={capability.label}>{capability.label}</span>)}
-              </div>
-              <p className="portfolio-catalog-card__access"><CircleDot aria-hidden="true" /> {product.status} · {product.accessDescription}</p>
-              <div className="portfolio-actions">
-                <a href={product.websiteUrl} className="portfolio-button portfolio-button--product" data-product={product.analyticsId}>
-                  {product.websiteLabel} <ArrowUpRight aria-hidden="true" />
-                </a>
-                <Link href={product.path} className="portfolio-text-link">Product brief <ArrowRight aria-hidden="true" /></Link>
-              </div>
-            </div>
-          </article>
-        ))}
-      </main>
-
-      <section className="portfolio-final">
-        <div className="northstar-container">
-          <p className="portfolio-eyebrow">No close match?</p>
-          <h2>Bring us the workflow that still needs its own system.</h2>
-          <div className="portfolio-actions portfolio-actions--centered">
-            <Link href="/contact" className="portfolio-button portfolio-button--primary">Start a conversation <ArrowRight aria-hidden="true" /></Link>
-          </div>
+      <section className="terminal-section terminal-shell" aria-labelledby="all-apps-title">
+        <div className="terminal-section__head">
+          <div><h2 id="all-apps-title"><span>*</span> all apps</h2><p><span>$</span> cat --briefs</p></div>
+          <p>{projectScreens.length} purpose-built systems</p>
         </div>
+        <div className="terminal-product-grid">
+          {projectScreens.map((product, index) => (
+            <article key={product.slug} className={`terminal-product terminal-product--${product.accentToken}`}>
+              <Link href={product.path} className="terminal-product__image">
+                <Image src={product.screenshot.src} alt={product.screenshot.alt} fill sizes="(min-width: 900px) 31vw, 100vw" priority={index === 0} />
+              </Link>
+              <div className="terminal-product__body">
+                <div className="terminal-product__title"><h3>{product.name}</h3><ArrowUpRight aria-hidden="true" /></div>
+                <p className="terminal-product__category">{product.category}</p>
+                <p>{product.description}</p>
+                <div className="terminal-tags">{product.capabilities.slice(0, 4).map((capability) => <span key={capability.label}>{capability.label}</span>)}</div>
+                <div className="terminal-links"><Link href={product.path}>[brief]</Link><a href={product.websiteUrl}>[live]</a></div>
+                <p className="terminal-proof"><Check aria-hidden="true" /> {product.accessDescription}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="terminal-section terminal-shell terminal-contact" aria-label="Custom systems">
+        <div><p className="terminal-command"><span>~/mbmapps/apps</span> $ custom</p><h2><span>*</span> none of these fit exactly?</h2><p>The studio takes on a small number of custom operating systems each year. Describe the workflow and we will map it against what already exists.</p></div>
+        <div className="terminal-contact__actions"><Link href="/contact">[contact the studio]</Link><Link href="/#studio">[open studio]</Link></div>
       </section>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
     </div>

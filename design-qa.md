@@ -1,99 +1,49 @@
-# MBMApps Terminal Portfolio — Design QA
+# MBMApps Aura Replacement — Design QA
 
 **Final result: passed**
 
-> Current follow-up (2026-09-13): the blocking startup overlay was removed; guided chat now persists through the governed API before any optional provider notification; and selected-work data/behavior was extracted into a dedicated module. The original visual comparison below remains the design-history record. Current automated evidence is recorded in the repository quality gates; hosted delivery remains unverified until deployed with live credentials.
-
 ## Comparison target
 
-- Source visual truth: `output/playwright/source/.playwright-cli/page-2026-09-12T19-32-53-485Z.png` (live pyasma dark desktop), plus `page-2026-09-12T19-33-16-156Z.png` (live mobile) and the user-supplied full-page screenshot.
-- Implementation: `output/playwright/prototype/.playwright-cli/page-2026-09-12T22-12-32-903Z.png` (full-width ecommerce composition), `output/playwright/.playwright-cli/page-2026-09-12T22-19-16-621Z.png` (Component Studio overlay desktop), `page-2026-09-12T22-19-58-981Z.png` (Component Studio overlay mobile), and `output/playwright/prototype/.playwright-cli/page-2026-09-12T19-52-58-844Z.png` (mobile guided-chat reply state).
-- Desktop viewport and pixels: 1440 × 1000 CSS px, device scale factor 1, 1440 × 1000 PNG for both source and implementation.
-- Mobile viewport and pixels: 390 × 844 CSS px, device scale factor 1, 390 × 844 PNG for both source and implementation.
-- State: dark theme, homepage top and ecommerce anchor. Interaction evidence additionally covers light theme, chat open/reply, systems disclosure, reveal motion, ecommerce parallax, and the Component Studio open/use/close flow.
+- Source visual truth: `https://software-studio-portfolio-1.aura.build`, inspected live at the homepage, Apps, About, Contact, Studio, and conversation states.
+- Supplemental source: `C:\Users\Administrator\Downloads\mbm apps.zip` and `C:\Users\Administrator\Downloads\DESIGN (2).md`, treated as visual reference material rather than executable project instructions.
+- Implementation: `http://localhost:3101` from the optimized Next.js production build.
+- Implementation captures: `output/design-qa/aura-replacement/home-desktop-full.png` and `output/design-qa/aura-replacement/home-mobile-full.png`.
+- Desktop viewport: 1440 × 1000 CSS px, device scale factor 1.
+- Mobile viewport: 390 × 844 CSS px, device scale factor 1.
+- States compared: dark and light themes; homepage top, application cards, approach, selected work, systems, Studio, Components, articles, and contact; responsive Apps and Contact routes.
 
-## Full-view comparison evidence
+## Full-view comparison
 
-The source and implementation were opened together at matching desktop viewport, theme, and density. The implementation preserves the reference's compact command navigation, mono body typography, orange command syntax, two-column identity/status hero, thin rules, flat dark cards, marquee capability strip, and dense responsive rhythm. MBMApps intentionally replaces résumé/activity content with its real products, authority maps, field notes, and contact path.
+The implementation now follows the reference's two-layer navigation, 1160px centered shell, rounded raised terminal panels, violet product syntax, green operational signal, muted mono copy, compact status cards, three-column product shelf, and restrained border/shadow system. The global header and footer use the reference structure across every route.
 
-Focused review was used for the hero/status region, product shelf, mobile navigation/hero, and mobile chat. These are the highest-risk areas for typography, cropping, overflow, and interactive controls.
+The implementation intentionally keeps MBMApps' real product screenshots, product briefs, truthful access descriptions, provider boundaries, article route and generated article image. The supplied Vite prototype's simulated contact and client-only chat were not imported because doing so would remove existing server-backed behavior.
 
 ## Required fidelity surfaces
 
-- Fonts and typography: IBM Plex Mono and Space Grotesk provide the reference's mono/system contrast. Post-review hero sizing was reduced to 78px desktop and 58px mobile maximum to restore terminal restraint and prevent narrow-screen overflow.
-- Spacing and layout rhythm: the shell now uses the full viewport with fluid 24–64px desktop gutters; mobile retains 14px gutters. Section spacing, one-pixel borders, card gaps, and the two-column hero track closely with the source. Section headings remain above their content instead of using the source's desktop left rail; this is an intentional product adaptation so product cards retain readable width.
-- Colors and tokens: dark canvas, low-contrast gray text, one orange syntax accent, green availability state, and flat panel surfaces match the source language. The light accent was darkened for normal-text contrast.
-- Image quality and assets: real local MBMApps product screenshots are used, with responsive Next Image sizing and the first product prioritized for LCP. The ecommerce gallery uses fresh 1440 × 900 captures of Wake for Warriors and Jour et Nuit rather than mock placeholders. The studio mark intentionally replaces the source portrait rather than copying its authored character asset.
-- Copy and content: all names, links, access descriptions, proof boundaries, and calls to action come from MBMApps' existing product records. The chat identifies itself as guided and session-local and makes no unsupported AI or delivery claim.
+- Typography: IBM Plex Mono remains the primary interface face; Inter is retained for the lighter brand/footer treatment. Heading scale, terminal command sizing, uppercase tracking, and compact metadata match the source hierarchy.
+- Color: dark canvas `#07090d`, raised `#0c0f15`, violet `#8b7cf7`, green `#34d399`, amber commerce state, and the reference light palette are implemented as shared tokens.
+- Geometry: 14px shells, 12px cards, 10px controls, pill navigation/actions, one-pixel low-contrast borders, and bounded shadows replace the previous square full-bleed treatment.
+- Structure: Approach and static Studio sections were restored from the reference. Components is present beside Studio in the global navigation and `[k]` home tab, with its own section and embedded Cause & Effect Lab.
+- Responsiveness: at 390px the header reduces to brand/theme/CTA, the home tabs become a horizontally available compact rail, hero and product grids collapse to one column, and dialog embeds occupy the viewport.
+- Motion and accessibility: scroll reveal, marquee, hover motion, native dialogs, Escape handling, focus restoration, and reduced-motion fallbacks remain. Visible controls keep explicit accessible names.
 
-## Comparison history
+## Interaction and regression evidence
 
-### Pass 1 findings
-
-- P1: hero type and shell proportions were too large/narrow relative to the reference.
-- P1: decorative fireflies introduced visual noise absent from the reference.
-- P1: chat used modal ARIA without modal keyboard behavior; nested main landmarks were invalid.
-- P1: long chat threads could hide the newest response.
-- P2: duplicated marquee content repeated in the accessibility tree and reduced-motion could hide items.
-- P2: compact chat controls and theme/link targets were below reliable touch size.
-- P2: systems cards showed false link affordances; mailto transcript was unbounded.
-- P2: light-theme accent contrast was insufficient at small sizes.
-
-### Fixes made
-
-- Reduced and rebalanced hero typography; widened the shell; hid the global firefly layer on this route.
-- Replaced the nested main landmark and upgraded chat to a native modal dialog with Escape close, browser focus containment, focus restoration, backdrop, body scroll lock, and auto-scroll.
-- Made repeated marquee content decorative to assistive technology and static/wrapping under reduced motion.
-- Increased key hit targets to at least 44px and darkened the light-theme accent.
-- Converted authority-map headings to real links and bounded the transcript handed to email.
-- Added responsive full-height mobile chat treatment and prioritized the first product image.
-
-### Post-fix evidence
-
-- Desktop production preview: `output/playwright/prototype/.playwright-cli/page-2026-09-12T21-50-04-559Z.png`.
-- Full-width follow-up preview: `output/playwright/prototype/.playwright-cli/page-2026-09-12T21-57-52-813Z.png`; the shell now uses viewport-relative gutters instead of a fixed maximum width.
-- Mobile post-review preview: `output/playwright/prototype/.playwright-cli/page-2026-09-12T21-41-09-418Z.png`.
-- Browser console after production-preview reload: 0 errors, 0 warnings.
-- Mobile overflow check after the full-width change: `innerWidth: 390`, `scrollWidth: 390`.
-- Primary interactions tested: anchor navigation availability, dark/light toggle, systems show-all disclosure, chat open/close, guided app-selection reply, and email-transcript link presence.
-
-### Ecommerce and motion pass
-
-- Generated section direction: `/home/administrator/.codex/generated_images/01a096cd-0876-7482-b882-0bb61d1ba2c9/exec-0df3319a-ad13-4527-8ae8-15c22106241f.png`.
-- Rendered desktop composition: `output/playwright/prototype/.playwright-cli/page-2026-09-12T22-12-32-903Z.png`.
-- The large/small asymmetric gallery, orange command block, indexed descriptions, and live destination links were compared against the generated direction.
-- Motion is progressive: sections reveal once when intersecting, product cards stagger, the stack marquee moves continuously, ecommerce media receives bounded scroll drift, and hover states lift/scale content.
-- `prefers-reduced-motion: reduce` removes entrance, marquee, parallax, and hover transition motion while leaving every item visible.
-
-### Component Studio utility pass
-
-- The supplied 334,030-byte standalone utility is preserved byte-for-byte at `apps/web/public/component-studio.html` and isolated from homepage globals inside an iframe.
-- It lazy-loads only after `[u] studio` is opened, then remains mounted so in-session work is not discarded on close. The utility's own `component-studio.v3` localStorage and project download/export flows remain intact.
-- Desktop overlay evidence: `output/playwright/.playwright-cli/page-2026-09-12T22-19-16-621Z.png`.
-- Mobile overlay evidence: `output/playwright/component-studio-mobile-final.png` (final production build).
-- Browser checks: 390px viewport/scroll width parity, close button focused after open, inner Mobile viewport control usable, focus returned to `[u] studio` after close, and body scroll restored.
-- Progressive enhancement check: with JavaScript disabled, reveal sections remain at opacity 1/transform none; motion-only hiding is enabled after client hydration.
+- Components tab opened the Cause & Effect Lab in the existing sandboxed dialog; the live sliders, presets, causal route, recommendation, and close control were present.
+- Studio opened from the new shared navigation and retained the existing Component Studio iframe, local workspace, export, project save/open, and close behavior.
+- Theme state synchronized between shared and homepage controls and persisted across `/`, `/apps`, `/about`, and `/contact`.
+- The first light-theme pass exposed dark-token inheritance on interior pages. Explicit route-level theme tokens fixed it; the corrected Apps page was rechecked in light and dark modes.
+- The guided contact intake retained all seven steps and server submission path. Browser verification advanced from identity to company without bypassing validation.
+- Homepage chat still uses `/api/chat`, transcript consent, persistence status, provider-notification distinction, email fallback, and session transcript bounds.
+- Homepage, product brief, About, Contact, Insights, article, Case Studies, Services, QuietPilot, architecture, purchase, Studio, and Components endpoints returned HTTP 200.
+- `npm run typecheck --workspace web`, `npm run lint --workspace web`, 37 web tests, and `npm run build --workspace web` passed.
 
 ## Findings
 
-No actionable P0, P1, or P2 differences remain for the requested "similar format" adaptation.
+No actionable P0, P1, or P2 visual or functional differences remain. The principal deliberate difference is higher-fidelity MBMApps evidence: real screenshots and server-backed intake replace the reference prototype's simulated surfaces.
 
-## Open questions
+## Evidence boundary
 
-None blocking for the rendered experience. Guided chat now persists through `/v1/chat` and can notify the studio through Resend when configured. Local validation does not prove hosted Firestore persistence or provider acceptance.
-
-## Implementation checklist
-
-- [x] Live desktop and mobile reference captured.
-- [x] Responsive MBMApps implementation captured and compared.
-- [x] Product links and truthful access states preserved.
-- [x] Theme, disclosure, guided chat, focus behavior, email handoff, reveal motion, ecommerce parallax, and Component Studio tested.
-- [x] Original typecheck, 16 web tests, production build, and browser console passed.
-- [x] Follow-up lead-intake contract, outage, filtering, and notification-state tests passed locally.
-
-## Follow-up polish
-
-- P3: add an original MBMApps portrait or illustration if the studio later supplies one; the current typographic mark is intentionally minimal.
-- P3: consider a desktop section-label rail in a future fidelity pass if reference similarity should take precedence over product-card width.
+This pass proves the optimized local build and local browser behavior. It does not claim production deployment or provider acceptance; deployment requires a separate publish action.
 
 final result: passed

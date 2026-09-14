@@ -1,61 +1,45 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { ArrowUpRight, Check } from 'lucide-react';
 import { ContactForm } from '@/components/contact-form';
-import { NorthstarPageHero } from '@/components/northstar-page-hero';
+import { siteConfig } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Start a discovery call with MBMApps to scope your web platform and growth roadmap.'
+  description: 'Start a direct, structured conversation with MBMApps about the operating outcome you need.'
 };
 
 export default function ContactPage() {
   const schedulingUrl = process.env.NEXT_PUBLIC_SCHEDULING_URL ?? 'https://calendly.com/mbmapps/discovery-call';
 
   return (
-    <div className="pb-20">
-      <NorthstarPageHero
-        eyebrow="Start a conversation"
-        title="Tell us what needs to work better."
-        description="Share the outcome, the constraint, and what is already in motion. We’ll respond with a scoped technical approach, an architecture recommendation, and a realistic path to launch."
-        signal="INTAKE / OPEN"
-        actions={<Link href={schedulingUrl} className="storefront-hero-button storefront-hero-button--primary" target="_blank" rel="noreferrer">Book a discovery call <ArrowUpRight className="h-4 w-4" /></Link>}
-        aside={(
-          <div>
-            <p className="font-display text-3xl font-light tracking-[-0.04em] text-white">Practical next steps, not a generic discovery script.</p>
-            <p className="mt-4 text-sm leading-7 text-white/48">MBMApps reviews the operating context before recommending scope.</p>
-          </div>
-        )}
-      />
+    <div className="terminal-home terminal-page">
+      <section className="terminal-shell terminal-pagehead">
+        <p className="terminal-command"><span>~/mbmapps/contact</span> $ start</p>
+        <h1>start a conversation<span className="terminal-cursor" aria-hidden="true" /></h1>
+        <p className="terminal-lede">Share the outcome, the constraint, and what is already in motion. Your request is saved only when you explicitly submit it.</p>
+        <div className="terminal-links"><a href={`mailto:${siteConfig.email}`}>[email directly]</a><Link href="/">[back home]</Link><a href={schedulingUrl} target="_blank" rel="noreferrer">[book a call]</a></div>
+      </section>
 
-      <div className="northstar-section northstar-container grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
-        <section className="space-y-4 lg:sticky lg:top-28">
-          <div className="northstar-card p-6 md:p-8">
-            <p className="northstar-kicker">What you receive</p>
-            <div className="northstar-rule-list mt-6 text-sm text-white/76">
-              {[
-                'A focused architecture recommendation based on your context',
-                'Suggested delivery phases with risk-aware scope boundaries',
-                'An implementation path across product, infrastructure, and operations'
-              ].map((item) => (
-                <p key={item} className="flex gap-3 py-4 leading-6">
-                  <Check className="mt-1 h-4 w-4 shrink-0 text-indigo-300" aria-hidden="true" />{item}
-                </p>
-              ))}
-            </div>
-          </div>
-
-          <div className="northstar-card p-6 md:p-8">
-            <p className="northstar-kicker">Useful context</p>
-            <p className="mt-4 text-sm leading-7 text-white/52">Budget range, timeline, current tools, and the cost of the present workflow help us shape a credible first response.</p>
-            <p className="mt-6 font-mono text-xs text-indigo-200/70">Chicago, IL · Remote delivery</p>
-          </div>
-        </section>
-
-        <div>
+      <section className="terminal-section terminal-shell terminal-intake" aria-labelledby="contact-form-title">
+        <div className="terminal-section__head"><div><h2 id="contact-form-title"><span>*</span> guided studio intake</h2><p><span>$</span> compose --direct --persist-on-submit</p></div><p>7 concise steps</p></div>
+        <div className="terminal-intake__grid">
+          <aside>
+            <p className="terminal-command"><span>what you receive</span></p>
+            <ul>
+              <li>A focused architecture recommendation based on your context.</li>
+              <li>Suggested delivery phases with risk-aware scope boundaries.</li>
+              <li>An implementation path across product, infrastructure, and operations.</li>
+            </ul>
+            <p className="terminal-proof-note">Useful context: budget, timeline, current tools, and the cost of the present workflow.</p>
+          </aside>
           <ContactForm />
         </div>
-      </div>
+      </section>
+
+      <section className="terminal-section terminal-shell terminal-contact" aria-label="Direct contact details">
+        <div><p className="terminal-command"><span>~/mbmapps/contact</span> $ cat details</p><h2><span>*</span> direct lines</h2><p>The studio replies directly. Expect a considered answer, not an automated sequence.</p></div>
+        <div className="terminal-contact__actions"><a href={`mailto:${siteConfig.email}`}>[{siteConfig.email}]</a><a href={schedulingUrl} target="_blank" rel="noreferrer">[book discovery call]</a></div>
+      </section>
     </div>
   );
 }

@@ -29,6 +29,13 @@ const prompts = [
   'I want to discuss a partnership'
 ];
 
+const approachSteps = [
+  ['observe', 'Map the real operation', 'We start with the workflow as it actually runs — the handoffs, the evidence, and the places where guesswork creeps in.'],
+  ['verify', 'Separate claims from proof', 'Accepted is not paid. Planned is not ready. Every MBMApps system distinguishes what is known from what is assumed.'],
+  ['ship', 'Build the operating surface', 'A focused product with role-aware access and clear states: known, blocked, and needs a human decision.'],
+  ['prove', 'Keep the proof register', 'Software only makes claims it can back with evidence. Feedback loops keep the system faithful as the work evolves.']
+] as const;
+
 export function TerminalPortfolioHome() {
   const [light, setLight] = useState(false);
   const [showAll, setShowAll] = useState(false);
@@ -55,6 +62,31 @@ export function TerminalPortfolioHome() {
   useEffect(() => {
     const saved = window.localStorage.getItem('mbm-theme');
     setLight(saved === 'light');
+
+    const syncTheme = (event: Event) => setLight((event as CustomEvent<{ light: boolean }>).detail?.light ?? false);
+    window.addEventListener('mbm-theme-change', syncTheme);
+    return () => window.removeEventListener('mbm-theme-change', syncTheme);
+  }, []);
+
+  useEffect(() => {
+    const openRequestedPanel = (event?: Event) => {
+      const requested = (event as CustomEvent<{ panel?: string }> | undefined)?.detail?.panel ?? window.location.hash.slice(1);
+      if (requested === 'studio') {
+        setStudioLoaded(true);
+        setStudioOpen(true);
+      }
+      if (requested === 'components') {
+        setComponentsLoaded(true);
+        setComponentsOpen(true);
+      }
+    };
+    openRequestedPanel();
+    window.addEventListener('mbm-open-panel', openRequestedPanel);
+    window.addEventListener('hashchange', openRequestedPanel);
+    return () => {
+      window.removeEventListener('mbm-open-panel', openRequestedPanel);
+      window.removeEventListener('hashchange', openRequestedPanel);
+    };
   }, []);
 
   useEffect(() => {
@@ -153,6 +185,8 @@ export function TerminalPortfolioHome() {
     setLight((current) => {
       const next = !current;
       window.localStorage.setItem('mbm-theme', next ? 'light' : 'dark');
+      document.documentElement.dataset.theme = next ? 'light' : 'dark';
+      window.dispatchEvent(new CustomEvent('mbm-theme-change', { detail: { light: next } }));
       return next;
     });
   }
@@ -231,6 +265,7 @@ export function TerminalPortfolioHome() {
             <a href="#home"><span>[h]</span> home</a>
             <a href="#apps"><span>[a]</span> apps</a>
             <a href="#commerce"><span>[e]</span> commerce</a>
+            <a href="#approach"><span>[p]</span> approach</a>
             <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog"><span>[u]</span> studio</button>
             <button type="button" onClick={openComponents} aria-haspopup="dialog" aria-controls="components-dialog"><span>[k]</span> components</button>
             <button type="button" onClick={openChat}><span>[m]</span> chat</button>
@@ -313,6 +348,28 @@ export function TerminalPortfolioHome() {
           </div>
         </section>
 
+        <section id="approach" className="terminal-section terminal-shell" aria-labelledby="approach-title" data-reveal>
+          <div className="terminal-section__head">
+            <div>
+              <h2 id="approach-title"><span>*</span> approach</h2>
+              <p><span>$</span> cat --method --proof-driven</p>
+            </div>
+            <p>4 steps, every engagement</p>
+          </div>
+          <ol className="terminal-approach">
+            {approachSteps.map(([command, title, detail], index) => (
+              <li key={command}>
+                <span className="terminal-approach__index">0{index + 1}</span>
+                <div>
+                  <p className="terminal-approach__cmd">$ {command}</p>
+                  <h3>{title}</h3>
+                  <p>{detail}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
         <SelectedWorkRail />
 
         <section id="systems" className="terminal-section terminal-shell" aria-labelledby="systems-title" data-reveal>
@@ -329,6 +386,55 @@ export function TerminalPortfolioHome() {
           <button className="terminal-disclose" type="button" onClick={() => setShowAll((value) => !value)} aria-expanded={showAll} aria-controls="terminal-system-list">
             [{showAll ? 'show less' : `ls -a (${projectScreens.length})`}] <ChevronDown aria-hidden="true" />
           </button>
+        </section>
+
+        <section id="studio" className="terminal-section terminal-shell" aria-labelledby="studio-section-title" data-reveal>
+          <div className="terminal-section__head">
+            <div>
+              <h2 id="studio-section-title"><span>*</span> studio</h2>
+              <p><span>$</span> launch --utility component-studio@4</p>
+            </div>
+            <p>local workspace · choices stay in your browser</p>
+          </div>
+          <div className="terminal-studio-grid">
+            <div>
+              <h3>Component Studio v4</h3>
+              <p>Compose a visual direction, tune its motion system, and export an implementation-ready design pack. The same discipline behind every MBMApps product surface.</p>
+              <div className="terminal-links">
+                <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog">[open component studio]</button>
+                <a href={siteConfig.social.github}>[see the code]</a>
+              </div>
+            </div>
+            <div className="terminal-studio-swatches" aria-hidden="true">
+              <span className="swatch swatch--violet">violet / product</span>
+              <span className="swatch swatch--field">field / operations</span>
+              <span className="swatch swatch--amber">amber / commerce</span>
+              <span className="swatch swatch--mono">mono / evidence</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="components" className="terminal-section terminal-shell" aria-labelledby="components-section-title" data-reveal>
+          <div className="terminal-section__head">
+            <div>
+              <h2 id="components-section-title"><span>*</span> components</h2>
+              <p><span>$</span> launch --component nexamind/cause-effect@2</p>
+            </div>
+            <p>interactive lab · deterministic browser-only state</p>
+          </div>
+          <div className="terminal-studio-grid terminal-components-grid">
+            <div>
+              <h3>Cause &amp; Effect Lab</h3>
+              <p>Change a scenario fact and inspect its causal route, authority result, recommendation transition, and memory receipt without leaving MBMApps.</p>
+              <div className="terminal-links">
+                <button type="button" onClick={openComponents} aria-haspopup="dialog" aria-controls="components-dialog">[open components]</button>
+                <a href="/nexamind-cause-effect/index.html" target="_blank" rel="noreferrer">[open in new tab]</a>
+              </div>
+            </div>
+            <div className="component-flow-preview" aria-hidden="true">
+              <span>fact</span><i>→</i><span>cause</span><i>→</i><span>decision</span><i>→</i><span>proof</span>
+            </div>
+          </div>
         </section>
 
         <section id="articles" className="terminal-section terminal-shell" aria-labelledby="articles-title" data-reveal>
