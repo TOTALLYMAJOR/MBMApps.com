@@ -383,9 +383,9 @@ export function TerminalPortfolioHome() {
       <dialog id="component-studio-dialog" ref={studioDialogRef} className="terminal-studio" aria-labelledby="studio-title" aria-describedby="studio-description" onCancel={(event) => { event.preventDefault(); setStudioOpen(false); }}>
         <header className="terminal-studio__header">
           <div>
-            <span>$ launch --utility component-studio</span>
-            <h2 id="studio-title"><Layers3 aria-hidden="true" /> Component Studio</h2>
-            <p id="studio-description">Compose a visual direction and export an implementation-ready design pack.</p>
+            <span>$ launch --utility component-studio@4</span>
+            <h2 id="studio-title"><Layers3 aria-hidden="true" /> Component Studio v4</h2>
+            <p id="studio-description">Compose a visual direction, tune its motion system, and export an implementation-ready design pack.</p>
           </div>
           <div className="terminal-studio__actions">
             <div className="terminal-studio__status"><i /> local workspace · choices stay in your browser</div>
@@ -393,7 +393,7 @@ export function TerminalPortfolioHome() {
           </div>
           <button type="button" onClick={() => setStudioOpen(false)} aria-label="Close Component Studio"><X aria-hidden="true" /></button>
         </header>
-        {studioLoaded ? <iframe src="/component-studio.html" title="Component Studio interface builder" loading="lazy" allow="clipboard-write" /> : null}
+        {studioLoaded ? <iframe src="/component-studio.html" title="Component Studio v4 interface and motion builder" loading="lazy" allow="clipboard-write" /> : null}
       </dialog>
     </div>
   );

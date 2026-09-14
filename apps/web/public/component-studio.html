@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Explore live UI components, compare their styles and states, and export your exact choices for a coding agent.">
-<title>Component Studio — build a visual direction</title>
+<meta name="description" content="Explore live UI components, compose screens, tune a motion system, and export exact implementation choices for a coding agent.">
+<title>Component Studio v4 — build a visual and motion direction</title>
 <style id="appStyles">
 /* component-studio/styles.css */
 :root {
@@ -238,12 +238,46 @@ pre { background:#100d15; border:1px solid #35283f; border-radius:7px; padding:1
 @media(min-width:1700px) { .component-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } .tile-preview{height:220px;} }
 @media(max-width:1200px) { .component-grid{grid-template-columns:repeat(2,minmax(0,1fr));} .intro-aside{display:none;} .local-label{display:none;} .preset{padding:11px;gap:8px;} .preset-art{width:39px;} .preset small{font-size:9px;} .motion-toggle{margin-left:0;} }
 @media(max-width:1000px) { .sidebar{width:195px;} .brand{width:195px;padding-left:17px;} .main{margin-left:195px;padding:25px 22px 70px;} .header-breadcrumb{padding-left:22px;} .preset-row{gap:8px;} .preset-art{display:none;} .editor-layout{grid-template-columns:minmax(0,1fr) 256px;} .editor-canvas{padding:16px;} .editor-controls{padding:16px;} .header-actions{padding-right:18px;} .toolbar-divider{display:none;} .intro h1{font-size:27px;} }
-@media(max-width:760px) { .topbar{height:61px;} .brand{width:auto;flex:1;} .header-breadcrumb,.local-label{display:none;} .header-actions{padding-right:12px;gap:6px;} .header-actions .btn{padding:8px 10px;font-size:10px;} .header-actions .btn .icon{width:13px;height:13px;} .sidebar{top:61px;bottom:auto;width:100%;height:auto;padding:9px 12px;background:#101116f5;border-bottom:1px solid var(--line);border-right:0;} .nav-label,.nav-separator,.reference-card,.sidebar-bottom,.side-nav-secondary{display:none;} .side-nav{flex-direction:row;overflow:auto;gap:6px;} .nav-item{width:auto;flex-shrink:0;min-height:32px;padding:6px 9px;font-size:10px;gap:5px;} .nav-item .count{display:none;} .nav-item .icon{width:12px;height:12px;} .main{margin-left:0;padding:77px 16px 60px;} .intro{margin-bottom:20px;} .intro h1{font-size:26px;letter-spacing:-.9px;} .intro p{font-size:11px;} .preset-row{gap:7px;} .preset{padding:10px;gap:5px;} .preset strong{font-size:10px;} .preset small{display:none;} .preset-tick{width:12px;height:12px;} .preset.active .preset-tick{box-shadow:inset 0 0 0 3px #1d1928;} .toolbar{gap:10px;padding-bottom:17px;} .search-box{min-width:100%;max-width:100%;} .component-grid{gap:12px;} .tile-preview{height:200px;padding:20px 14px;} .tile-description{font-size:9px;} .tile-top{padding:8px 10px;} .tile-footer{padding:10px;} .view-tabs{margin-bottom:24px;gap:21px;} .view-tab{font-size:11px;} .results-hint{display:none;} .editor-layout{display:block;} .editor-canvas{max-height:none;} .editor-controls{border-left:0;border-top:1px solid #3a2c42;max-height:none;display:grid;grid-template-columns:1fr 1fr;gap:12px;} .editor-dialog{max-height:94vh;} .editor-scroll{max-height:70vh;overflow:auto;} .editor-footer{padding:13px;} .editor-footer small{display:none;} .editor-footer .actions{width:100%;justify-content:flex-end;} .dialog-header{padding:15px;} .dialog-header h2{font-size:17px;} .dialog-header .tag{display:none;} .preview-workspace{padding:15px;min-height:260px;} .preview-port{padding:20px;min-height:220px;} .toast{left:50%;} .project-fields{grid-template-columns:1fr;} .board-intro{flex-direction:column;gap:16px;} .composition-workspace{padding:12px;} .file-list{grid-template-columns:1fr;} .export-actions .btn{flex:1;} .control-section{padding:5px 0 10px;margin:0;} }
+@media(max-width:760px) { .topbar{height:61px;} .brand{width:auto;flex:1;padding-inline:12px;} .header-breadcrumb,.local-label,#headerBoard{display:none;} .header-actions{padding-right:8px;gap:6px;} .header-actions .btn{padding:8px 10px;font-size:10px;} .header-actions .btn .icon{width:13px;height:13px;} .sidebar{top:61px;bottom:auto;width:100%;height:auto;padding:9px 12px;background:#101116f5;border-bottom:1px solid var(--line);border-right:0;} .nav-label,.nav-separator,.reference-card,.sidebar-bottom,.side-nav-secondary{display:none;} .side-nav{flex-direction:row;overflow:auto;gap:6px;} .nav-item{width:auto;flex-shrink:0;min-height:32px;padding:6px 9px;font-size:10px;gap:5px;} .nav-item .count{display:none;} .nav-item .icon{width:12px;height:12px;} .main{margin-left:0;padding:77px 16px 60px;} .intro{margin-bottom:20px;} .intro h1{font-size:26px;letter-spacing:-.9px;} .intro p{font-size:11px;} .preset-row{gap:7px;} .preset{padding:10px;gap:5px;} .preset strong{font-size:10px;} .preset small{display:none;} .preset-tick{width:12px;height:12px;} .preset.active .preset-tick{box-shadow:inset 0 0 0 3px #1d1928;} .toolbar{gap:10px;padding-bottom:17px;} .search-box{min-width:100%;max-width:100%;} .component-grid{gap:12px;} .tile-preview{height:200px;padding:20px 14px;} .tile-description{font-size:9px;} .tile-top{padding:8px 10px;} .tile-footer{padding:10px;} .view-tabs{margin-bottom:24px;gap:21px;overflow-x:auto;scrollbar-width:none;} .view-tabs::-webkit-scrollbar{display:none;} .view-tab{flex-shrink:0;font-size:11px;} .results-hint{display:none;} .editor-layout{display:block;} .editor-canvas{max-height:none;} .editor-controls{border-left:0;border-top:1px solid #3a2c42;max-height:none;display:grid;grid-template-columns:1fr 1fr;gap:12px;} .editor-dialog{max-height:94vh;} .editor-scroll{max-height:70vh;overflow:auto;} .editor-footer{padding:13px;} .editor-footer small{display:none;} .editor-footer .actions{width:100%;justify-content:flex-end;} .dialog-header{padding:15px;} .dialog-header h2{font-size:17px;} .dialog-header .tag{display:none;} .preview-workspace{padding:15px;min-height:260px;} .preview-port{padding:20px;min-height:220px;} .toast{left:50%;} .project-fields{grid-template-columns:1fr;} .board-intro{flex-direction:column;gap:16px;} .composition-workspace{padding:12px;} .file-list{grid-template-columns:1fr;} .export-actions .btn{flex:1;} .control-section{padding:5px 0 10px;margin:0;} }
 @media(max-width:470px) { .brand{font-size:13px;gap:7px;padding-left:12px;} .brand-mark{width:27px;height:27px;} .header-actions #headerBoard span.board-text{display:none;} .component-grid{grid-template-columns:1fr;} .tile-preview{height:217px;padding:25px;} .tile-top{padding:9px 13px;} .tile-footer{padding:13px;} .tile-description{font-size:10px;} .intro h1{font-size:25px;} .control-label{display:none;} .editor-grid{grid-template-columns:1fr;} .editor-controls{grid-template-columns:1fr;} .preset{padding:10px 9px;} .view-tab{font-size:10px;} .view-tabs{gap:17px;} .editor-tools .segments{flex-wrap:wrap;} }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important;} }
 
 .dialog-status { display:none; padding:10px 20px; font-size:11px; color:#d7c4ed; background:#302338; border-top:1px solid #654276; }
 .dialog-status:not(:empty) { display:block; }
+
+/* v4 Motion Studio */
+.motion-studio-trigger{white-space:nowrap}
+.motion-studio{width:min(1080px,94vw);max-height:90vh;padding:0;border:1px solid #463b52;border-radius:20px;background:#17131f;color:#f1eaf9;box-shadow:0 30px 90px #0009}
+.motion-studio::backdrop{background:#09070db8;backdrop-filter:blur(5px)}
+.motion-shell{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:660px}
+.motion-main{padding:24px;border-right:1px solid #3a3044}
+.motion-inspector{padding:20px;background:#1d1726;overflow:auto}
+.motion-head{display:flex;gap:12px;align-items:center;margin-bottom:20px}
+.motion-head h2{margin:0;font-size:22px}
+.motion-head p{margin:3px 0 0;color:#b9aaca}
+.motion-head .btn{margin-left:auto}
+.motion-preview{display:grid;place-items:center;min-height:460px;border:1px solid #3b3147;border-radius:18px;background:#100d16;overflow:hidden}
+.motion-preview-card{width:min(480px,80%);padding:24px;border:1px solid #4b3d59;border-radius:16px;background:#211a2b;box-shadow:0 18px 50px #0005;transform-origin:center}
+.motion-preview-card h3{margin:0 0 6px}
+.motion-preview-card p{margin:0 0 18px;color:#b9aaca}
+.motion-preview-card button{border:0;border-radius:10px;padding:10px 14px;background:#b592f4;color:#1c102d;font-weight:800}
+.motion-state-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.motion-choice{border:1px solid #44374f;background:#211a2b;color:#f1eaf9;border-radius:12px;padding:10px 12px}
+.motion-choice[aria-pressed="true"]{border-color:#b592f4;box-shadow:0 0 0 1px #b592f4 inset}
+.motion-presets{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.motion-preset{border:1px solid #43364f;background:#16111e;color:#f1eaf9;border-radius:12px;padding:11px;text-align:left}
+.motion-preset strong,.motion-preset small{display:block}.motion-preset small{color:#9e8bad;margin-top:2px}
+.motion-preset.active{border-color:#b592f4;background:#251c31}
+.motion-field{margin:14px 0}.motion-field label{display:flex;justify-content:space-between;color:#c8bad4;font-size:12px;margin-bottom:6px}
+.motion-field input[type=range],.motion-field select{width:100%}
+.motion-field select{background:#120e18;color:#f1eaf9;border:1px solid #43364f;border-radius:9px;padding:9px}
+.motion-group{border-bottom:1px solid #3a3044;padding-bottom:16px;margin-bottom:16px}.motion-group:last-child{border-bottom:0}
+.motion-group h3{font-size:13px;margin:0 0 10px}
+.motion-scope{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.motion-scope button{border:1px solid #43364f;background:#17121e;color:#f1eaf9;border-radius:9px;padding:8px}
+.motion-scope button.active{background:#b592f4;color:#1c102d;border-color:transparent;font-weight:700}
+@media(max-width:800px){.motion-shell{grid-template-columns:1fr}.motion-main{border-right:0;border-bottom:1px solid #3a3044}.motion-preview{min-height:330px}}
+
 </style>
 <style id="componentStyles">
 /* component-studio/components.css */
@@ -523,6 +557,7 @@ pre { background:#100d15; border:1px solid #35283f; border-radius:7px; padding:1
   <div class="header-actions">
     <span class="local-label"><span class="dot"></span>Local workspace</span>
     <button type="button" class="btn ghost" id="headerBoard" data-view="board"><span data-icon="board"></span><span class="board-text">My board</span><span class="count" data-board-count>0</span></button>
+    <button type="button" class="btn ghost motion-studio-trigger" id="motionStudioButton">Motion system</button>
     <button type="button" class="btn primary" id="exportButton" disabled>Export to agent <span data-icon="upRight"></span></button>
   </div>
 </header>
@@ -789,7 +824,7 @@ const CATALOG = [
 ];
 const CATALOG_BY_ID = new Map(CATALOG.map(entry => [entry.id, entry]));
 let app = {
-  schemaVersion:3, composer:null, projectName:"My interface direction", goal:"",
+  schemaVersion:3, composer:null, motionSystem:null, projectName:"My interface direction", goal:"",
   global:{...PRESETS.studio}, board:[], category:"all", view:"page", query:""
 };
 let editor = null;
@@ -1202,6 +1237,18 @@ function normalizeConfig(raw, defaultLabel="") {
     icon:choose("icon",["none","leading","trailing"],"leading")
   };
 }
+
+function normalizeMotionSystem(raw) {
+  const base={
+    schemaVersion:"1.0.0",preset:"smooth",scope:"site",
+    tokens:{durationMs:{instant:0,fast:120,normal:220,slow:360,deliberate:520},easing:{standard:[.2,0,0,1],emphasized:[.16,1,.3,1],enter:[0,0,.2,1],exit:[.4,0,1,1]},spring:{snappy:{stiffness:520,damping:36,mass:.8},smooth:{stiffness:320,damping:30,mass:1},expressive:{stiffness:220,damping:22,mass:1}},distancePx:{xs:2,sm:8,md:16,lg:24,xl:40},scale:{press:.98,hover:1.01,enter:.98,emphasized:1.04},staggerMs:{tight:24,normal:40,loose:72}},
+    reducedMotionPolicy:{productionMode:"respect-user",editorPreview:"system",strategy:"replace",allowTransforms:false,allowLayoutMotion:false,allowInfiniteLoops:false,maxDurationMs:160},
+    stateMapping:{hover:"interaction.hover-lift",press:"interaction.press",loading:"feedback.loading-pulse",layout:"layout.smooth",presence:"presence.fade-rise"}
+  };
+  if(!raw||typeof raw!=="object")return base;
+  return {...base,...raw,tokens:{...base.tokens,...(raw.tokens||{}),durationMs:{...base.tokens.durationMs,...(raw.tokens?.durationMs||{})},spring:{...base.tokens.spring,...(raw.tokens?.spring||{})},scale:{...base.tokens.scale,...(raw.tokens?.scale||{})}},reducedMotionPolicy:{...base.reducedMotionPolicy,...(raw.reducedMotionPolicy||{})},stateMapping:{...base.stateMapping,...(raw.stateMapping||{})}};
+}
+
 function validateProject(raw) {
   if(!raw||![2,3].includes(raw.schemaVersion)||!Array.isArray(raw.board))throw Error("Choose a Component Studio v2 or v3 project.");
   if(raw.board.length>60)throw Error("A project can contain at most 60 configurations.");
@@ -1213,7 +1260,7 @@ function validateProject(raw) {
     return {uid:id,componentId:selection.componentId,config:normalizeConfig(selection.config,getEntry(selection.componentId).label),note:typeof selection.note==="string"?selection.note.slice(0,1200):""};
   });
   const global=normalizeConfig(raw.global);delete global.label;
-  return {schemaVersion:3,composer:normalizeComposer(raw.schemaVersion===3?raw.composer:null),projectName:typeof raw.projectName==="string"?raw.projectName.slice(0,160):"My interface direction",goal:typeof raw.goal==="string"?raw.goal.slice(0,3000):"",global,board,view:["gallery","board","page"].includes(raw.view)?raw.view:"board",category:CATEGORIES.some(c=>c.id===raw.category)?raw.category:"all",query:typeof raw.query==="string"?raw.query.slice(0,120):""};
+  return {schemaVersion:3,composer:normalizeComposer(raw.schemaVersion===3?raw.composer:null),motionSystem:normalizeMotionSystem(raw.motionSystem),projectName:typeof raw.projectName==="string"?raw.projectName.slice(0,160):"My interface direction",goal:typeof raw.goal==="string"?raw.goal.slice(0,3000):"",global,board,view:["gallery","board","page"].includes(raw.view)?raw.view:"board",category:CATEGORIES.some(c=>c.id===raw.category)?raw.category:"all",query:typeof raw.query==="string"?raw.query.slice(0,120):""};
 }
 
 /** The handoff records exact chosen configurations, not inferred screenshot measurements. */
@@ -1223,7 +1270,7 @@ function buildContract() {
     created_at:new Date().toISOString(),
     source:"User-selected, hand-built live component examples; not automatic extraction of the reference screenshot.",
     implementation_status:"Visual and local-interaction examples. Not a production application or accessibility certification.",
-    global_tokens:clone(app.global),
+    global_tokens:clone(app.global),motion_system:clone(app.motionSystem||normalizeMotionSystem(null)),
     components:app.board.map((selection,index)=>{
       const entry=getEntry(selection.componentId);
       return {id:selection.uid,order:index+1,catalog_id:entry.id,name:entry.name,category:entry.category,configuration:clone(selection.config),resolved_css_variables:tokenStyle(selection.config),required_states:entry.states,behavior:entry.behavior,user_instruction:selection.note,visual_reference:"COMPONENTS.html#"+selection.uid};
@@ -1334,7 +1381,8 @@ function buildVisualHTML(selections=app.board) {
   const script=handleDemoEvent.toString()+"\n"+handleDemoKeyboard.toString()+"\ndocument.addEventListener('click',handleDemoEvent);document.addEventListener('keydown',handleDemoKeyboard);";
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(app.projectName)} — selected components</title><style>${css}
     body{margin:0;background:#100e15;color:#ede5f5;font:13px/1.6 system-ui,sans-serif;padding:36px;max-width:1500px;margin-inline:auto}h1{font-size:30px;letter-spacing:-.8px;margin:0}h2{font-size:18px;margin:0}h3{font-size:11px;margin:0;padding:10px 13px;background:#261c30;color:#d7c0eb;font-weight:500}p{color:#ad9abb;margin:7px 0}.page-header{border-bottom:1px solid #40304c;padding-bottom:25px;margin-bottom:28px}.reference-section{padding:24px 0;border-bottom:1px solid #36283f}.reference-section>header{display:flex;gap:13px;align-items:center;margin-bottom:18px}.ordinal{color:#c5a3e3;font-size:14px;background:#302039;border:1px solid #553864;padding:8px 12px;border-radius:8px}.reference-section header p{font-size:11px}.reference-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}.reference-cell{border:1px solid #4b3557;border-radius:10px;overflow:hidden;min-width:0}.reference-cell .demo{display:flex;align-items:center;justify-content:center;min-height:240px;padding:28px 22px;overflow:auto}.selection-note{padding:13px 16px;background:#24182f;border:1px solid #4b3557;border-radius:7px;margin-bottom:16px;color:#d7c2e9;white-space:pre-wrap}.behavior{font-size:11px;max-width:980px;margin-top:13px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}[hidden]{display:none!important}@media(max-width:600px){body{padding:20px}.reference-grid{grid-template-columns:1fr}}@media print{body{background:#fff;color:#211629;padding:15px}.reference-section{break-inside:avoid}h1,h2{color:#211629}}
-    </style></head><body><header class="page-header"><p>COMPONENT STUDIO / VISUAL HANDOFF</p><h1>${escapeHtml(app.projectName)}</h1><p>${escapeHtml(app.goal||"Selected component configurations. Product goal still to be specified.")}</p><p>These are live visual references with demonstration behavior, not a production application. Inspect all shown states; hover/active and focus states are forced visual examples.</p></header>${componentSections}<script>${script}<\/script></body></html>`;
+    </style></head><body><header class="page-header"><p>COMPONENT STUDIO / VISUAL HANDOFF</p><h1>${escapeHtml(app.projectName)}</h1><p>${escapeHtml(app.goal||"Selected component configurations. Product goal still to be specified.")}</p><p>These are live visual references with demonstration behavior, not a production application. Inspect all shown states; hover/active and focus states are forced visual examples.</p></header>${componentSections}<script>${script}<\/script>
+</body></html>`;
 }
 function openExport() {
   if(!app.board.length&&!app.composer.screens.length){notify("Add a component or create a screen first.");return;}
@@ -2177,5 +2225,174 @@ function initComposer() {
 }
 </script>
 <script>start();</script>
+<dialog id="motionStudio" class="motion-studio" aria-labelledby="motionStudioTitle">
+  <div class="motion-shell">
+    <section class="motion-main">
+      <div class="motion-head">
+        <div>
+          <h2 id="motionStudioTitle">Motion system</h2>
+          <p>Choose motion visually, then fine-tune only when needed.</p>
+        </div>
+        <button type="button" class="btn ghost" id="motionClose">Close</button>
+      </div>
+      <div class="motion-preview">
+        <div class="motion-preview-card" id="motionPreviewCard">
+          <h3>Project analytics</h3>
+          <p>The same component, rendered with your selected motion character.</p>
+          <button type="button" id="motionPreviewButton">Open project</button>
+        </div>
+      </div>
+      <div class="motion-state-row" aria-label="Preview state">
+        <button type="button" class="motion-choice" data-motion-state="rest" aria-pressed="true">Rest</button>
+        <button type="button" class="motion-choice" data-motion-state="hover" aria-pressed="false">Hover</button>
+        <button type="button" class="motion-choice" data-motion-state="press" aria-pressed="false">Press</button>
+        <button type="button" class="motion-choice" data-motion-state="enter" aria-pressed="false">Entrance</button>
+        <button type="button" class="motion-choice" data-motion-state="loading" aria-pressed="false">Loading</button>
+      </div>
+    </section>
+    <aside class="motion-inspector">
+      <div class="motion-group">
+        <h3>Apply to</h3>
+        <div class="motion-scope">
+          <button type="button" data-motion-scope="instance">Instance</button>
+          <button type="button" data-motion-scope="component">Component</button>
+          <button type="button" class="active" data-motion-scope="site">Entire site</button>
+        </div>
+      </div>
+      <div class="motion-group">
+        <h3>Try alternatives</h3>
+        <div class="motion-presets">
+          <button type="button" class="motion-preset" data-motion-preset="crisp"><strong>Crisp</strong><small>Fast · restrained</small></button>
+          <button type="button" class="motion-preset active" data-motion-preset="smooth"><strong>Smooth</strong><small>Balanced · calm</small></button>
+          <button type="button" class="motion-preset" data-motion-preset="springy"><strong>Springy</strong><small>Responsive · expressive</small></button>
+          <button type="button" class="motion-preset" data-motion-preset="static"><strong>Static</strong><small>No transform motion</small></button>
+        </div>
+      </div>
+      <div class="motion-group">
+        <h3>Fine tune</h3>
+        <div class="motion-field"><label for="motionDuration">Duration <output id="motionDurationOut">220ms</output></label><input id="motionDuration" type="range" min="0" max="700" step="10" value="220"></div>
+        <div class="motion-field"><label for="motionStiffness">Stiffness <output id="motionStiffnessOut">320</output></label><input id="motionStiffness" type="range" min="80" max="800" step="10" value="320"></div>
+        <div class="motion-field"><label for="motionDamping">Damping <output id="motionDampingOut">30</output></label><input id="motionDamping" type="range" min="8" max="70" step="1" value="30"></div>
+        <div class="motion-field"><label for="motionHoverScale">Hover scale <output id="motionHoverScaleOut">1.01</output></label><input id="motionHoverScale" type="range" min="1" max="1.08" step=".005" value="1.01"></div>
+        <div class="motion-field"><label for="motionPressScale">Press scale <output id="motionPressScaleOut">0.98</output></label><input id="motionPressScale" type="range" min=".9" max="1" step=".005" value=".98"></div>
+      </div>
+      <div class="motion-group">
+        <h3>Reduced motion</h3>
+        <div class="motion-field"><label for="motionReduced">Fallback</label><select id="motionReduced"><option value="replace">Opacity-only replacement</option><option value="jump-to-end">Jump to end state</option><option value="disable">Disable animation</option></select></div>
+      </div>
+      <button type="button" class="btn primary" id="motionExport" style="width:100%">Export motion JSON</button>
+    </aside>
+  </div>
+</dialog>
+
+
+<script>
+"use strict";
+const MOTION_PRESET_VALUES={
+  crisp:{duration:120,stiffness:520,damping:36,hoverScale:1.005,pressScale:.985},
+  smooth:{duration:220,stiffness:320,damping:30,hoverScale:1.01,pressScale:.98},
+  springy:{duration:260,stiffness:220,damping:20,hoverScale:1.025,pressScale:.965},
+  static:{duration:0,stiffness:320,damping:30,hoverScale:1,pressScale:1}
+};
+function defaultMotionSystem(){
+  return {
+    schemaVersion:"1.0.0",
+    preset:"smooth",
+    scope:"site",
+    tokens:{
+      durationMs:{instant:0,fast:120,normal:220,slow:360,deliberate:520},
+      easing:{standard:[.2,0,0,1],emphasized:[.16,1,.3,1],enter:[0,0,.2,1],exit:[.4,0,1,1]},
+      spring:{snappy:{stiffness:520,damping:36,mass:.8},smooth:{stiffness:320,damping:30,mass:1},expressive:{stiffness:220,damping:22,mass:1}},
+      distancePx:{xs:2,sm:8,md:16,lg:24,xl:40},
+      scale:{press:.98,hover:1.01,enter:.98,emphasized:1.04},
+      staggerMs:{tight:24,normal:40,loose:72}
+    },
+    reducedMotionPolicy:{productionMode:"respect-user",editorPreview:"system",strategy:"replace",allowTransforms:false,allowLayoutMotion:false,allowInfiniteLoops:false,maxDurationMs:160},
+    stateMapping:{hover:"interaction.hover-lift",press:"interaction.press",loading:"feedback.loading-pulse",layout:"layout.smooth",presence:"presence.fade-rise"}
+  };
+}
+function normalizeMotionSystemValue(raw){
+  const base=defaultMotionSystem();
+  if(!raw||typeof raw!=="object")return base;
+  const preset=MOTION_PRESET_VALUES[raw.preset]?raw.preset:"smooth";
+  const candidate={...base,...raw,preset,tokens:{...base.tokens,...(raw.tokens||{})},reducedMotionPolicy:{...base.reducedMotionPolicy,...(raw.reducedMotionPolicy||{})},stateMapping:{...base.stateMapping,...(raw.stateMapping||{})}};
+  candidate.tokens.scale={...base.tokens.scale,...(raw.tokens?.scale||{})};
+  candidate.tokens.spring={...base.tokens.spring,...(raw.tokens?.spring||{})};
+  candidate.tokens.durationMs={...base.tokens.durationMs,...(raw.tokens?.durationMs||{})};
+  return candidate;
+}
+function ensureMotionSystem(){app.motionSystem=normalizeMotionSystemValue(app.motionSystem);return app.motionSystem}
+function motionSyncControls(){
+  const m=ensureMotionSystem();
+  $("motionDuration").value=m.tokens.durationMs.normal;
+  $("motionStiffness").value=m.tokens.spring.smooth.stiffness;
+  $("motionDamping").value=m.tokens.spring.smooth.damping;
+  $("motionHoverScale").value=m.tokens.scale.hover;
+  $("motionPressScale").value=m.tokens.scale.press;
+  $("motionReduced").value=m.reducedMotionPolicy.strategy;
+  $("motionDurationOut").textContent=m.tokens.durationMs.normal+"ms";
+  $("motionStiffnessOut").textContent=m.tokens.spring.smooth.stiffness;
+  $("motionDampingOut").textContent=m.tokens.spring.smooth.damping;
+  $("motionHoverScaleOut").textContent=Number(m.tokens.scale.hover).toFixed(3).replace(/0+$/,"").replace(/\.$/,"");
+  $("motionPressScaleOut").textContent=Number(m.tokens.scale.press).toFixed(3).replace(/0+$/,"").replace(/\.$/,"");
+  document.querySelectorAll("[data-motion-preset]").forEach(b=>b.classList.toggle("active",b.dataset.motionPreset===m.preset));
+  document.querySelectorAll("[data-motion-scope]").forEach(b=>b.classList.toggle("active",b.dataset.motionScope===m.scope));
+}
+function motionCommit(){
+  const m=ensureMotionSystem();
+  m.tokens.durationMs.normal=Number($("motionDuration").value);
+  m.tokens.spring.smooth.stiffness=Number($("motionStiffness").value);
+  m.tokens.spring.smooth.damping=Number($("motionDamping").value);
+  m.tokens.scale.hover=Number($("motionHoverScale").value);
+  m.tokens.scale.press=Number($("motionPressScale").value);
+  m.reducedMotionPolicy.strategy=$("motionReduced").value;
+  app.global.duration=m.tokens.durationMs.normal;
+  if(m.scope==="site"){
+    app.board.forEach(item=>item.config.duration=m.tokens.durationMs.normal);
+    app.composer?.screens?.forEach(screen=>screen.tokens.duration=m.tokens.durationMs.normal);
+  }
+  motionSyncControls();
+  save();
+  if(typeof renderGallery==="function")renderGallery();
+  if(typeof renderBoard==="function"&&app.view==="board")renderBoard();
+  if(typeof renderPage==="function"&&app.view==="page")renderPage();
+}
+function motionPreview(stateName){
+  const m=ensureMotionSystem(),card=$("motionPreviewCard"),duration=Math.max(1,m.tokens.durationMs.normal);
+  document.querySelectorAll("[data-motion-state]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.motionState===stateName)));
+  card.getAnimations().forEach(a=>a.cancel());
+  card.style.opacity="1";card.style.transform="none";
+  if(stateName==="hover")card.animate([{transform:"none"},{transform:`translateY(-2px) scale(${m.tokens.scale.hover})`}],{duration,fill:"forwards",easing:"cubic-bezier(.2,0,0,1)"});
+  if(stateName==="press")card.animate([{transform:"none"},{transform:`scale(${m.tokens.scale.press})`}],{duration,fill:"forwards",easing:"cubic-bezier(.2,0,0,1)"});
+  if(stateName==="enter")card.animate([{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration,fill:"forwards",easing:"cubic-bezier(0,0,.2,1)"});
+  if(stateName==="loading")card.animate([{opacity:1},{opacity:.58},{opacity:1}],{duration:Math.max(700,duration*3),iterations:Infinity,easing:"ease-in-out"});
+}
+function motionApplyPreset(name){
+  const values=MOTION_PRESET_VALUES[name];if(!values)return;
+  const m=ensureMotionSystem();m.preset=name;
+  m.tokens.durationMs.normal=values.duration;
+  m.tokens.spring.smooth.stiffness=values.stiffness;
+  m.tokens.spring.smooth.damping=values.damping;
+  m.tokens.scale.hover=values.hoverScale;
+  m.tokens.scale.press=values.pressScale;
+  motionSyncControls();motionCommit();motionPreview("hover");
+}
+function motionDownload(){
+  const blob=new Blob([JSON.stringify(ensureMotionSystem(),null,2)],{type:"application/json"});
+  download(blob,slug(app.projectName)+"-motion-system.json");
+  notify("Motion system downloaded.");
+}
+$("motionStudioButton").addEventListener("click",()=>{motionSyncControls();$("motionStudio").showModal()});
+$("motionClose").addEventListener("click",()=>$("motionStudio").close());
+$("motionExport").addEventListener("click",motionDownload);
+document.querySelectorAll("[data-motion-preset]").forEach(b=>b.addEventListener("click",()=>motionApplyPreset(b.dataset.motionPreset)));
+document.querySelectorAll("[data-motion-scope]").forEach(b=>b.addEventListener("click",()=>{ensureMotionSystem().scope=b.dataset.motionScope;motionSyncControls();save()}));
+document.querySelectorAll("[data-motion-state]").forEach(b=>b.addEventListener("click",()=>motionPreview(b.dataset.motionState)));
+["motionDuration","motionStiffness","motionDamping","motionHoverScale","motionPressScale"].forEach(id=>$(id).addEventListener("input",motionCommit));
+$("motionReduced").addEventListener("change",motionCommit);
+ensureMotionSystem();
+</script>
+
+
 </body>
 </html>
