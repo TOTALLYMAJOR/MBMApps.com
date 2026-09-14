@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ArrowUpRight, Check, ChevronDown, Layers3, Mail, MessageSquare, Moon, Send, Sun, X } from 'lucide-react';
+import { ArrowUpRight, Check, ChevronDown, GitBranch, Layers3, Mail, MessageSquare, Moon, Send, Sun, X } from 'lucide-react';
 import { currentConsentPolicyVersion, type ChatLeadDeliveryResponse } from '@mbm/contracts';
 import { SelectedWorkRail } from '@/components/selected-work-rail';
 import { projectScreens } from '@/lib/projects';
@@ -35,6 +35,8 @@ export function TerminalPortfolioHome() {
   const [chatOpen, setChatOpen] = useState(false);
   const [studioOpen, setStudioOpen] = useState(false);
   const [studioLoaded, setStudioLoaded] = useState(false);
+  const [componentsOpen, setComponentsOpen] = useState(false);
+  const [componentsLoaded, setComponentsLoaded] = useState(false);
   const [draft, setDraft] = useState('');
   const [replyEmail, setReplyEmail] = useState('');
   const [chatConsent, setChatConsent] = useState(false);
@@ -44,8 +46,10 @@ export function TerminalPortfolioHome() {
   ]);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const studioDialogRef = useRef<HTMLDialogElement>(null);
+  const componentsDialogRef = useRef<HTMLDialogElement>(null);
   const openerRef = useRef<HTMLButtonElement | null>(null);
   const studioOpenerRef = useRef<HTMLButtonElement | null>(null);
+  const componentsOpenerRef = useRef<HTMLButtonElement | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -77,9 +81,21 @@ export function TerminalPortfolioHome() {
   }, [studioOpen]);
 
   useEffect(() => {
-    document.body.style.overflow = chatOpen || studioOpen ? 'hidden' : '';
+    const dialog = componentsDialogRef.current;
+    if (!dialog) return;
+    if (componentsOpen && !dialog.open) {
+      dialog.showModal();
+      dialog.querySelector<HTMLButtonElement>('button')?.focus();
+    } else if (!componentsOpen && dialog.open) {
+      dialog.close();
+      componentsOpenerRef.current?.focus();
+    }
+  }, [componentsOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = chatOpen || studioOpen || componentsOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
-  }, [chatOpen, studioOpen]);
+  }, [chatOpen, studioOpen, componentsOpen]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ block: 'nearest' });
@@ -113,14 +129,24 @@ export function TerminalPortfolioHome() {
   function openChat(event: React.MouseEvent<HTMLButtonElement>) {
     openerRef.current = event.currentTarget;
     setStudioOpen(false);
+    setComponentsOpen(false);
     setChatOpen(true);
   }
 
   function openStudio(event: React.MouseEvent<HTMLButtonElement>) {
     studioOpenerRef.current = event.currentTarget;
     setChatOpen(false);
+    setComponentsOpen(false);
     setStudioLoaded(true);
     setStudioOpen(true);
+  }
+
+  function openComponents(event: React.MouseEvent<HTMLButtonElement>) {
+    componentsOpenerRef.current = event.currentTarget;
+    setChatOpen(false);
+    setStudioOpen(false);
+    setComponentsLoaded(true);
+    setComponentsOpen(true);
   }
 
   function toggleTheme() {
@@ -198,7 +224,7 @@ export function TerminalPortfolioHome() {
   }
 
   return (
-    <div className={`terminal-home ${light ? 'terminal-home--light' : ''}`}>
+    <div className={`terminal-home terminal-home--homepage ${light ? 'terminal-home--light' : ''}`}>
       <nav className="terminal-nav" aria-label="Homepage sections">
         <div className="terminal-shell terminal-nav__inner">
           <div className="terminal-nav__links">
@@ -206,6 +232,7 @@ export function TerminalPortfolioHome() {
             <a href="#apps"><span>[a]</span> apps</a>
             <a href="#commerce"><span>[e]</span> commerce</a>
             <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog"><span>[u]</span> studio</button>
+            <button type="button" onClick={openComponents} aria-haspopup="dialog" aria-controls="components-dialog"><span>[k]</span> components</button>
             <button type="button" onClick={openChat}><span>[m]</span> chat</button>
             <a href="#contact"><span>[c]</span> contact</a>
             <a href="#systems"><span>[s]</span> systems</a>
@@ -231,6 +258,7 @@ export function TerminalPortfolioHome() {
               <a href={siteConfig.social.github}>[github]</a>
               <button type="button" onClick={openChat}>[chat]</button>
               <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog">[open component studio]</button>
+              <button type="button" onClick={openComponents} aria-haspopup="dialog" aria-controls="components-dialog">[open components]</button>
             </div>
           </div>
           <aside className="terminal-status" aria-label="Studio status">
@@ -394,6 +422,22 @@ export function TerminalPortfolioHome() {
           <button type="button" onClick={() => setStudioOpen(false)} aria-label="Close Component Studio"><X aria-hidden="true" /></button>
         </header>
         {studioLoaded ? <iframe src="/component-studio.html" title="Component Studio v4 interface and motion builder" loading="lazy" allow="clipboard-write" /> : null}
+      </dialog>
+
+      <dialog id="components-dialog" ref={componentsDialogRef} className="terminal-studio terminal-components" aria-labelledby="components-title" aria-describedby="components-description" onCancel={(event) => { event.preventDefault(); setComponentsOpen(false); }}>
+        <header className="terminal-studio__header">
+          <div>
+            <span>$ launch --component nexamind/cause-effect@2</span>
+            <h2 id="components-title"><GitBranch aria-hidden="true" /> Components · Cause &amp; Effect Lab</h2>
+            <p id="components-description">Change a scenario fact and inspect its causal route, authority result, recommendation transition, and memory receipt.</p>
+          </div>
+          <div className="terminal-studio__actions">
+            <div className="terminal-studio__status"><i /> deterministic demo · browser-only state</div>
+            <a href="/nexamind-cause-effect/index.html" target="_blank" rel="noreferrer">[open tab] <ArrowUpRight aria-hidden="true" /></a>
+          </div>
+          <button type="button" onClick={() => setComponentsOpen(false)} aria-label="Close Components"><X aria-hidden="true" /></button>
+        </header>
+        {componentsLoaded ? <iframe src="/nexamind-cause-effect/index.html" title="NexaMind Cause and Effect Lab interactive component" loading="lazy" sandbox="allow-scripts" /> : null}
       </dialog>
     </div>
   );

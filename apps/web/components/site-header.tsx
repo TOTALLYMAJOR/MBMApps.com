@@ -2,44 +2,44 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { navigation } from '@/lib/site';
 import { cn } from '@/lib/utils';
+
+const terminalNavigation = [
+  { href: '/', label: 'home', key: 'h' },
+  { href: '/apps', label: 'apps', key: 'a' },
+  { href: '/case-studies', label: 'work', key: 'w' },
+  { href: '/services', label: 'services', key: 's' },
+  { href: '/insights', label: 'articles', key: 'r' },
+  { href: '/about', label: 'about', key: 'b' },
+  { href: '/contact', label: 'contact', key: 'c' }
+];
 
 export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="northstar-header sticky top-0 z-40">
-      <div className="northstar-container flex items-center justify-between py-4">
-        <Link href="/" className="group flex min-h-11 items-center gap-3 text-xl tracking-[-0.04em] text-white" aria-label="MBMApps home">
-          <span className="font-semibold">MBM</span><span className="-ml-3 font-light text-white/72">Apps</span>
-        </Link>
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
-          {navigation.map((item) => {
-            const active = item.href.startsWith('/#') ? false : pathname.startsWith(item.href);
+    <header className="northstar-header terminal-nav site-terminal-nav sticky top-0 z-40">
+      <div className="terminal-shell terminal-nav__inner">
+        <nav className="terminal-nav__links" aria-label="Primary navigation">
+          {terminalNavigation.map((item) => {
+            const active = item.href === '/' ? pathname === '/' : !item.href.includes('#') && pathname.startsWith(item.href);
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'northstar-nav-link',
-                  active && 'northstar-nav-link--active'
+                  'site-terminal-nav__link',
+                  active && 'is-active'
                 )}
+                aria-current={active ? 'page' : undefined}
               >
-                {item.label}
+                <span>[{item.key}]</span> {item.label}
               </Link>
             );
           })}
         </nav>
-        <div className="flex items-center gap-3">
-          <span className="availability-mark availability-mark--live hidden lg:inline-flex">
-            <span className="availability-mark__dot" aria-hidden="true" />
-            Open for new engagements
-          </span>
-          <Link href="/contact" className="northstar-header-link hidden sm:inline-flex">Start a conversation</Link>
-          <Link href="/apps" className="northstar-header-cta">Browse apps</Link>
-        </div>
+        <Link href="/" className="site-terminal-brand" aria-label="MBMApps home">MBMApps<span aria-hidden="true" /></Link>
       </div>
     </header>
   );

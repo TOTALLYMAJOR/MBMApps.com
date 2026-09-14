@@ -463,7 +463,7 @@ export function QuietPilotCommandPreview({ className }: { className?: string }) 
       id="preview"
       aria-label="QuietPilot command center preview"
       className={cn(
-        'h-[clamp(520px,calc(100svh-8rem),720px)] overflow-hidden rounded-lg border border-indigo-200 bg-[#fafafa] text-[13px] text-zinc-900 shadow-2xl shadow-indigo-950/10 2xl:text-sm',
+        'quietpilot-command-preview h-[clamp(520px,calc(100svh-8rem),720px)] overflow-hidden rounded-lg border border-indigo-200 bg-[#fafafa] text-[13px] text-zinc-900 shadow-2xl shadow-indigo-950/10 2xl:text-sm',
         className
       )}
     >

@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { ArrowLeft } from 'lucide-react';
 import { ContentReadBeacon } from '@/components/content-read-beacon';
+import { TerminalArticleShell } from '@/components/terminal-article-shell';
 import { getInsightBySlug, getInsights } from '@/lib/content';
 import { siteConfig } from '@/lib/site';
 
@@ -63,44 +66,76 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
     image: post.frontmatter.heroImage ? `${siteConfig.url}${post.frontmatter.heroImage}` : undefined
   };
 
+  const publishedDate = new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC'
+  });
+
   return (
-    <article className="mx-auto w-full max-w-5xl px-6 py-16 lg:px-8">
-      <ContentReadBeacon
-        section="insight"
-        slug={slug}
-        path={`/insights/${slug}`}
-        metadata={{
-          industry: post.frontmatter.industry,
-          persona: post.frontmatter.persona,
-          funnel_stage: post.frontmatter.funnelStage,
-          problem: post.frontmatter.problem,
-          capability: post.frontmatter.capability,
-          champion_signal: post.frontmatter.championSignal,
-          primary_outcome: post.frontmatter.primaryOutcome
-        }}
-      />
-      <div className="mx-auto max-w-3xl">
-        <p className="northstar-kicker">{post.frontmatter.industry} / Article</p>
-        <h1 className="mt-3 font-display text-5xl font-light tracking-[-0.04em] text-white md:text-6xl">{post.frontmatter.title}</h1>
-        <p className="text-mbm-muted mt-4 text-lg leading-8">{post.frontmatter.summary}</p>
-      </div>
-      {post.frontmatter.heroImage ? (
-        <figure className="mt-10">
-          <div className="relative aspect-[16/9] overflow-hidden border border-white/10 bg-black">
-            <Image src={post.frontmatter.heroImage} alt={post.frontmatter.heroAlt ?? ''} fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover" priority />
+    <TerminalArticleShell>
+      <article className="terminal-reader">
+        <ContentReadBeacon
+          section="insight"
+          slug={slug}
+          path={`/insights/${slug}`}
+          metadata={{
+            industry: post.frontmatter.industry,
+            persona: post.frontmatter.persona,
+            funnel_stage: post.frontmatter.funnelStage,
+            problem: post.frontmatter.problem,
+            capability: post.frontmatter.capability,
+            champion_signal: post.frontmatter.championSignal,
+            primary_outcome: post.frontmatter.primaryOutcome
+          }}
+        />
+
+        <header className="terminal-shell terminal-reader__header">
+          <Link href="/insights" className="terminal-reader__back"><ArrowLeft aria-hidden="true" /> [all articles]</Link>
+          <p className="terminal-command"><span>~/mbmapps/articles</span> $ open {slug}</p>
+          <div className="terminal-reader__meta">
+            <span>article</span>
+            <span>{post.frontmatter.industry}</span>
+            <time dateTime={post.frontmatter.publishedAt}>{publishedDate}</time>
           </div>
-          <figcaption className="mt-3 font-mono text-[0.68rem] leading-5 text-white/38">A useful intelligence loop: observe the world, retain context, reason within policy, act, and verify the consequence.</figcaption>
-        </figure>
-      ) : null}
-      <div className="mx-auto max-w-3xl">
-        <span className="instrument-chip instrument-chip--ember mt-4">
-          {new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })}
-        </span>
-        <div className="mbm-prose mt-10">
-          <MDXRemote source={post.content} />
-        </div>
-      </div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
-    </article>
+          <h1>{post.frontmatter.title}</h1>
+          <p className="terminal-reader__summary">{post.frontmatter.summary}</p>
+        </header>
+
+        {post.frontmatter.heroImage ? (
+          <figure className="terminal-shell terminal-reader__figure">
+            <div>
+              <Image
+                src={post.frontmatter.heroImage}
+                alt={post.frontmatter.heroAlt ?? post.frontmatter.title}
+                fill
+                sizes="100vw"
+                priority
+              />
+            </div>
+            <figcaption>{post.frontmatter.heroAlt ?? post.frontmatter.summary}</figcaption>
+          </figure>
+        ) : null}
+
+        <section className="terminal-shell terminal-reader__layout" aria-label="Article content">
+          <aside className="terminal-reader__details">
+            <div><span>published</span><strong>{publishedDate}</strong></div>
+            <div><span>domain</span><strong>{post.frontmatter.industry}</strong></div>
+            <div className="terminal-reader__tags">
+              <span>topics</span>
+              <p>{post.frontmatter.tags.map((tag) => <span key={tag}>#{tag}</span>)}</p>
+            </div>
+            <Link href="/insights"><ArrowLeft aria-hidden="true" /> back to register</Link>
+          </aside>
+
+          <div className="mbm-prose terminal-reader__prose">
+            <MDXRemote source={post.content} />
+          </div>
+        </section>
+
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      </article>
+    </TerminalArticleShell>
   );
 }

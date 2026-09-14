@@ -1,0 +1,75 @@
+.shell {
+  min-width: 320px;
+  border-bottom: 1px solid rgba(76, 255, 156, 0.14);
+  background: #020807;
+}
+
+.contextBar {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 20px;
+  border-bottom: 1px solid rgba(76, 255, 156, 0.12);
+  color: #8da79d;
+  background: #04100d;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 11px;
+}
+
+.contextBar p,
+.contextBar a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.contextBar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.contextBar a {
+  color: #85ffbb;
+  transition: color 160ms ease;
+}
+
+.contextBar a:hover {
+  color: #f3faf6;
+}
+
+.contextBar a:focus-visible {
+  outline: 2px solid #4cff9c;
+  outline-offset: -4px;
+}
+
+.frame {
+  width: 100%;
+  height: calc(100svh - 96px);
+  min-height: 720px;
+  display: block;
+  border: 0;
+  background: #020807;
+}
+
+@media (max-width: 640px) {
+  .contextBar {
+    padding-inline: 12px;
+  }
+
+  .contextBar p {
+    display: none;
+  }
+
+  .contextBar a {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .frame {
+    min-height: 760px;
+  }
+}

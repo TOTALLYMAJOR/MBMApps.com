@@ -39,7 +39,7 @@ export default async function QuietPilotPurchasePage({ searchParams }: PageProps
   const checkoutState = firstParam(params.checkout);
 
   return (
-    <main className="min-h-screen bg-[#f7f8fc] text-slate-950">
+    <main className="terminal-purchase min-h-screen bg-[#f7f8fc] text-slate-950">
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 py-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8">
           <div>

@@ -61,7 +61,7 @@ export function QuietPilotArchitectureTopology() {
 
   return (
     <div
-      className="relative isolate min-h-screen overflow-hidden bg-[#030412] text-[#eef6ff]"
+      className="terminal-architecture relative isolate min-h-screen overflow-hidden bg-[#030412] text-[#eef6ff]"
       style={{
         backgroundImage: `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, rgba(22,199,255,0.14), transparent 18rem), radial-gradient(circle at 14% 0%, rgba(37,50,150,0.32), transparent 25rem), radial-gradient(circle at 92% 45%, rgba(12,196,255,0.12), transparent 18rem)`
       }}

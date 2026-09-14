@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "next dev -p 3001",
+    "prebuild": "npm run build:embeds",
+    "build:embeds": "npm run build:embed:nexamind && npm run build:embed:cause-effect",
+    "build:embed:nexamind": "node embeds/nexamind-agentic-demo/build.mjs",
+    "build:embed:cause-effect": "node embeds/nexamind-cause-effect/build.mjs",
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "eslint .",

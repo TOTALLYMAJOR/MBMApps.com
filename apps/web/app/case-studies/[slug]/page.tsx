@@ -55,7 +55,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
   };
 
   return (
-    <article className="mx-auto w-full max-w-3xl px-6 py-16 lg:px-8">
+    <article className="terminal-case-study mx-auto w-full max-w-3xl px-6 py-16 lg:px-8">
       <EventBeacon
         event="case_study_viewed"
         path={`/case-studies/${slug}`}

@@ -66,7 +66,7 @@ export default function QuietPilotPage() {
   };
 
   return (
-    <main className="bg-[#f7f8fc] text-zinc-950">
+    <main className="terminal-product-marketing bg-[#f7f8fc] text-zinc-950">
       <section className="relative overflow-hidden border-b border-indigo-100">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_25%_15%,rgba(14,165,233,0.18),transparent_34%),linear-gradient(180deg,#ffffff_0%,#f7f8fc_88%)]" />
         <div className="relative mx-auto w-full max-w-[1360px] px-4 py-8 sm:px-6 lg:px-8">
