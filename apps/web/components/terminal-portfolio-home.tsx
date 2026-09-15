@@ -283,7 +283,7 @@ export function TerminalPortfolioHome() {
 
       <div>
         <section id="home" className="terminal-shell terminal-hero" data-reveal>
-          <OperatingWorldSphere />
+          <OperatingWorldSphere onOpenStudio={openStudio} onOpenComponents={openComponents} />
           <div className="terminal-hero__copy">
             <p className="terminal-command"><span>~/mbmapps</span> $ whoami</p>
             <h1>MBMApps<span aria-hidden="true" /></h1>

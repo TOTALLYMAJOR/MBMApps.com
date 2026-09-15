@@ -3708,6 +3708,15 @@ body::after,
 }
 
 /* Interactive operating-world visualization */
+.terminal-home--homepage:not(.terminal-home--light){
+  --term-bg:#090b11;
+  --term-panel:#101219;
+  --term-panel-2:#151722;
+  --term-line:#272a35;
+  --term-text:#e0e0e7;
+  --term-muted:#92939e;
+  --term-accent:#8d7dff;
+}
 .terminal-home--homepage .terminal-hero{
   position:relative;
   isolation:isolate;
@@ -3729,7 +3738,7 @@ body::after,
   overflow:hidden;
   pointer-events:none;
   background:
-    radial-gradient(circle at 56% 49%,rgba(69,78,190,.08),transparent 32%),
+    radial-gradient(circle at 56% 49%,rgba(141,125,255,.1),transparent 32%),
     linear-gradient(90deg,transparent 0 67%,rgba(8,8,8,.12));
   mask-image:linear-gradient(90deg,#000 0 88%,transparent 100%);
 }
@@ -3753,8 +3762,8 @@ body::after,
   opacity:.98;
 }
 .operating-world__canvas[data-failed=true]{
-  background:
-    radial-gradient(circle at 50% 50%,rgba(99,102,241,.22),rgba(99,102,241,.04) 44%,transparent 70%);
+    background:
+    radial-gradient(circle at 50% 50%,rgba(141,125,255,.22),rgba(141,125,255,.04) 44%,transparent 70%);
 }
 .operating-world__hud{
   position:absolute;
@@ -3780,10 +3789,10 @@ body::after,
   align-items:center;
   min-height:5rem;
   border:0;
-  border-top:1px solid rgba(199,210,254,.15);
+  border-top:1px solid rgba(141,125,255,.2);
   background:transparent;
   padding:.65rem 0;
-  color:rgba(255,255,255,.44);
+  color:rgba(224,224,231,.58);
   text-align:left;
   cursor:pointer;
   transition:color 180ms ease,padding 220ms ease,background 220ms ease,transform 220ms ease;
@@ -3793,13 +3802,13 @@ body::after,
 .operating-world__modes button.is-active{
   padding-left:.65rem;
   color:#fff;
-  background:linear-gradient(90deg,rgba(99,102,241,.13),rgba(99,102,241,.025) 68%,transparent);
+  background:linear-gradient(90deg,rgba(141,125,255,.16),rgba(141,125,255,.03) 68%,transparent);
   transform:translateX(-.15rem);
 }
 .operating-world__modes span{
   grid-area:n;
   font:600 .62rem var(--font-ibm-plex-mono),monospace;
-  color:rgba(199,210,254,.58);
+  color:rgba(141,125,255,.82);
 }
 .operating-world__modes strong{
   grid-area:t;
@@ -3814,7 +3823,7 @@ body::after,
   line-height:1.35;
   text-transform:uppercase;
   letter-spacing:.1em;
-  color:rgba(255,255,255,.36);
+  color:rgba(224,224,231,.46);
 }
 @media(max-width:1040px){
   .terminal-home--homepage .terminal-hero{min-height:740px}

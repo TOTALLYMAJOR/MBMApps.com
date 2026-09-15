@@ -1,28 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, type MouseEventHandler } from 'react';
 
-const MODES = ['observe', 'verify', 'ship', 'prove'] as const;
-type Mode = (typeof MODES)[number];
-
-const modeDetails: Record<Mode, string> = {
-  observe: 'map the real operation',
-  verify: 'separate claims from proof',
-  ship: 'build the operating surface',
-  prove: 'keep the proof register'
+type OperatingWorldSphereProps = {
+  onOpenStudio: MouseEventHandler<HTMLButtonElement>;
+  onOpenComponents: MouseEventHandler<HTMLButtonElement>;
 };
 
-export function OperatingWorldSphere() {
+export function OperatingWorldSphere({ onOpenStudio, onOpenComponents }: OperatingWorldSphereProps) {
   const hostRef = useRef<HTMLDivElement>(null);
-  const [mode, setMode] = useState<Mode>('observe');
-  const modeRef = useRef<Mode>('observe');
-  const transitionRef = useRef(0);
-
-  const selectMode = useCallback((next: Mode) => {
-    if (modeRef.current !== next) transitionRef.current = performance.now();
-    modeRef.current = next;
-    setMode(next);
-  }, []);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -305,32 +291,16 @@ export function OperatingWorldSphere() {
         resize();
 
         const clock = new THREE.Clock();
-        const modeIndex: Record<Mode, number> = {
-          observe: 0,
-          verify: 1,
-          ship: 2,
-          prove: 3
-        };
-
         const animate = () => {
           if (disposed) return;
           animationFrame = requestAnimationFrame(animate);
           if (!isVisible || !pageVisible) return;
 
           const time = clock.getElapsedTime();
-          const activeMode = modeRef.current;
-          const activeIndex = modeIndex[activeMode];
-          const pulse = 0.5 + 0.5 * Math.sin(time * 1.45 + activeIndex);
-          const sinceTransition = transitionRef.current
-            ? (performance.now() - transitionRef.current) / 1000
-            : 10;
-          const transition = reducedMotion
-            ? 0
-            : Math.max(0, 1 - sinceTransition / 0.9);
-          const shock = transition * transition * (3 - 2 * transition);
+          const pulse = 0.5 + 0.5 * Math.sin(time * 1.45);
 
           if (!reducedMotion) {
-            world.rotation.y += 0.0017 + activeIndex * 0.00018;
+            world.rotation.y += 0.0017;
             world.rotation.x += (-pointerY * 0.04 - world.rotation.x) * 0.025;
             world.position.x += (pointerX * 0.07 - 0.2 - world.position.x) * 0.025;
             stars.rotation.y = time * 0.0016;
@@ -338,26 +308,7 @@ export function OperatingWorldSphere() {
 
           cubes.forEach((cube, index) => {
             let displacement = 0.007 * Math.sin(time * 0.85 + cube.seed);
-
-            if (activeMode === 'observe') {
-              displacement += 0.021 * Math.sin(time * 1.35 + cube.seed);
-            } else if (activeMode === 'verify') {
-              displacement += index % 9 === 0 ? 0.05 * pulse : 0;
-            } else if (activeMode === 'ship') {
-              displacement += 0.016 * Math.sin(time * 1.9 + cube.base.y);
-            } else {
-              displacement *= 0.22;
-            }
-
-            if (shock > 0) {
-              const travellingWave = Math.max(
-                0,
-                Math.sin(cube.azimuth - sinceTransition * 7 + activeIndex * 0.8)
-              );
-              displacement += shock * travellingWave * (cube.front ? 0.16 : 0.07);
-              cube.line.rotation.x += shock * 0.002 * Math.sin(cube.seed);
-              cube.line.rotation.y += shock * 0.0014 * Math.cos(cube.seed);
-            }
+            displacement += index % 9 === 0 ? 0.021 * pulse : 0;
 
             cube.line.position
               .copy(cube.base)
@@ -367,21 +318,12 @@ export function OperatingWorldSphere() {
             material.opacity =
               (cube.front ? 0.17 : 0.045) +
               (cube.front ? 0.12 : 0.03) * pulse +
-              (activeMode === 'prove' ? 0.06 : 0) +
-              shock * (cube.front ? 0.09 : 0.025);
+              (cube.front ? 0.02 : 0.006);
           });
 
           panelMeshes.forEach((mesh, index) => {
             const material = mesh.material as InstanceType<typeof THREE.MeshBasicMaterial>;
-            const baseOpacity =
-              activeMode === 'observe'
-                ? 0.17
-                : activeMode === 'verify'
-                  ? 0.25
-                  : activeMode === 'ship'
-                    ? 0.31
-                    : 0.22;
-            const target = Math.max(0.07, baseOpacity - index * 0.025);
+            const target = Math.max(0.07, 0.19 - index * 0.025);
             material.opacity += (target - material.opacity) * 0.045;
             mesh.position.y += (
               (index - 1) * 0.12 +
@@ -391,16 +333,16 @@ export function OperatingWorldSphere() {
           });
 
           shards.forEach((shard) => {
-            const burst = shock * (0.12 + 0.42 * Math.max(0, Math.sin(shard.seed + sinceTransition * 9)));
+            const burst = 0.02 * Math.sin(time * 1.2 + shard.seed);
             shard.mesh.position
               .copy(shard.base)
               .add(shard.direction.clone().multiplyScalar(burst));
-            shard.mesh.rotation.z += shock * 0.006 * Math.sin(shard.seed);
+            shard.mesh.rotation.z += 0.001 * Math.sin(shard.seed);
             (shard.mesh.material as InstanceType<typeof THREE.MeshBasicMaterial>).opacity =
-              shock * 0.22;
+              0.08;
           });
 
-          const scale = 1 + (activeMode === 'ship' ? 0.007 * pulse : 0.0025 * pulse) + shock * 0.008;
+          const scale = 1 + 0.0035 * pulse;
           world.scale.setScalar(scale);
           renderer.render(scene, camera);
         };
@@ -458,24 +400,19 @@ export function OperatingWorldSphere() {
       <div ref={hostRef} className="operating-world__canvas" aria-hidden="true" />
       <div className="operating-world__hud">
         <p className="terminal-command">
-          <span>~/mbmapps</span> $ inspect --operating-world
+          <span>~/mbmapps</span> $ open --navigation
         </p>
         <div className="operating-world__modes">
-          {MODES.map((item, index) => (
-            <button
-              key={item}
-              type="button"
-              className={mode === item ? 'is-active' : ''}
-              aria-pressed={mode === item}
-              onPointerEnter={() => selectMode(item)}
-              onFocus={() => selectMode(item)}
-              onClick={() => selectMode(item)}
-            >
-              <span>0{index + 1}</span>
-              <strong>{item}</strong>
-              <small>{modeDetails[item]}</small>
-            </button>
-          ))}
+          <button type="button" onClick={onOpenStudio} aria-keyshortcuts="u">
+            <span>[u]</span>
+            <strong>studio</strong>
+            <small>open component studio</small>
+          </button>
+          <button type="button" onClick={onOpenComponents} aria-keyshortcuts="k">
+            <span>[k]</span>
+            <strong>components</strong>
+            <small>open component index</small>
+          </button>
         </div>
       </div>
     </div>
