@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { TerminalPortfolioHome } from '@/components/terminal-portfolio-home';
 import { projectScreens } from '@/lib/projects';
+import { getGitHubProjects } from '@/lib/github-projects';
 import { siteConfig } from '@/lib/site';
 
 export const metadata: Metadata = {
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
     'Explore MBMApps applications for catering operations, youth-sports management, and quote-to-event workflows, or start a conversation about a custom system.'
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const githubProjects = await getGitHubProjects();
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -39,7 +41,7 @@ export default function HomePage() {
 
   return (
     <>
-      <TerminalPortfolioHome />
+      <TerminalPortfolioHome githubProjects={githubProjects} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
     </>

@@ -8,7 +8,8 @@ import { currentConsentPolicyVersion, type ChatLeadDeliveryResponse } from '@mbm
 import { SelectedWorkRail } from '@/components/selected-work-rail';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
-import { OperatingWorldSphere } from '@/components/operating-world-sphere';
+import { OperatingWorldSphere, type OperatingWorldMode } from '@/components/operating-world-sphere';
+import type { GitHubProject } from '@/lib/github-projects';
 
 type ChatLine = { from: 'studio' | 'visitor'; text: string };
 type ChatDeliveryState = { status: 'idle' | 'sending' | 'saved' | 'sent' | 'error'; message: string };
@@ -37,7 +38,7 @@ const approachSteps = [
   ['prove', 'Keep the proof register', 'Software only makes claims it can back with evidence. Feedback loops keep the system faithful as the work evolves.']
 ] as const;
 
-export function TerminalPortfolioHome() {
+export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitHubProject[] }) {
   const [light, setLight] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
@@ -45,6 +46,8 @@ export function TerminalPortfolioHome() {
   const [studioLoaded, setStudioLoaded] = useState(false);
   const [componentsOpen, setComponentsOpen] = useState(false);
   const [componentsLoaded, setComponentsLoaded] = useState(false);
+  const [operatingMode, setOperatingMode] = useState<OperatingWorldMode>('observe');
+  const [methodologyProgress, setMethodologyProgress] = useState(0);
   const [draft, setDraft] = useState('');
   const [replyEmail, setReplyEmail] = useState('');
   const [chatConsent, setChatConsent] = useState(false);
@@ -133,6 +136,57 @@ export function TerminalPortfolioHome() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ block: 'nearest' });
   }, [lines]);
+
+  useEffect(() => {
+    const steps = Array.from(document.querySelectorAll<HTMLElement>('[data-method-step]'));
+    const section = document.querySelector<HTMLElement>('.terminal-methodology');
+    if (!steps.length || !section) return;
+
+    const modes: OperatingWorldMode[] = ['observe', 'verify', 'ship', 'prove'];
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const viewportAnchor = window.innerHeight * 0.48;
+      const centers = steps.map((step) => {
+        const rect = step.getBoundingClientRect();
+        return rect.top + rect.height / 2;
+      });
+
+      let segment = 0;
+      while (segment < centers.length - 1) {
+        const nextCenter = centers[segment + 1];
+        if (nextCenter === undefined || viewportAnchor <= nextCenter) break;
+        segment += 1;
+      }
+
+      const next = Math.min(segment + 1, centers.length - 1);
+      const start = centers[segment] ?? viewportAnchor;
+      const end = centers[next] ?? start;
+      const local = next === segment ? 0 : Math.max(0, Math.min(1, (viewportAnchor - start) / Math.max(1, end - start)));
+      const progress = Math.max(0, Math.min(3, segment + local));
+      setMethodologyProgress((current) => current + (progress - current) * 0.42);
+
+      const nearest = Math.max(0, Math.min(3, Math.round(progress)));
+      setOperatingMode(modes[nearest] ?? 'observe');
+      section.style.setProperty('--methodology-progress', String(progress));
+      section.style.setProperty('--methodology-progress-pct', `${(progress / 3) * 100}%`);
+    };
+
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', requestUpdate);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -265,6 +319,7 @@ export function TerminalPortfolioHome() {
           <div className="terminal-nav__links">
             <a href="#home"><span>[h]</span> home</a>
             <a href="#apps"><span>[a]</span> apps</a>
+            <a href="#projects"><span>[g]</span> projects</a>
             <a href="#commerce"><span>[e]</span> commerce</a>
             <a href="#approach"><span>[p]</span> approach</a>
             <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog"><span>[u]</span> studio</button>
@@ -283,7 +338,7 @@ export function TerminalPortfolioHome() {
 
       <div>
         <section id="home" className="terminal-shell terminal-hero" data-reveal>
-          <OperatingWorldSphere onOpenStudio={openStudio} onOpenComponents={openComponents} />
+          <OperatingWorldSphere mode={operatingMode} progress={methodologyProgress} onModeChange={setOperatingMode} />
           <div className="terminal-hero__copy">
             <p className="terminal-command"><span>~/mbmapps</span> $ whoami</p>
             <h1>MBMApps<span aria-hidden="true" /></h1>
@@ -350,26 +405,115 @@ export function TerminalPortfolioHome() {
           </div>
         </section>
 
-        <section id="approach" className="terminal-section terminal-shell" aria-labelledby="approach-title" data-reveal>
+        <section id="projects" className="terminal-section terminal-shell terminal-github" aria-labelledby="projects-title" data-reveal>
+          <div className="terminal-section__head">
+            <div>
+              <h2 id="projects-title"><span>*</span> projects</h2>
+              <p><span>$</span> gh repo list TOTALLYMAJOR --source</p>
+            </div>
+            <p>{githubProjects.length} recently updated public repositories</p>
+          </div>
+          <div className="terminal-github__grid">
+            {githubProjects.map((project) => (
+              <article key={project.url} className="terminal-github__card">
+                <a href={project.url} className="terminal-github__preview" aria-label={`Open ${project.name} on GitHub`}>
+                  <span
+                    role="img"
+                    aria-label={`${project.name} repository preview`}
+                    style={{ backgroundImage: `url(${JSON.stringify(project.previewUrl).slice(1, -1)})` }}
+                  />
+                </a>
+                <div className="terminal-github__body">
+                  <div className="terminal-github__title">
+                    <h3>{project.name}</h3>
+                    <ArrowUpRight aria-hidden="true" />
+                  </div>
+                  <p>{project.description}</p>
+                  <div className="terminal-github__meta">
+                    {project.language ? <span><i aria-hidden="true" /> {project.language}</span> : null}
+                    {project.topics.map((topic) => <span key={topic}>#{topic}</span>)}
+                  </div>
+                  <div className="terminal-links">
+                    <a href={project.url}>[code]</a>
+                    {project.homepage ? <a href={project.homepage}>[live]</a> : null}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="approach" className="terminal-section terminal-shell terminal-methodology" aria-labelledby="approach-title" data-reveal>
           <div className="terminal-section__head">
             <div>
               <h2 id="approach-title"><span>*</span> approach</h2>
               <p><span>$</span> cat --method --proof-driven</p>
             </div>
-            <p>4 steps, every engagement</p>
+            <p>4 steps, one operating world</p>
           </div>
-          <ol className="terminal-approach">
-            {approachSteps.map(([command, title, detail], index) => (
-              <li key={command}>
-                <span className="terminal-approach__index">0{index + 1}</span>
-                <div>
-                  <p className="terminal-approach__cmd">$ {command}</p>
-                  <h3>{title}</h3>
-                  <p>{detail}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+
+          <div className="terminal-methodology__intro">
+            <p>The visual system is the method: fragmented reality becomes verified evidence, then a usable operating surface, then a proof-bearing system.</p>
+            <strong>Observe → Verify → Ship → Prove</strong>
+          </div>
+
+          <div className="terminal-methodology__experience">
+            <div className="terminal-methodology__visual" data-methodology-mode={operatingMode}>
+              <OperatingWorldSphere
+                mode={operatingMode}
+                progress={methodologyProgress}
+                onModeChange={setOperatingMode}
+                compact
+                showControls={false}
+              />
+              <div className="terminal-methodology__labels" aria-hidden="true">
+                <span className="label label--observation">observation</span>
+                <span className="label label--memory">memory</span>
+                <span className="label label--authority">authority</span>
+                <span className="label label--proof">proof</span>
+              </div>
+              <div className="terminal-methodology__status" aria-live="polite">
+                <span>current state</span>
+                <strong>{operatingMode}</strong>
+                <i aria-hidden="true" />
+              </div>
+            </div>
+
+            <ol className="terminal-approach terminal-approach--interactive">
+              {approachSteps.map(([command, title, detail], index) => {
+                const stage = command as OperatingWorldMode;
+                const active = operatingMode === stage;
+                return (
+                  <li key={command} className={active ? 'is-active' : ''} data-method-step={stage}>
+                    <button
+                      type="button"
+                      onPointerEnter={() => setOperatingMode(stage)}
+                      onFocus={() => setOperatingMode(stage)}
+                      onClick={() => setOperatingMode(stage)}
+                      aria-pressed={active}
+                    >
+                      <span className="terminal-approach__index">0{index + 1}</span>
+                      <div>
+                        <p className="terminal-approach__cmd">$ {command}</p>
+                        <h3>{title}</h3>
+                        <p>{detail}</p>
+                      </div>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+
+          <div className="terminal-methodology__handoff">
+            <div>
+              <p><span>$</span> launch --simulator nexamind/agentic-decision-lab</p>
+              <strong>Change the facts and watch authority, recommendations, and proof move with them.</strong>
+            </div>
+            <a href="/nexamind-agentic-demo/index.html" target="_blank" rel="noreferrer">
+              Try Interactive Simulator <ArrowUpRight aria-hidden="true" />
+            </a>
+          </div>
         </section>
 
         <SelectedWorkRail />
@@ -431,6 +575,7 @@ export function TerminalPortfolioHome() {
               <div className="terminal-links">
                 <button type="button" onClick={openComponents} aria-haspopup="dialog" aria-controls="components-dialog">[open components]</button>
                 <a href="/nexamind-cause-effect/index.html" target="_blank" rel="noreferrer">[open in new tab]</a>
+                <a href="/nexamind-agentic-demo/index.html" target="_blank" rel="noreferrer">[try interactive simulator]</a>
               </div>
             </div>
             <div className="component-flow-preview" aria-hidden="true">

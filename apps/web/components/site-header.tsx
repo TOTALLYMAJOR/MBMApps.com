@@ -52,6 +52,10 @@ export function SiteHeader() {
     window.dispatchEvent(new CustomEvent('mbm-open-panel', { detail: { panel } }));
   }
 
+  // The homepage owns its terminal navigation. Rendering the shared header
+  // there creates two competing navigation bars; inner routes keep this one.
+  if (pathname === '/') return null;
+
   return (
     <header className="northstar-header" data-scrolled={scrolled ? 'true' : 'false'}>
       <div className="northstar-container northstar-header__inner">
