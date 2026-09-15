@@ -196,7 +196,7 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
       resultingClarity: 'Everyone can see the current commercial version and what still needs confirmation.'
     },
     screenshot: {
-      src: '/product-screens/quoteflow.png',
+      src: '/product-screens/quoteflow.webp',
       alt: 'QuoteFlow product surface showing the connected inquiry, proposal, decision, payment, and event-operations workflow.',
       caption:
         'This current product surface demonstrates the QuotePilot workflow model. The staff workspace requires authentication and tenant configuration.',

@@ -8,6 +8,7 @@ import { currentConsentPolicyVersion, type ChatLeadDeliveryResponse } from '@mbm
 import { SelectedWorkRail } from '@/components/selected-work-rail';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
+import { OperatingWorldSphere } from '@/components/operating-world-sphere';
 
 type ChatLine = { from: 'studio' | 'visitor'; text: string };
 type ChatDeliveryState = { status: 'idle' | 'sending' | 'saved' | 'sent' | 'error'; message: string };
@@ -282,6 +283,7 @@ export function TerminalPortfolioHome() {
 
       <div>
         <section id="home" className="terminal-shell terminal-hero" data-reveal>
+          <OperatingWorldSphere />
           <div className="terminal-hero__copy">
             <p className="terminal-command"><span>~/mbmapps</span> $ whoami</p>
             <h1>MBMApps<span aria-hidden="true" /></h1>

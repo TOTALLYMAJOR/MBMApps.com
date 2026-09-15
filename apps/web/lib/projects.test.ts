@@ -20,7 +20,7 @@ describe('project catalog', () => {
       expect(project.proofBoundary.length).toBeGreaterThan(30);
       expect(project.websiteUrl).toMatch(/^https:\/\//);
       expect(project.websiteLabel.length).toBeGreaterThan(4);
-      expect(project.screenshot.src).toMatch(/^\/product-screens\/.+\.png$/);
+      expect(project.screenshot.src).toMatch(/^\/product-screens\/.+\.(png|webp)$/);
       expect(project.screenshot.alt.length).toBeGreaterThan(25);
       expect(project.visible).toBe(true);
       expect(project.sourceRepository.label).toMatch(/^TOTALLYMAJOR\//);

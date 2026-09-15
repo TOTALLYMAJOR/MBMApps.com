@@ -3706,3 +3706,157 @@ body::after,
   .northstar-container, .terminal-shell { width: calc(100% - 28px); padding-inline: 0; }
   .northstar-page-hero .northstar-container { padding-inline: 0; }
 }
+
+/* Interactive operating-world visualization */
+.terminal-home--homepage .terminal-hero{
+  position:relative;
+  isolation:isolate;
+  display:block;
+  min-height:min(820px,88vh);
+  overflow:hidden;
+  padding-block:clamp(72px,9vw,118px);
+}
+.terminal-home--homepage .terminal-hero__copy{
+  position:relative;
+  z-index:4;
+  width:min(38%,34rem);
+}
+.terminal-home--homepage .terminal-status{display:none}
+.operating-world{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  overflow:hidden;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 56% 49%,rgba(69,78,190,.08),transparent 32%),
+    linear-gradient(90deg,transparent 0 67%,rgba(8,8,8,.12));
+  mask-image:linear-gradient(90deg,#000 0 88%,transparent 100%);
+}
+.operating-world:after{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(8,8,8,.84) 0%,rgba(8,8,8,.42) 22%,rgba(8,8,8,.08) 46%,rgba(8,8,8,.22) 72%,rgba(8,8,8,.82) 100%),
+    radial-gradient(circle at 53% 50%,transparent 0 31%,rgba(8,8,8,.2) 58%,rgba(8,8,8,.58) 90%);
+}
+.operating-world__canvas{
+  position:absolute;
+  z-index:1;
+  left:25%;
+  top:-9%;
+  bottom:-9%;
+  width:58%;
+  opacity:.98;
+}
+.operating-world__canvas[data-failed=true]{
+  background:
+    radial-gradient(circle at 50% 50%,rgba(99,102,241,.22),rgba(99,102,241,.04) 44%,transparent 70%);
+}
+.operating-world__hud{
+  position:absolute;
+  z-index:3;
+  right:2.2%;
+  top:50%;
+  width:min(31%,25rem);
+  transform:translateY(-50%);
+  pointer-events:auto;
+}
+.operating-world__hud>.terminal-command{
+  margin:0 0 1rem;
+  opacity:.72;
+  font-size:.62rem;
+  letter-spacing:.04em;
+}
+.operating-world__modes{display:grid}
+.operating-world__modes button{
+  display:grid;
+  grid-template-columns:2.35rem minmax(0,1fr);
+  grid-template-areas:'n t' 'n d';
+  gap:0 .85rem;
+  align-items:center;
+  min-height:5rem;
+  border:0;
+  border-top:1px solid rgba(199,210,254,.15);
+  background:transparent;
+  padding:.65rem 0;
+  color:rgba(255,255,255,.44);
+  text-align:left;
+  cursor:pointer;
+  transition:color 180ms ease,padding 220ms ease,background 220ms ease,transform 220ms ease;
+}
+.operating-world__modes button:last-child{border-bottom:1px solid rgba(199,210,254,.15)}
+.operating-world__modes button:hover,
+.operating-world__modes button.is-active{
+  padding-left:.65rem;
+  color:#fff;
+  background:linear-gradient(90deg,rgba(99,102,241,.13),rgba(99,102,241,.025) 68%,transparent);
+  transform:translateX(-.15rem);
+}
+.operating-world__modes span{
+  grid-area:n;
+  font:600 .62rem var(--font-ibm-plex-mono),monospace;
+  color:rgba(199,210,254,.58);
+}
+.operating-world__modes strong{
+  grid-area:t;
+  font:550 clamp(1.5rem,2.5vw,2.85rem)/.92 var(--font-bricolage-grotesk),sans-serif;
+  text-transform:uppercase;
+  letter-spacing:-.045em;
+}
+.operating-world__modes small{
+  grid-area:d;
+  margin-top:.28rem;
+  font:.59rem var(--font-ibm-plex-mono),monospace;
+  line-height:1.35;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:rgba(255,255,255,.36);
+}
+@media(max-width:1040px){
+  .terminal-home--homepage .terminal-hero{min-height:740px}
+  .terminal-home--homepage .terminal-hero__copy{width:min(44%,32rem)}
+  .operating-world__canvas{left:24%;width:61%}
+  .operating-world__hud{right:1.5%;width:31%}
+}
+@media(max-width:760px){
+  .terminal-home--homepage .terminal-hero{
+    min-height:auto;
+    padding-top:26rem;
+    padding-bottom:4.25rem;
+  }
+  .terminal-home--homepage .terminal-hero__copy{width:100%}
+  .operating-world{
+    height:28rem;
+    mask-image:linear-gradient(#000 0 78%,transparent 100%);
+  }
+  .operating-world:after{
+    background:
+      linear-gradient(180deg,rgba(8,8,8,.08),rgba(8,8,8,.22) 56%,rgba(8,8,8,.92) 100%);
+  }
+  .operating-world__canvas{
+    left:-20%;
+    top:-14%;
+    bottom:0;
+    width:100%;
+  }
+  .operating-world__hud{
+    right:.85rem;
+    top:48%;
+    width:45%;
+  }
+  .operating-world__hud>.terminal-command{display:none}
+  .operating-world__modes button{
+    grid-template-columns:1.6rem 1fr;
+    min-height:3.25rem;
+    padding:.38rem 0;
+  }
+  .operating-world__modes strong{font-size:clamp(.95rem,4.8vw,1.45rem)}
+  .operating-world__modes small{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .operating-world__modes button{transition:none}
+}

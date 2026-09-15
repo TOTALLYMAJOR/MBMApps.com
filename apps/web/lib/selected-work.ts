@@ -26,5 +26,14 @@ export const selectedWorkProjects: readonly SelectedWorkProject[] = [
     image: '/product-screens/jour-et-nuit.png',
     alt: 'Jour et Nuit Concierge website presenting business readiness and growth consulting services.',
     visitLabel: 'visit site'
+  },
+  {
+    name: 'PerformancePilot Wheelchair Rugby',
+    type: 'Team website / public season hub / community support',
+    description: 'A public-facing season hub that brings team stories, approved competition updates, community support, and team merchandise into one clear experience while keeping private operations protected.',
+    href: 'https://public-cjwljt182-mbmapps.vercel.app/',
+    image: '/product-screens/performancepilot-wheelchair-rugby.webp',
+    alt: 'PerformancePilot Wheelchair Rugby public season website with a wheelchair rugby action scene and support call to action.',
+    visitLabel: 'visit site'
   }
 ] as const;
