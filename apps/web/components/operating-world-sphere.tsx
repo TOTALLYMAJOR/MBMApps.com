@@ -83,34 +83,26 @@ export function OperatingWorldSphere({
       camera.position.set(0, 0, compact ? 12.4 : 11.6);
 
       const renderer = new THREE.WebGLRenderer({
-        antialias: true,
+        antialias: false,
         alpha: true,
         powerPreference: 'high-performance'
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, compact ? 1.45 : 1.8));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, compact ? 0.75 : 0.85));
       renderer.setClearColor(0x000000, 0);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.22;
+      renderer.toneMapping = THREE.NoToneMapping;
       mount.appendChild(renderer.domElement);
 
       const world = new THREE.Group();
       world.position.set(compact ? 0 : -0.18, 0, 0);
       scene.add(world);
 
-      const ambient = new THREE.AmbientLight(0xffffff, 0.65);
-      const pointA = new THREE.PointLight(0xffffff, 11, 18);
-      const pointB = new THREE.PointLight(0xe0e7ff, 7, 15);
-      pointA.position.set(-3.5, 2.4, 4.1);
-      pointB.position.set(0.9, -2.2, 3.4);
-      scene.add(ambient, pointA, pointB);
-
       const coreMaterial = new THREE.MeshBasicMaterial({
         color: 0x07101b,
         transparent: true,
         opacity: 0.72
       });
-      const core = new THREE.Mesh(new THREE.SphereGeometry(3.72, 48, 48), coreMaterial);
+      const core = new THREE.Mesh(new THREE.SphereGeometry(3.72, 28, 24), coreMaterial);
       world.add(core);
 
       const rear = new THREE.Group();
@@ -119,9 +111,15 @@ export function OperatingWorldSphere({
       const evidence = new THREE.Group();
       world.add(rear, media, front, evidence);
 
-      const edgeGeometry = new THREE.EdgesGeometry(new THREE.BoxGeometry(0.18, 0.18, 0.18));
-      const cubes: Array<InstanceType<typeof THREE.LineSegments>> = [];
-      const cubeCount = reducedMotion ? 450 : compact ? 800 : 1500;
+      const cubeSourceGeometry = new THREE.BoxGeometry(0.18, 0.18, 0.18);
+      const cubeEdgeGeometry = new THREE.EdgesGeometry(cubeSourceGeometry);
+      const cubeCount = reducedMotion ? 220 : compact ? 380 : 560;
+      const cubeData: Array<{
+        base: InstanceType<typeof THREE.Vector3>;
+        rotation: InstanceType<typeof THREE.Euler>;
+        scale: number;
+        front: boolean;
+      }> = [];
 
       for (let i = 0; i < cubeCount; i += 1) {
         const u = 1 - (2 * (i + 0.5)) / cubeCount;
@@ -133,28 +131,66 @@ export function OperatingWorldSphere({
           u * radius,
           Math.sin(phi) * ring * radius
         );
-        const dir = base.clone().normalize();
         const frontFacing = base.z > 0;
-        const material = new THREE.LineBasicMaterial({
-          color: frontFacing ? 0xffffff : 0xdcecff,
-          transparent: true,
-          opacity: frontFacing ? 0.4 : 0.13,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false
-        });
-        const cube = new THREE.LineSegments(edgeGeometry, material);
-        cube.position.copy(base);
-        cube.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
-        cube.scale.setScalar(0.52 + Math.random() * 1.22);
-        cube.userData = {
+        cubeData.push({
           base,
-          dir,
-          seed: Math.random() * 20,
+          rotation: new THREE.Euler(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI),
+          scale: 0.52 + Math.random() * 1.22,
           front: frontFacing
-        };
-        (frontFacing ? front : rear).add(cube);
-        cubes.push(cube);
+        });
       }
+
+      const frontCubeData = cubeData.filter((cube) => cube.front);
+      const rearCubeData = cubeData.filter((cube) => !cube.front);
+      const frontCubeMaterial = new THREE.LineBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.32,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const rearCubeMaterial = new THREE.LineBasicMaterial({
+        color: 0xdcecff,
+        transparent: true,
+        opacity: 0.09,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const cubeMatrix = new THREE.Matrix4();
+      const cubeQuaternion = new THREE.Quaternion();
+      const cubeScale = new THREE.Vector3();
+      const cubeVertex = new THREE.Vector3();
+      const sourcePositions = cubeEdgeGeometry.attributes.position;
+      if (!sourcePositions) throw new Error('Cube edge geometry is missing its position attribute.');
+      const mergeCubeEdges = (data: typeof cubeData) => {
+        const positions = new Float32Array(data.length * sourcePositions.count * 3);
+        data.forEach((cube, index) => {
+          cubeQuaternion.setFromEuler(cube.rotation);
+          cubeScale.setScalar(cube.scale);
+          cubeMatrix.compose(cube.base, cubeQuaternion, cubeScale);
+          for (let vertexIndex = 0; vertexIndex < sourcePositions.count; vertexIndex += 1) {
+            cubeVertex
+              .fromBufferAttribute(sourcePositions, vertexIndex)
+              .applyMatrix4(cubeMatrix);
+            const targetIndex = (index * sourcePositions.count + vertexIndex) * 3;
+            positions[targetIndex] = cubeVertex.x;
+            positions[targetIndex + 1] = cubeVertex.y;
+            positions[targetIndex + 2] = cubeVertex.z;
+          }
+        });
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.computeBoundingSphere();
+        return geometry;
+      };
+      const frontCubeGeometry = mergeCubeEdges(frontCubeData);
+      const rearCubeGeometry = mergeCubeEdges(rearCubeData);
+      const frontCubes = new THREE.LineSegments(frontCubeGeometry, frontCubeMaterial);
+      const rearCubes = new THREE.LineSegments(rearCubeGeometry, rearCubeMaterial);
+      cubeEdgeGeometry.dispose();
+      cubeSourceGeometry.dispose();
+      front.add(frontCubes);
+      rear.add(rearCubes);
 
       function makeTexture(title: string, rows: string[], accent: string) {
         const canvas = document.createElement('canvas');
@@ -187,9 +223,10 @@ export function OperatingWorldSphere({
       ] as const;
 
       const mediaPanels: Array<InstanceType<typeof THREE.Mesh>> = [];
-      panels.forEach(([title, rows, accent], index) => {
+      const activePanels = compact ? panels : [];
+      activePanels.forEach(([title, rows, accent], index) => {
         const radius = 4.22 - index * 0.3;
-        const geometry = new THREE.PlaneGeometry(4.5 - index * 0.25, 2.58 - index * 0.12, 36, 12);
+        const geometry = new THREE.PlaneGeometry(4.5 - index * 0.25, 2.58 - index * 0.12, 20, 8);
         const position = geometry.attributes.position;
         if (!position) return;
         for (let i = 0; i < position.count; i += 1) {
@@ -224,7 +261,7 @@ export function OperatingWorldSphere({
         const radius = 3.0 + Math.random() * 0.6;
         const ring = Math.sqrt(1 - u * u);
         const mesh = new THREE.Mesh(
-          new THREE.SphereGeometry(0.045 + Math.random() * 0.035, 12, 12),
+          new THREE.SphereGeometry(0.045 + Math.random() * 0.035, 8, 8),
           new THREE.MeshBasicMaterial({
             color: 0xf8fbff,
             transparent: true,
@@ -260,7 +297,7 @@ export function OperatingWorldSphere({
       const proofRings: Array<InstanceType<typeof THREE.Mesh>> = [];
       [3.15, 3.42, 3.68].forEach((radius, index) => {
         const ring = new THREE.Mesh(
-          new THREE.TorusGeometry(radius, 0.008 + index * 0.004, 8, 160),
+          new THREE.TorusGeometry(radius, 0.008 + index * 0.004, 6, 72),
           new THREE.MeshBasicMaterial({
             color: 0xf8fbff,
             transparent: true,
@@ -286,7 +323,7 @@ export function OperatingWorldSphere({
       ];
       boundarySpecs.forEach((spec, index) => {
         const boundary = new THREE.Mesh(
-          new THREE.TorusGeometry(spec.radius, 0.006 + index * 0.003, 8, 180),
+          new THREE.TorusGeometry(spec.radius, 0.006 + index * 0.003, 6, 80),
           new THREE.MeshBasicMaterial({
             color: 0xf8fbff,
             transparent: true,
@@ -301,7 +338,7 @@ export function OperatingWorldSphere({
       });
 
       const starGeometry = new THREE.BufferGeometry();
-      const starCount = reducedMotion ? 420 : 1200;
+      const starCount = reducedMotion ? 220 : 600;
       const starPositions = new Float32Array(starCount * 3);
       for (let i = 0; i < starCount; i += 1) {
         starPositions[i * 3] = (Math.random() - 0.5) * 20;
@@ -346,7 +383,7 @@ export function OperatingWorldSphere({
         // Perspective cameras use vertical FOV, so portrait containers need
         // additional distance to keep the sphere inside the horizontal frame.
         const halfFov = THREE.MathUtils.degToRad(camera.fov * 0.5);
-        const fitRadius = compact ? 4.35 : 4.6;
+        const fitRadius = compact ? 4.75 : 5.1;
         const verticalDistance = fitRadius / Math.tan(halfFov);
         const horizontalDistance = verticalDistance / camera.aspect;
         camera.position.z = Math.max(verticalDistance, horizontalDistance) + (compact ? 1.2 : 0.7);
@@ -372,11 +409,15 @@ export function OperatingWorldSphere({
       viewportObserver.observe(mount);
 
       const timer = new THREE.Timer();
+      const frameInterval = reducedMotion ? 1000 / 10 : 1000 / 30;
+      let lastRenderAt = 0;
 
-      const animate = () => {
+      const animate = (now = 0) => {
         if (stopped) return;
         frame = window.requestAnimationFrame(animate);
         if (!documentVisible || !inViewport) return;
+        if (now - lastRenderAt < frameInterval) return;
+        lastRenderAt = now;
 
         timer.update();
         const t = timer.getElapsed();
@@ -398,35 +439,13 @@ export function OperatingWorldSphere({
         world.position.y += ((-pointerY * 0.08) - world.position.y) * 0.035;
         world.scale.setScalar(1 + pulse * 0.006 + pointerVelocity * 0.018);
 
-        cubes.forEach((cube, index) => {
-          const data = cube.userData;
-          let radial = 0.012 * Math.sin(t * 0.9 + data.seed) + pointerVelocity * 0.11 * Math.sin(t * 3 + data.seed);
-
-          radial *= 1 - 0.8 * proveWeight;
-          radial += observeWeight * (0.05 * Math.sin(t * 1.75 + data.seed) + 0.03 * Math.cos(t * 1.2 + data.base.y));
-          radial += verifyWeight * ((index % 7 === 0 ? 0.085 * pulse : 0) - (index % 6 === 0 ? 0.02 : 0));
-          radial += shipWeight * (0.028 * Math.sin(t * 2.6 + data.base.y) - 0.055);
-
-          cube.position.copy(data.base).add(data.dir.clone().multiplyScalar(radial));
-          cube.rotation.x += 0.0005 + pointerVelocity * 0.0018;
-          cube.rotation.y += 0.00035 + pointerVelocity * 0.0012;
-
-          const material = cube.material as InstanceType<typeof THREE.LineBasicMaterial>;
-          const baseOpacity = data.front ? 0.18 : 0.05;
-          const verifyBoost = verifyWeight * (index % 9 === 0 ? 0.18 : 0);
-          const shipBoost = shipWeight * 0.08;
-          const proveBoost = proveWeight * 0.16;
-          material.opacity =
-            baseOpacity +
-            (data.front ? 0.15 : 0.04) * pulse +
-            verifyBoost +
-            shipBoost +
-            proveBoost +
-            pointerVelocity * (data.front ? 0.28 : 0.08);
-
-          const white = Math.min(1, 0.9 + reactive * 0.1 + proveWeight * 0.08);
-          material.color.setRGB(white, white, 1);
-        });
+        frontCubeMaterial.opacity =
+          0.2 + 0.08 * pulse + verifyWeight * 0.07 + shipWeight * 0.05 + proveWeight * 0.11;
+        rearCubeMaterial.opacity = 0.045 + 0.025 * pulse + proveWeight * 0.055;
+        frontCubes.rotation.x += 0.00035 + pointerVelocity * 0.0008;
+        frontCubes.rotation.y += 0.00024 + pointerVelocity * 0.0006;
+        rearCubes.rotation.x -= 0.00012;
+        rearCubes.rotation.y += 0.0001;
 
         mediaPanels.forEach((panel, index) => {
           const material = panel.material as InstanceType<typeof THREE.MeshBasicMaterial>;
@@ -492,11 +511,6 @@ export function OperatingWorldSphere({
           reactive * 0.08 -
           shipWeight * 0.06 -
           proveWeight * (0.12 + 0.06 * pulse);
-        const proofPulse = proveWeight * (0.5 + 0.5 * Math.sin(t * 3.2));
-        pointA.intensity = 10 + reactive * 16 + proveWeight * 12 + 18 * proofPulse;
-        pointB.intensity = 7 + reactive * 10 + verifyWeight * 5 + 10 * proofPulse;
-        renderer.toneMappingExposure = 1.18 + reactive * 0.28 + proveWeight * 0.18 + 0.32 * proofPulse;
-
         stars.rotation.y = t * 0.0016;
         renderer.render(scene, camera);
       };
@@ -509,8 +523,10 @@ export function OperatingWorldSphere({
         mount.removeEventListener('pointermove', handlePointerMove);
         document.removeEventListener('visibilitychange', handleVisibility);
         viewportObserver.disconnect();
-        cubes.forEach((cube) => (cube.material as InstanceType<typeof THREE.Material>).dispose());
-        edgeGeometry.dispose();
+        frontCubeGeometry.dispose();
+        rearCubeGeometry.dispose();
+        frontCubeMaterial.dispose();
+        rearCubeMaterial.dispose();
         mediaPanels.forEach((panel) => {
           panel.geometry.dispose();
           const material = panel.material as InstanceType<typeof THREE.MeshBasicMaterial>;
