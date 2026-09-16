@@ -25,7 +25,7 @@ export default async function InsightsPage() {
         <aside className="terminal-article-count" aria-label={`${insights.length} published articles`}>
           <span>published notes</span>
           <strong>{String(insights.length).padStart(2, '0')}</strong>
-          <p>written from implementation work—not a content calendar.</p>
+          <p>written from implementation work, not a content calendar.</p>
         </aside>
       </header>
 

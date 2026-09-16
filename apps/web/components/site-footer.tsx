@@ -22,6 +22,7 @@ export function SiteFooter() {
             <p className="northstar-kicker">Company</p>
             <div className="northstar-footer__links">
               <Link className="northstar-footer-link" href="/apps">All applications</Link>
+              <Link className="northstar-footer-link" href="/insights">Articles</Link>
               <Link className="northstar-footer-link" href="/#studio">Studio</Link>
               <Link className="northstar-footer-link" href="/#components">Components</Link>
               <Link className="northstar-footer-link" href="/about">About</Link>

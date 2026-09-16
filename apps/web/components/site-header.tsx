@@ -4,10 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { BrandMark } from '@/components/brand-mark';
 import { cn } from '@/lib/utils';
 
 const primaryNavigation = [
   { href: '/apps', label: 'Apps' },
+  { href: '/tools', label: 'Tools' },
+  { href: '/insights', label: 'Articles' },
   { href: '/#approach', label: 'Approach' },
   { href: '/#studio', label: 'Studio', panel: 'studio' },
   { href: '/#components', label: 'Components', panel: 'components' },
@@ -60,6 +63,7 @@ export function SiteHeader() {
     <header className="northstar-header" data-scrolled={scrolled ? 'true' : 'false'}>
       <div className="northstar-container northstar-header__inner">
         <Link className="northstar-brand" aria-label="MBMApps home" href="/">
+          <BrandMark className="northstar-brand__logo" priority />
           <span className="northstar-brand__mark"><strong>MBM</strong><span>Apps</span></span>
         </Link>
 
@@ -67,6 +71,10 @@ export function SiteHeader() {
           {primaryNavigation.map((item) => {
             const active = item.href === '/apps'
               ? pathname.startsWith('/apps')
+              : item.href === '/tools'
+                ? pathname.startsWith('/tools')
+              : item.href === '/insights'
+                ? pathname.startsWith('/insights')
               : item.href === '/about'
                 ? pathname.startsWith('/about')
                 : false;

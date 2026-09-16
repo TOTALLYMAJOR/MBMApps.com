@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Check, ChevronDown, GitBranch, Layers3, Mail, MessageSquare, Moon, Send, Sun, X } from 'lucide-react';
 import { currentConsentPolicyVersion, type ChatLeadDeliveryResponse } from '@mbm/contracts';
+import { BrandMark } from '@/components/brand-mark';
 import { SelectedWorkRail } from '@/components/selected-work-rail';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
 import { OperatingWorldSphere, type OperatingWorldMode } from '@/components/operating-world-sphere';
-import type { GitHubProject } from '@/lib/github-projects';
+import { groupGitHubProjects, type GitHubProject } from '@/lib/github-projects';
 
 type ChatLine = { from: 'studio' | 'visitor'; text: string };
 type ChatDeliveryState = { status: 'idle' | 'sending' | 'saved' | 'sent' | 'error'; message: string };
@@ -268,6 +269,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
   const transcript = lines.map((line) => `${line.from === 'visitor' ? 'Visitor' : 'MBMApps'}: ${line.text}`).join('\n').slice(-4000);
   const mailto = `mailto:${siteConfig.email}?subject=${encodeURIComponent('MBMApps project conversation')}&body=${encodeURIComponent(`Hello MBMApps,\n\nHere is the context from the website chat:\n\n${transcript}\n\nMy name and preferred contact details:`)}`;
   const hasVisitorMessage = lines.some((line) => line.from === 'visitor');
+  const githubPortfolio = groupGitHubProjects(githubProjects);
 
   async function sendTranscript(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -317,6 +319,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
       <nav className="terminal-nav" aria-label="Homepage sections">
         <div className="terminal-shell terminal-nav__inner">
           <div className="terminal-nav__links">
+            <a className="terminal-nav__brand" href="#home" aria-label="MBMApps home"><BrandMark /></a>
             <a href="#home"><span>[h]</span> home</a>
             <a href="#apps"><span>[a]</span> apps</a>
             <a href="#projects"><span>[g]</span> projects</a>
@@ -327,7 +330,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
             <button type="button" onClick={openChat}><span>[m]</span> chat</button>
             <a href="#contact"><span>[c]</span> contact</a>
             <a href="#systems"><span>[s]</span> systems</a>
-            <a href="#articles"><span>[r]</span> articles</a>
+            <Link href="/insights"><span>[r]</span> articles</Link>
           </div>
           <button type="button" onClick={toggleTheme} aria-label={`Switch to ${light ? 'dark' : 'light'} theme`}>
             {light ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
@@ -341,7 +344,10 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
           <OperatingWorldSphere mode={operatingMode} progress={methodologyProgress} onModeChange={setOperatingMode} />
           <div className="terminal-hero__copy">
             <p className="terminal-command"><span>~/mbmapps</span> $ whoami</p>
-            <h1>MBMApps<span aria-hidden="true" /></h1>
+            <div className="terminal-hero__brand">
+              <BrandMark className="terminal-hero__logo" priority />
+              <h1>MBMApps<span aria-hidden="true" /></h1>
+            </div>
             <p className="terminal-subline">independent software studio · chicago · proof-driven products</p>
             <p className="terminal-lede">We build focused operating systems for catering, youth sports, and quote-to-event work. Teams can see what is known, what is blocked, and what needs a human decision.</p>
             <div className="terminal-links">
@@ -406,40 +412,62 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
         </section>
 
         <section id="projects" className="terminal-section terminal-shell terminal-github" aria-labelledby="projects-title" data-reveal>
-          <div className="terminal-section__head">
-            <div>
-              <h2 id="projects-title"><span>*</span> projects</h2>
-              <p><span>$</span> gh repo list TOTALLYMAJOR --source</p>
+          <div className="terminal-github__row terminal-github__row--utilities">
+            <div className="terminal-github__rail">
+              <h2><span>*</span> utilities</h2>
+              <p><span>[</span>gh repo list --tools<span>]</span></p>
             </div>
-            <p>{githubProjects.length} recently updated public repositories</p>
-          </div>
-          <div className="terminal-github__grid">
-            {githubProjects.map((project) => (
-              <article key={project.url} className="terminal-github__card">
-                <a href={project.url} className="terminal-github__preview" aria-label={`Open ${project.name} on GitHub`}>
-                  <span
-                    role="img"
-                    aria-label={`${project.name} repository preview`}
-                    style={{ backgroundImage: `url(${JSON.stringify(project.previewUrl).slice(1, -1)})` }}
-                  />
-                </a>
-                <div className="terminal-github__body">
+            <div className="terminal-github__utilities">
+              {githubPortfolio.utilities.map((utility) => (
+                <a key={utility.url} href={utility.url} className="terminal-github__utility">
                   <div className="terminal-github__title">
-                    <h3>{project.name}</h3>
+                    <h3>TOTALLYMAJOR/{utility.name}</h3>
                     <ArrowUpRight aria-hidden="true" />
                   </div>
-                  <p>{project.description}</p>
-                  <div className="terminal-github__meta">
-                    {project.language ? <span><i aria-hidden="true" /> {project.language}</span> : null}
-                    {project.topics.map((topic) => <span key={topic}>#{topic}</span>)}
+                  <p className="terminal-github__utility-meta">
+                    {utility.stars} {utility.stars === 1 ? 'star' : 'stars'} · {utility.language?.toLowerCase() ?? 'mixed'}
+                  </p>
+                  <p>{utility.description}</p>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="terminal-github__divider" aria-hidden="true" />
+
+          <div className="terminal-github__row terminal-github__row--projects">
+            <div className="terminal-github__rail">
+              <h2 id="projects-title"><span>*</span> projects</h2>
+              <p><span>[</span>ls -a ({githubPortfolio.projects.length})<span>]</span></p>
+            </div>
+            <div className="terminal-github__grid">
+              {githubPortfolio.projects.map((project) => (
+                <article key={project.url} className="terminal-github__card">
+                  <a href={project.url} className="terminal-github__preview" aria-label={`Open ${project.name} on GitHub`}>
+                    <span
+                      role="img"
+                      aria-label={`${project.name} repository preview`}
+                      style={{ backgroundImage: `url(${JSON.stringify(project.previewUrl).slice(1, -1)})` }}
+                    />
+                  </a>
+                  <div className="terminal-github__body">
+                    <div className="terminal-github__title">
+                      <h3>{project.name}</h3>
+                      <ArrowUpRight aria-hidden="true" />
+                    </div>
+                    <p>{project.description}</p>
+                    <div className="terminal-github__meta">
+                      {project.language ? <span><i aria-hidden="true" /> {project.language}</span> : null}
+                      {project.topics.map((topic) => <span key={topic}>#{topic}</span>)}
+                    </div>
+                    <div className="terminal-links">
+                      <a href={project.url}>[code]</a>
+                      {project.homepage ? <a href={project.homepage}>[live]</a> : null}
+                    </div>
                   </div>
-                  <div className="terminal-links">
-                    <a href={project.url}>[code]</a>
-                    {project.homepage ? <a href={project.homepage}>[live]</a> : null}
-                  </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -581,31 +609,6 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
             <div className="component-flow-preview" aria-hidden="true">
               <span>fact</span><i>→</i><span>cause</span><i>→</i><span>decision</span><i>→</i><span>proof</span>
             </div>
-          </div>
-        </section>
-
-        <section id="articles" className="terminal-section terminal-shell" aria-labelledby="articles-title" data-reveal>
-          <div className="terminal-section__head">
-            <div>
-              <h2 id="articles-title"><span>*</span> articles</h2>
-              <p><span>$</span> cat --ideas --systems</p>
-            </div>
-            <Link href="/insights">view all articles →</Link>
-          </div>
-          <article className="terminal-article-feature">
-            <Link href="/insights/the-intelligence-improves-your-world-remains" className="terminal-article-feature__image">
-              <Image src="/articles/the-intelligence-improves-your-world-remains.webp" alt="A wedding represented as a living operational system connected to observation, policy, action, and verified outcomes" fill sizes="(min-width: 900px) 56vw, 100vw" />
-            </Link>
-            <div className="terminal-article-feature__copy">
-              <p><span>NEW</span> · 2026 · AI SYSTEMS</p>
-              <h3><Link href="/insights/the-intelligence-improves-your-world-remains">The Intelligence Improves. Your World Remains.</Link></h3>
-              <p>AI&apos;s durable advantage is not a clever prompt or agent diagram. It is a faithful operating world with observation, memory, authority, feedback, and proof.</p>
-              <Link href="/insights/the-intelligence-improves-your-world-remains">[read the article] <ArrowUpRight aria-hidden="true" /></Link>
-            </div>
-          </article>
-          <div className="terminal-notes terminal-notes--articles">
-            <Link href="/insights/the-proof-register"><strong>The Proof Register</strong><span>Authority, evidence, and the claims software is allowed to make.</span><time>2026</time></Link>
-            <Link href="/insights/choosing-cloud-combinations"><strong>Choosing cloud combinations</strong><span>How to assemble infrastructure without hiding operational boundaries.</span><time>2025</time></Link>
           </div>
         </section>
 

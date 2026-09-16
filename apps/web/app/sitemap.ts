@@ -10,6 +10,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseRoutes: MetadataRoute.Sitemap = [
     '',
     '/apps',
+    '/tools',
+    '/tools/prompt-register',
     ...projectScreens.map((project) => project.path),
     '/services',
     '/case-studies',

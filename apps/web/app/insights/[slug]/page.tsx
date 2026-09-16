@@ -8,6 +8,7 @@ import { ContentReadBeacon } from '@/components/content-read-beacon';
 import { TerminalArticleShell } from '@/components/terminal-article-shell';
 import { getInsightBySlug, getInsights } from '@/lib/content';
 import { siteConfig } from '@/lib/site';
+import { buildSocialShareUrls } from '@/lib/social-share';
 
 type InsightPageProps = {
   params: Promise<{ slug: string }>;
@@ -26,15 +27,30 @@ export async function generateMetadata({ params }: InsightPageProps): Promise<Me
     return {};
   }
 
+  const articlePath = `/insights/${slug}`;
+
   return {
     title: post.frontmatter.title,
     description: post.frontmatter.summary,
+    alternates: {
+      canonical: articlePath
+    },
     openGraph: post.frontmatter.heroImage
       ? {
           title: post.frontmatter.title,
           description: post.frontmatter.summary,
           type: 'article',
+          url: articlePath,
+          siteName: siteConfig.name,
           publishedTime: post.frontmatter.publishedAt,
+          images: [{ url: post.frontmatter.heroImage, alt: post.frontmatter.heroAlt }]
+        }
+      : undefined,
+    twitter: post.frontmatter.heroImage
+      ? {
+          card: 'summary_large_image',
+          title: post.frontmatter.title,
+          description: post.frontmatter.summary,
           images: [{ url: post.frontmatter.heroImage, alt: post.frontmatter.heroAlt }]
         }
       : undefined
@@ -61,7 +77,11 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
     },
     publisher: {
       '@type': 'Organization',
-      name: siteConfig.legalName
+      name: siteConfig.legalName,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteConfig.url}/mbmapps-mark.svg`
+      }
     },
     image: post.frontmatter.heroImage ? `${siteConfig.url}${post.frontmatter.heroImage}` : undefined
   };
@@ -72,6 +92,8 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
     day: 'numeric',
     timeZone: 'UTC'
   });
+  const articleUrl = new URL(`/insights/${slug}`, siteConfig.url).toString();
+  const shareUrls = buildSocialShareUrls(articleUrl);
 
   return (
     <TerminalArticleShell>
@@ -125,6 +147,17 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
             <div className="terminal-reader__tags">
               <span>topics</span>
               <p>{post.frontmatter.tags.map((tag) => <span key={tag}>#{tag}</span>)}</p>
+            </div>
+            <div className="terminal-reader__share">
+              <span>share this article</span>
+              <div>
+                <a href={shareUrls.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`Share ${post.frontmatter.title} on LinkedIn`}>
+                  LinkedIn
+                </a>
+                <a href={shareUrls.facebook} target="_blank" rel="noopener noreferrer" aria-label={`Share ${post.frontmatter.title} on Facebook`}>
+                  Facebook
+                </a>
+              </div>
             </div>
             <Link href="/insights"><ArrowLeft aria-hidden="true" /> back to register</Link>
           </aside>
