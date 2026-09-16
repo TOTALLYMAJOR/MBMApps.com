@@ -1,0 +1,251 @@
+/**
+ * Component Studio catalog
+ *
+ * Kept as a plain browser asset so the standalone Studio can load it without
+ * a framework runtime. The same artifact is exercised by the web test suite.
+ */
+(function registerComponentStudioCatalog(root) {
+  'use strict';
+
+  const categories = [
+    { id: 'all', name: 'All components', icon: 'grid' },
+    { id: 'buttons', name: 'Buttons', icon: 'cursor' },
+    { id: 'cards', name: 'Cards', icon: 'card' },
+    { id: 'navigation', name: 'Navigation', icon: 'navigation' },
+    { id: 'inputs', name: 'Inputs & controls', icon: 'input' },
+    { id: 'feedback', name: 'Feedback', icon: 'bell' },
+    { id: 'motion', name: 'Motion', icon: 'motion' },
+    { id: 'data', name: 'Data display', icon: 'chart' }
+  ];
+
+  const statesByKind = {
+    solid: ['default', 'hover', 'focus', 'loading', 'disabled'],
+    outline: ['default', 'hover', 'focus', 'loading', 'disabled'],
+    soft: ['default', 'hover', 'focus', 'loading', 'disabled'],
+    gradient: ['default', 'hover', 'focus', 'loading', 'disabled'],
+    pill: ['default', 'hover', 'focus', 'loading', 'disabled'],
+    icon: ['default', 'hover', 'focus', 'loading', 'disabled'],
+    project: ['default', 'hover', 'focus', 'loading'],
+    metric: ['default', 'loading'],
+    feature: ['default', 'hover', 'focus', 'loading'],
+    glass: ['default', 'hover', 'focus', 'loading'],
+    horizontal: ['default', 'hover', 'focus', 'loading'],
+    pricing: ['default', 'hover', 'focus', 'loading'],
+    tabs: ['default', 'focus'],
+    pills: ['default', 'focus'],
+    underline: ['default', 'focus'],
+    sidebar: ['default', 'focus'],
+    search: ['default', 'focus', 'error', 'disabled'],
+    text: ['default', 'focus', 'error', 'disabled'],
+    toggle: ['default', 'focus', 'disabled'],
+    check: ['default', 'focus', 'disabled'],
+    toast: ['default'],
+    callout: ['default'],
+    empty: ['default'],
+    progress: ['default'],
+    disclosure: ['default'],
+    orbit: ['default'],
+    stagger: ['default'],
+    hover: ['default', 'hover', 'focus'],
+    chart: ['default', 'loading'],
+    table: ['default', 'loading'],
+    activity: ['default', 'loading'],
+    stat: ['default', 'loading']
+  };
+
+  const behaviorByCategory = {
+    buttons: 'Action control with visible hover, keyboard focus, busy, and disabled configurations. Connect the demonstration action to product authority before production use.',
+    cards: 'Responsive summary surface with loading treatment and an accessible next action where applicable. Replace sample content with product-owned data.',
+    navigation: 'Local navigation demonstration with selected-state and keyboard behavior. Production routing and authorization remain implementation responsibilities.',
+    inputs: 'Labeled control with visible focus plus relevant error and disabled configurations. Server validation and persistence are outside this visual reference.',
+    feedback: 'Status pattern that keeps context attached to the affected work. Timing, dismissal, and escalation rules require product-specific decisions.',
+    motion: 'Motion reference with a reduced-motion alternative. Animation communicates state or hierarchy and is not required for task completion.',
+    data: 'Data-display reference with sample values, loading treatment, and a textual structure. It does not represent connected analytics or operational truth.'
+  };
+
+  const definitions = {
+    buttons: [
+      ['b-solid', 'Solid action', 'Create project', 'solid'],
+      ['b-outline', 'Outline action', 'View details', 'outline'],
+      ['b-soft', 'Soft action', 'Save for later', 'soft'],
+      ['b-gradient', 'Gradient action', 'Start creating', 'gradient'],
+      ['b-pill', 'Pill action', 'Explore the library', 'pill'],
+      ['b-icon', 'Icon actions', 'Save this item', 'icon'],
+      ['b-submit', 'Submit action', 'Submit request', 'solid'],
+      ['b-publish', 'Publish action', 'Publish changes', 'gradient'],
+      ['b-continue', 'Continue action', 'Continue', 'solid'],
+      ['b-confirm', 'Confirm action', 'Confirm selection', 'solid'],
+      ['b-add', 'Add item action', 'Add another item', 'outline'],
+      ['b-save-draft', 'Save draft action', 'Save draft', 'soft'],
+      ['b-approve', 'Approve action', 'Approve direction', 'gradient'],
+      ['b-download', 'Download action', 'Download files', 'outline'],
+      ['b-share', 'Share action', 'Share with team', 'soft'],
+      ['b-filter', 'Filter action', 'Filter results', 'pill'],
+      ['b-menu', 'Menu trigger', 'Open actions', 'icon'],
+      ['b-back', 'Back action', 'Back to projects', 'outline'],
+      ['b-split', 'Split action', 'Create and continue', 'gradient'],
+      ['b-floating', 'Floating action', 'Create new', 'icon']
+    ],
+    cards: [
+      ['c-project', 'Project card', 'Website redesign', 'project'],
+      ['c-metric', 'Metric card', 'Monthly revenue', 'metric'],
+      ['c-feature', 'Feature card', 'A little more possibility', 'feature'],
+      ['c-glass', 'Tinted surface', 'Your creative space', 'glass'],
+      ['c-horizontal', 'Horizontal card', 'Design foundations', 'horizontal'],
+      ['c-pricing', 'Pricing card', 'Studio plan', 'pricing'],
+      ['c-profile', 'Profile card', 'Creative lead', 'project'],
+      ['c-team', 'Team card', 'Product design team', 'glass'],
+      ['c-status', 'Status card', 'Release readiness', 'metric'],
+      ['c-task', 'Task card', 'Prepare launch assets', 'horizontal'],
+      ['c-event', 'Event card', 'Design review', 'project'],
+      ['c-message', 'Message card', 'New client note', 'horizontal'],
+      ['c-file', 'File card', 'Interface specification', 'project'],
+      ['c-integration', 'Integration card', 'Connect your workspace', 'feature'],
+      ['c-onboarding', 'Onboarding card', 'Set up your first project', 'feature'],
+      ['c-upgrade', 'Upgrade card', 'Unlock team workflows', 'pricing'],
+      ['c-article', 'Article card', 'A practical design system', 'horizontal'],
+      ['c-testimonial', 'Testimonial card', 'What changed for the team', 'glass'],
+      ['c-product', 'Product card', 'Component Studio', 'feature'],
+      ['c-order', 'Order card', 'Order #1048', 'project'],
+      ['c-invoice', 'Invoice card', 'Invoice #2081', 'metric'],
+      ['c-schedule', 'Schedule card', 'This week', 'horizontal'],
+      ['c-goal', 'Goal card', 'Launch the new workspace', 'glass'],
+      ['c-insight', 'Insight card', 'Engagement is rising', 'metric'],
+      ['c-audit', 'Audit card', 'Latest evidence receipt', 'project']
+    ],
+    navigation: [
+      ['n-tabs', 'Segmented tabs', 'Overview', 'tabs'],
+      ['n-pills', 'Pill tabs', 'Overview', 'pills'],
+      ['n-underline', 'Underline tabs', 'Overview', 'underline'],
+      ['n-sidebar', 'Sidebar navigation', 'Overview', 'sidebar'],
+      ['n-breadcrumb', 'Breadcrumb trail', 'Workspace', 'underline'],
+      ['n-pagination', 'Pagination control', 'Page 1', 'pills'],
+      ['n-topbar', 'Top navigation', 'Dashboard', 'tabs'],
+      ['n-mobile', 'Mobile navigation', 'Home', 'pills'],
+      ['n-stepper', 'Progress stepper', 'Details', 'tabs'],
+      ['n-command', 'Command navigation', 'Quick open', 'underline'],
+      ['n-subnav', 'Section navigation', 'Activity', 'underline'],
+      ['n-tree', 'Tree navigation', 'Projects', 'sidebar'],
+      ['n-dock', 'Action dock', 'Workspace', 'pills'],
+      ['n-rail', 'Compact rail', 'Home', 'sidebar'],
+      ['n-context', 'Context switcher', 'Current project', 'tabs'],
+      ['n-account', 'Account navigation', 'Profile', 'sidebar'],
+      ['n-jump', 'Jump links', 'Summary', 'underline'],
+      ['n-filter-tabs', 'Filter tabs', 'All work', 'pills']
+    ],
+    inputs: [
+      ['i-search', 'Search field', 'Search your projects', 'search'],
+      ['i-toggle', 'Preference switches', 'Email notifications', 'toggle'],
+      ['i-text', 'Labeled text field', 'Email address', 'text'],
+      ['i-check', 'Selection group', 'Design updates', 'check'],
+      ['i-project-search', 'Project search', 'Find a project', 'search'],
+      ['i-command-search', 'Command search', 'Search actions', 'search'],
+      ['i-email', 'Email field', 'Work email', 'text'],
+      ['i-name', 'Name field', 'Project name', 'text'],
+      ['i-url', 'URL field', 'Website URL', 'text'],
+      ['i-password', 'Password field', 'Account password', 'text'],
+      ['i-notes', 'Notes field', 'Implementation notes', 'text'],
+      ['i-inline-edit', 'Inline edit field', 'Rename direction', 'text'],
+      ['i-settings-toggle', 'Settings switches', 'Workspace preferences', 'toggle'],
+      ['i-privacy-toggle', 'Privacy switches', 'Private workspace', 'toggle'],
+      ['i-notification-toggle', 'Notification switches', 'Release alerts', 'toggle'],
+      ['i-feature-toggle', 'Feature switches', 'Preview features', 'toggle'],
+      ['i-interest-check', 'Interest checklist', 'Product updates', 'check'],
+      ['i-permission-check', 'Permission checklist', 'Team permissions', 'check'],
+      ['i-topic-check', 'Topic checklist', 'Research topics', 'check'],
+      ['i-consent-check', 'Consent checklist', 'Contact preferences', 'check'],
+      ['i-choice-list', 'Choice list', 'Choose capabilities', 'check'],
+      ['i-compact-search', 'Compact search', 'Find anything', 'search'],
+      ['i-toolbar-search', 'Toolbar search', 'Search this view', 'search'],
+      ['i-hero-search', 'Hero search', 'What do you want to build?', 'search'],
+      ['i-filter-search', 'Filter search', 'Filter components', 'search']
+    ],
+    feedback: [
+      ['f-toast', 'Success toast', 'Changes saved', 'toast'],
+      ['f-callout', 'Contextual callout', 'A useful little tip', 'callout'],
+      ['f-empty', 'Empty state', 'Room for something new', 'empty'],
+      ['f-progress', 'Progress feedback', 'Uploading your files', 'progress'],
+      ['f-error-toast', 'Error toast', 'Something needs attention', 'toast'],
+      ['f-warning-callout', 'Warning callout', 'Review before continuing', 'callout'],
+      ['f-success-callout', 'Success callout', 'Everything is ready', 'callout'],
+      ['f-neutral-callout', 'Neutral callout', 'A note about this step', 'callout'],
+      ['f-search-empty', 'Search empty state', 'No matching results', 'empty'],
+      ['f-inbox-empty', 'Inbox empty state', 'You are all caught up', 'empty'],
+      ['f-project-empty', 'Project empty state', 'Start your first project', 'empty'],
+      ['f-upload-progress', 'Upload progress', 'Uploading assets', 'progress'],
+      ['f-sync-progress', 'Sync progress', 'Syncing workspace', 'progress'],
+      ['f-import-progress', 'Import progress', 'Importing records', 'progress'],
+      ['f-save-toast', 'Save confirmation', 'Draft saved', 'toast'],
+      ['f-copy-toast', 'Copy confirmation', 'Copied to clipboard', 'toast'],
+      ['f-offline-callout', 'Offline callout', 'You are working offline', 'callout'],
+      ['f-permission-callout', 'Permission callout', 'Access is required', 'callout'],
+      ['f-banner', 'Status banner', 'Workspace notice', 'callout'],
+      ['f-inline-status', 'Inline status', 'Ready for review', 'toast']
+    ],
+    motion: [
+      ['m-disclosure', 'Expandable details', 'What is included?', 'disclosure'],
+      ['m-orbit', 'Orbit indicator', 'Putting things together', 'orbit'],
+      ['m-stagger', 'Staggered entrance', 'Your workspace is ready', 'stagger'],
+      ['m-hover', 'Hover response', 'Give it a little hover', 'hover'],
+      ['m-accordion', 'Accordion reveal', 'Explore the details', 'disclosure'],
+      ['m-faq', 'FAQ reveal', 'How does this work?', 'disclosure'],
+      ['m-details', 'Details reveal', 'Show implementation notes', 'disclosure'],
+      ['m-loader', 'Loading orbit', 'Loading your workspace', 'orbit'],
+      ['m-processing', 'Processing orbit', 'Preparing the export', 'orbit'],
+      ['m-sync', 'Sync orbit', 'Syncing changes', 'orbit'],
+      ['m-list-entrance', 'List entrance', 'New items are ready', 'stagger'],
+      ['m-card-entrance', 'Card entrance', 'Your dashboard is ready', 'stagger'],
+      ['m-action-hover', 'Action hover', 'Make the action respond', 'hover'],
+      ['m-surface-hover', 'Surface hover', 'Lift the selected surface', 'hover'],
+      ['m-reveal', 'Progressive reveal', 'Reveal the next step', 'stagger']
+    ],
+    data: [
+      ['d-chart', 'Activity chart', 'Weekly activity', 'chart'],
+      ['d-table', 'Compact table', 'Recent projects', 'table'],
+      ['d-activity', 'Activity feed', 'Recent activity', 'activity'],
+      ['d-stat', 'Stat cluster', 'Workspace pulse', 'stat'],
+      ['d-revenue-chart', 'Revenue chart', 'Revenue trend', 'chart'],
+      ['d-traffic-chart', 'Traffic chart', 'Visitor activity', 'chart'],
+      ['d-capacity-chart', 'Capacity chart', 'Team capacity', 'chart'],
+      ['d-progress-chart', 'Progress chart', 'Milestone progress', 'chart'],
+      ['d-project-table', 'Project table', 'Active projects', 'table'],
+      ['d-member-table', 'Member table', 'Team members', 'table'],
+      ['d-order-table', 'Order table', 'Recent orders', 'table'],
+      ['d-event-table', 'Event table', 'Upcoming events', 'table'],
+      ['d-audit-table', 'Audit table', 'Evidence receipts', 'table'],
+      ['d-comment-feed', 'Comment feed', 'Latest comments', 'activity'],
+      ['d-change-feed', 'Change feed', 'Recent changes', 'activity'],
+      ['d-notification-feed', 'Notification feed', 'Notifications', 'activity'],
+      ['d-decision-feed', 'Decision feed', 'Recent decisions', 'activity'],
+      ['d-kpi-cluster', 'KPI cluster', 'Key indicators', 'stat'],
+      ['d-health-cluster', 'Health cluster', 'System health', 'stat'],
+      ['d-performance-cluster', 'Performance cluster', 'Performance summary', 'stat'],
+      ['d-summary-cluster', 'Summary cluster', 'Workspace summary', 'stat'],
+      ['d-funnel-chart', 'Funnel chart', 'Conversion funnel', 'chart'],
+      ['d-retention-chart', 'Retention chart', 'Retention trend', 'chart'],
+      ['d-ranking-table', 'Ranking table', 'Top projects', 'table'],
+      ['d-timeline-feed', 'Timeline feed', 'Project timeline', 'activity'],
+      ['d-comparison-table', 'Comparison table', 'Plan comparison', 'table'],
+      ['d-score-cluster', 'Score cluster', 'Readiness score', 'stat']
+    ]
+  };
+
+  const catalog = Object.entries(definitions).flatMap(([category, entries]) =>
+    entries.map(([id, name, label, kind]) => ({
+      id,
+      category,
+      name,
+      desc: `${name} with live states, configurable tokens, and implementation-ready handoff context.`,
+      label,
+      states: statesByKind[kind],
+      kind,
+      tags: Array.from(new Set([category, kind, ...name.toLowerCase().split(/\s+/)])),
+      behavior: behaviorByCategory[category]
+    }))
+  );
+
+  root.MBM_COMPONENT_STUDIO_CATALOG = Object.freeze({
+    categories: Object.freeze(categories),
+    catalog: Object.freeze(catalog)
+  });
+})(globalThis);
