@@ -12,6 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/apps',
     '/tools',
     '/tools/prompt-register',
+    '/control-plane',
     ...projectScreens.map((project) => project.path),
     '/services',
     '/case-studies',
