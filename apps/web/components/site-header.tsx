@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 const primaryNavigation = [
   { href: '/apps', label: 'Apps' },
   { href: '/tools', label: 'Tools' },
+  { href: '/control-plane', label: 'Control Plane' },
   { href: '/insights', label: 'Articles' },
   { href: '/#approach', label: 'Approach' },
   { href: '/#studio', label: 'Studio', panel: 'studio' },
@@ -73,6 +74,8 @@ export function SiteHeader() {
               ? pathname.startsWith('/apps')
               : item.href === '/tools'
                 ? pathname.startsWith('/tools')
+              : item.href === '/control-plane'
+                ? pathname.startsWith('/control-plane')
               : item.href === '/insights'
                 ? pathname.startsWith('/insights')
               : item.href === '/about'
