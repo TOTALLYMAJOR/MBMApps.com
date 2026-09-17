@@ -22,6 +22,7 @@ export const quietPilotProduct = {
 
 export const navigation = [
   { href: '/apps', label: 'Apps' },
+  { href: '/control-plane', label: 'Control Plane' },
   { href: '/#approach', label: 'Approach' },
   { href: '/#studio', label: 'Studio' },
   { href: '/about', label: 'About' }
