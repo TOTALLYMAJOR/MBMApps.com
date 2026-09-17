@@ -323,6 +323,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
             <a href="#home"><span>[h]</span> home</a>
             <a href="#apps"><span>[a]</span> apps</a>
             <a href="#projects"><span>[g]</span> projects</a>
+            <Link href="/control-plane"><span>[d]</span> control plane</Link>
             <a href="#commerce"><span>[e]</span> commerce</a>
             <a href="#approach"><span>[p]</span> approach</a>
             <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog"><span>[u]</span> studio</button>
@@ -357,6 +358,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
               <button type="button" onClick={openChat}>[chat]</button>
               <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog">[open component studio]</button>
               <button type="button" onClick={openComponents} aria-haspopup="dialog" aria-controls="components-dialog">[open components]</button>
+              <Link href="/control-plane">[development control plane]</Link>
             </div>
           </div>
           <aside className="terminal-status" aria-label="Studio status">
