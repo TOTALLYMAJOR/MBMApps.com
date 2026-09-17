@@ -80,7 +80,7 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
       name: siteConfig.legalName,
       logo: {
         '@type': 'ImageObject',
-        url: `${siteConfig.url}/mbmapps-mark.svg`
+        url: `${siteConfig.url}/icon.svg`
       }
     },
     image: post.frontmatter.heroImage ? `${siteConfig.url}${post.frontmatter.heroImage}` : undefined

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { ArrowUpRight } from 'lucide-react';
 import { TerminalArticleShell } from '@/components/terminal-article-shell';
+import { LinkedInPostEmbed } from '@/components/linkedin-post-embed';
 import { getInsights } from '@/lib/content';
 
 export const metadata: Metadata = {
@@ -76,6 +77,15 @@ export default async function InsightsPage() {
           <p className="terminal-article-empty">No articles are published yet.</p>
         )}
       </section>
+      <section className="terminal-shell insights-research-callout" aria-labelledby="research-callout-title">
+        <div>
+          <p className="terminal-command"><span>~/mbmapps/research</span> $ open --development-intelligence</p>
+          <h2 id="research-callout-title">What three years of building reveal</h2>
+          <p>A privacy-safe, interactive study of 2,701 development conversations—and the architecture, delivery, and evidence patterns inside them.</p>
+        </div>
+        <Link href="/research/development-intelligence">Explore the research <ArrowUpRight aria-hidden="true" /></Link>
+      </section>
+      <LinkedInPostEmbed />
     </TerminalArticleShell>
   );
 }

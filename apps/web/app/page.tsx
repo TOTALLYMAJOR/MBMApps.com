@@ -17,7 +17,7 @@ export default async function HomePage() {
     '@type': 'Organization',
     name: siteConfig.legalName,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/mbmapps-mark.svg`,
+    logo: `${siteConfig.url}/icon.svg`,
     email: siteConfig.email,
     sameAs: [siteConfig.social.github]
   };
