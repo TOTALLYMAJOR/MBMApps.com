@@ -1,0 +1,52 @@
+.shell{
+  width:100%;
+  min-height:calc(100vh - 72px);
+  background:#07090d;
+}
+.contextBar{
+  width:min(1480px,calc(100% - 32px));
+  min-height:48px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  color:rgba(255,255,255,.64);
+  font-family:var(--font-ibm-plex-mono),monospace;
+  font-size:.72rem;
+  letter-spacing:.02em;
+}
+.contextBar p,.contextBar a{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin:0;
+}
+.contextBar svg{
+  width:15px;
+  height:15px;
+  color:#ff8a00;
+}
+.contextBar a{
+  color:rgba(255,255,255,.76);
+  text-decoration:none;
+  transition:color 160ms ease;
+}
+.contextBar a:hover{color:#fff}
+.frame{
+  display:block;
+  width:100%;
+  min-height:calc(100vh - 120px);
+  border:0;
+  background:#07090d;
+}
+@media(max-width:720px){
+  .contextBar{
+    align-items:flex-start;
+    flex-direction:column;
+    justify-content:center;
+    gap:4px;
+    padding:10px 0;
+  }
+  .frame{min-height:calc(100vh - 150px)}
+}

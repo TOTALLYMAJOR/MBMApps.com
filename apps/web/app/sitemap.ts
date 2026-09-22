@@ -13,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/apps',
     '/tools',
     ...tools.map((tool) => tool.href),
+    '/control-plane',
     ...projectScreens.map((project) => project.path),
     '/services',
     '/case-studies',

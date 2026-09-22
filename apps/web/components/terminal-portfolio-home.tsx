@@ -250,9 +250,10 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
             <a className="terminal-nav__brand" href="#home" aria-label="MBMApps home"><BrandMark /></a>
             <a href="#apps"><span>[01]</span> apps</a>
             <Link href="/tools"><span>[02]</span> tools</Link>
-            <a href="#approach"><span>[03]</span> approach</a>
-            <Link href="/insights"><span>[04]</span> articles</Link>
-            <button className="terminal-nav__contact" type="button" onClick={openChat}><span>[05]</span> contact</button>
+            <Link href="/control-plane"><span>[03]</span> control plane</Link>
+            <a href="#approach"><span>[04]</span> approach</a>
+            <Link href="/insights"><span>[05]</span> articles</Link>
+            <button className="terminal-nav__contact" type="button" onClick={openChat}><span>[06]</span> contact</button>
           </div>
           <button type="button" onClick={toggleTheme} aria-label={`Switch to ${light ? 'dark' : 'light'} theme`}>
             {light ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
@@ -281,6 +282,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
             <div className="terminal-links terminal-hero__actions">
               <a className="terminal-hero__primary" href="#apps">Explore products <ArrowUpRight aria-hidden="true" /></a>
               <a href="#approach">See how we work</a>
+              <Link href="/control-plane">Explore control-plane simulation</Link>
               <button type="button" onClick={openChat}>Start a conversation</button>
             </div>
             <div className="terminal-hero__evidence" aria-label="Studio overview">

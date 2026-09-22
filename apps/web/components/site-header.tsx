@@ -11,6 +11,7 @@ const primaryNavigation = [
   { href: '/apps', label: 'Apps' },
   { href: '/tools', label: 'Tools' },
   { href: '/case-studies', label: 'Work' },
+  { href: '/control-plane', label: 'Control Plane' },
   { href: '/insights', label: 'Articles' },
   { href: '/#approach', label: 'Approach' },
   { href: '/about', label: 'About' }
@@ -70,6 +71,8 @@ export function SiteHeader() {
                 ? pathname.startsWith('/tools')
               : item.href === '/case-studies'
                 ? pathname.startsWith('/case-studies')
+              : item.href === '/control-plane'
+                ? pathname.startsWith('/control-plane')
               : item.href === '/insights'
                 ? pathname.startsWith('/insights')
               : item.href === '/about'
