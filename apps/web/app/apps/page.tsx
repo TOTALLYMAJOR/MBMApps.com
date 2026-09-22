@@ -31,7 +31,7 @@ export default function AppsPage() {
       <section className="terminal-shell terminal-pagehead">
         <p className="terminal-command"><span>~/mbmapps/apps</span> $ ls --products --available</p>
         <h1>applications<span className="terminal-cursor" aria-hidden="true" /></h1>
-        <p className="terminal-lede">Three purpose-built systems, each with a narrow job: make the state of the work visible, keep claims tied to evidence, and route the right decision to a human.</p>
+        <p className="terminal-lede">Three independent products for three operating environments. Compare who each serves, what it fixes, and how to inspect it.</p>
         <div className="terminal-links"><Link href="/">[back home]</Link><Link href="/contact">[ask which fits]</Link></div>
       </section>
 
@@ -47,11 +47,14 @@ export default function AppsPage() {
                 <Image src={product.screenshot.src} alt={product.screenshot.alt} fill sizes="(min-width: 900px) 31vw, 100vw" priority={index === 0} />
               </Link>
               <div className="terminal-product__body">
+                <p className="terminal-product__index">0{index + 1} / independent application</p>
                 <div className="terminal-product__title"><h3>{product.name}</h3><ArrowUpRight aria-hidden="true" /></div>
                 <p className="terminal-product__category">{product.category}</p>
+                <p className="terminal-product__audience"><span>For</span> {product.audience.join(' · ')}</p>
                 <p>{product.description}</p>
+                <p className="terminal-product__problem"><span>Solves</span> {product.problemStatement}</p>
                 <div className="terminal-tags">{product.capabilities.slice(0, 4).map((capability) => <span key={capability.label}>{capability.label}</span>)}</div>
-                <div className="terminal-links"><Link href={product.path}>[brief]</Link><a href={product.websiteUrl}>[live]</a></div>
+                <div className="terminal-links"><Link href={product.path}>[view brief]</Link><a href={product.websiteUrl}>[{product.websiteLabel.toLowerCase()}]</a></div>
                 <p className="terminal-proof"><Check aria-hidden="true" /> {product.accessDescription}</p>
               </div>
             </article>
@@ -61,7 +64,7 @@ export default function AppsPage() {
 
       <section className="terminal-section terminal-shell terminal-contact" aria-label="Custom systems">
         <div><p className="terminal-command"><span>~/mbmapps/apps</span> $ custom</p><h2><span>*</span> none of these fit exactly?</h2><p>The studio takes on a small number of custom operating systems each year. Describe the workflow and we will map it against what already exists.</p></div>
-        <div className="terminal-contact__actions"><Link href="/contact">[contact the studio]</Link><Link href="/#studio">[open studio]</Link></div>
+        <div className="terminal-contact__actions"><Link href="/contact">[contact the studio]</Link><Link href="/tools">[browse tools]</Link></div>
       </section>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
     </div>

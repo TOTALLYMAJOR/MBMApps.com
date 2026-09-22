@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ArrowUpRight, Check, ChevronDown, GitBranch, Layers3, Mail, MessageSquare, Moon, Send, Sun, X } from 'lucide-react';
+import { ArrowUpRight, Check, ChevronDown, Mail, MessageSquare, Moon, Send, Sun, X } from 'lucide-react';
 import { currentConsentPolicyVersion, type ChatLeadDeliveryResponse } from '@mbm/contracts';
 import { BrandMark } from '@/components/brand-mark';
 import { SelectedWorkRail } from '@/components/selected-work-rail';
@@ -11,6 +11,7 @@ import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
 import { OperatingWorldSphere, type OperatingWorldMode } from '@/components/operating-world-sphere';
 import { groupGitHubProjects, type GitHubProject } from '@/lib/github-projects';
+import { tools } from '@/lib/tools';
 
 type ChatLine = { from: 'studio' | 'visitor'; text: string };
 type ChatDeliveryState = { status: 'idle' | 'sending' | 'saved' | 'sent' | 'error'; message: string };
@@ -43,10 +44,6 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
   const [light, setLight] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const [studioOpen, setStudioOpen] = useState(false);
-  const [studioLoaded, setStudioLoaded] = useState(false);
-  const [componentsOpen, setComponentsOpen] = useState(false);
-  const [componentsLoaded, setComponentsLoaded] = useState(false);
   const [operatingMode, setOperatingMode] = useState<OperatingWorldMode>('observe');
   const [methodologyProgress, setMethodologyProgress] = useState(0);
   const [draft, setDraft] = useState('');
@@ -57,11 +54,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
     { from: 'studio', text: 'Hi. Tell me what you are trying to improve. I can point you toward an MBMApps product or prepare an email for the studio.' }
   ]);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const studioDialogRef = useRef<HTMLDialogElement>(null);
-  const componentsDialogRef = useRef<HTMLDialogElement>(null);
   const openerRef = useRef<HTMLButtonElement | null>(null);
-  const studioOpenerRef = useRef<HTMLButtonElement | null>(null);
-  const componentsOpenerRef = useRef<HTMLButtonElement | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,27 +64,6 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
     const syncTheme = (event: Event) => setLight((event as CustomEvent<{ light: boolean }>).detail?.light ?? false);
     window.addEventListener('mbm-theme-change', syncTheme);
     return () => window.removeEventListener('mbm-theme-change', syncTheme);
-  }, []);
-
-  useEffect(() => {
-    const openRequestedPanel = (event?: Event) => {
-      const requested = (event as CustomEvent<{ panel?: string }> | undefined)?.detail?.panel ?? window.location.hash.slice(1);
-      if (requested === 'studio') {
-        setStudioLoaded(true);
-        setStudioOpen(true);
-      }
-      if (requested === 'components') {
-        setComponentsLoaded(true);
-        setComponentsOpen(true);
-      }
-    };
-    openRequestedPanel();
-    window.addEventListener('mbm-open-panel', openRequestedPanel);
-    window.addEventListener('hashchange', openRequestedPanel);
-    return () => {
-      window.removeEventListener('mbm-open-panel', openRequestedPanel);
-      window.removeEventListener('hashchange', openRequestedPanel);
-    };
   }, []);
 
   useEffect(() => {
@@ -106,33 +78,9 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
   }, [chatOpen]);
 
   useEffect(() => {
-    const dialog = studioDialogRef.current;
-    if (!dialog) return;
-    if (studioOpen && !dialog.open) {
-      dialog.showModal();
-      dialog.querySelector<HTMLButtonElement>('button')?.focus();
-    } else if (!studioOpen && dialog.open) {
-      dialog.close();
-      studioOpenerRef.current?.focus();
-    }
-  }, [studioOpen]);
-
-  useEffect(() => {
-    const dialog = componentsDialogRef.current;
-    if (!dialog) return;
-    if (componentsOpen && !dialog.open) {
-      dialog.showModal();
-      dialog.querySelector<HTMLButtonElement>('button')?.focus();
-    } else if (!componentsOpen && dialog.open) {
-      dialog.close();
-      componentsOpenerRef.current?.focus();
-    }
-  }, [componentsOpen]);
-
-  useEffect(() => {
-    document.body.style.overflow = chatOpen || studioOpen || componentsOpen ? 'hidden' : '';
+    document.body.style.overflow = chatOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
-  }, [chatOpen, studioOpen, componentsOpen]);
+  }, [chatOpen]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ block: 'nearest' });
@@ -216,35 +164,15 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
 
   function openChat(event: React.MouseEvent<HTMLButtonElement>) {
     openerRef.current = event.currentTarget;
-    setStudioOpen(false);
-    setComponentsOpen(false);
     setChatOpen(true);
   }
 
-  function openStudio(event: React.MouseEvent<HTMLButtonElement>) {
-    studioOpenerRef.current = event.currentTarget;
-    setChatOpen(false);
-    setComponentsOpen(false);
-    setStudioLoaded(true);
-    setStudioOpen(true);
-  }
-
-  function openComponents(event: React.MouseEvent<HTMLButtonElement>) {
-    componentsOpenerRef.current = event.currentTarget;
-    setChatOpen(false);
-    setStudioOpen(false);
-    setComponentsLoaded(true);
-    setComponentsOpen(true);
-  }
-
   function toggleTheme() {
-    setLight((current) => {
-      const next = !current;
-      window.localStorage.setItem('mbm-theme', next ? 'light' : 'dark');
-      document.documentElement.dataset.theme = next ? 'light' : 'dark';
-      window.dispatchEvent(new CustomEvent('mbm-theme-change', { detail: { light: next } }));
-      return next;
-    });
+    const next = !light;
+    setLight(next);
+    window.localStorage.setItem('mbm-theme', next ? 'light' : 'dark');
+    document.documentElement.dataset.theme = next ? 'light' : 'dark';
+    window.dispatchEvent(new CustomEvent('mbm-theme-change', { detail: { light: next } }));
   }
 
   function sendMessage(text = draft) {
@@ -320,17 +248,11 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
         <div className="terminal-shell terminal-nav__inner">
           <div className="terminal-nav__links">
             <a className="terminal-nav__brand" href="#home" aria-label="MBMApps home"><BrandMark /></a>
-            <a href="#home"><span>[h]</span> home</a>
-            <a href="#apps"><span>[a]</span> apps</a>
-            <a href="#projects"><span>[g]</span> projects</a>
-            <a href="#commerce"><span>[e]</span> commerce</a>
-            <a href="#approach"><span>[p]</span> approach</a>
-            <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog"><span>[u]</span> studio</button>
-            <button type="button" onClick={openComponents} aria-haspopup="dialog" aria-controls="components-dialog"><span>[k]</span> components</button>
-            <button type="button" onClick={openChat}><span>[m]</span> chat</button>
-            <a href="#contact"><span>[c]</span> contact</a>
-            <a href="#systems"><span>[s]</span> systems</a>
-            <Link href="/insights"><span>[r]</span> articles</Link>
+            <a href="#apps"><span>[01]</span> apps</a>
+            <Link href="/tools"><span>[02]</span> tools</Link>
+            <a href="#approach"><span>[03]</span> approach</a>
+            <Link href="/insights"><span>[04]</span> articles</Link>
+            <button className="terminal-nav__contact" type="button" onClick={openChat}><span>[05]</span> contact</button>
           </div>
           <button type="button" onClick={toggleTheme} aria-label={`Switch to ${light ? 'dark' : 'light'} theme`}>
             {light ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
@@ -341,22 +263,30 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
 
       <div>
         <section id="home" className="terminal-shell terminal-hero" data-reveal>
-          <OperatingWorldSphere mode={operatingMode} progress={methodologyProgress} onModeChange={setOperatingMode} />
+          <OperatingWorldSphere
+            mode={operatingMode}
+            progress={methodologyProgress}
+            onModeChange={setOperatingMode}
+            showControls={false}
+          />
           <div className="terminal-hero__copy">
             <p className="terminal-command"><span>~/mbmapps</span> $ whoami</p>
             <div className="terminal-hero__brand">
               <BrandMark className="terminal-hero__logo" priority />
-              <h1>MBMApps<span aria-hidden="true" /></h1>
+              <p><strong>MBMApps</strong><span>Independent software studio · Chicago</span></p>
             </div>
-            <p className="terminal-subline">independent software studio · chicago · proof-driven products</p>
+            <h1>Software for operations that cannot run on guesswork.</h1>
+            <p className="terminal-subline">Focused products · explicit authority · evidence-backed decisions</p>
             <p className="terminal-lede">We build focused operating systems for catering, youth sports, and quote-to-event work. Teams can see what is known, what is blocked, and what needs a human decision.</p>
-            <div className="terminal-links">
-              <a href="#apps">[browse apps]</a>
-              <Link href="/about">[about]</Link>
-              <a href={siteConfig.social.github}>[github]</a>
-              <button type="button" onClick={openChat}>[chat]</button>
-              <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog">[open component studio]</button>
-              <button type="button" onClick={openComponents} aria-haspopup="dialog" aria-controls="components-dialog">[open components]</button>
+            <div className="terminal-links terminal-hero__actions">
+              <a className="terminal-hero__primary" href="#apps">Explore products <ArrowUpRight aria-hidden="true" /></a>
+              <a href="#approach">See how we work</a>
+              <button type="button" onClick={openChat}>Start a conversation</button>
+            </div>
+            <div className="terminal-hero__evidence" aria-label="Studio overview">
+              <p><strong>Products</strong><span>{projectScreens.map((product) => product.name).join(' · ')}</span></p>
+              <p><strong>Method</strong><span>Observe · Verify · Ship · Prove</span></p>
+              <p><strong>Studio</strong><span>Chicago · direct contact</span></p>
             </div>
           </div>
           <aside className="terminal-status" aria-label="Studio status">
@@ -389,20 +319,21 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
           </div>
           <div className="terminal-product-grid">
             {projectScreens.map((product, index) => (
-              <article key={product.slug} className={`terminal-product terminal-product--${product.accentToken}`}>
+              <article key={product.slug} className={`terminal-product terminal-product--${product.accentToken} terminal-product--layout-${index + 1}`}>
                 <Link href={product.path} className="terminal-product__image">
                   <Image src={product.screenshot.src} alt={product.screenshot.alt} fill sizes="(min-width: 800px) 44vw, 100vw" priority={index === 0} />
                 </Link>
                 <div className="terminal-product__body">
+                  <p className="terminal-product__index">0{index + 1} / product system</p>
                   <div className="terminal-product__title"><h3>{product.name}</h3><ArrowUpRight aria-hidden="true" /></div>
                   <p className="terminal-product__category">{product.category}</p>
+                  <p className="terminal-product__audience"><span>For</span> {product.audience.join(' · ')}</p>
                   <p>{product.description}</p>
+                  <p className="terminal-product__problem"><span>Solves</span> {product.problemStatement}</p>
                   <div className="terminal-tags">{product.capabilities.slice(0, 4).map((item) => <span key={item.label}>{item.label}</span>)}</div>
                   <div className="terminal-links">
-                    <Link href={product.path}>[brief]</Link>
-                    <a href={product.websiteUrl}>[live]</a>
-                    {product.id === 'quietpilot' ? <a href="https://quietpilot.mbmapps.com/">[mbmapps surface]</a> : null}
-                    {product.secondaryAction ? <Link href={product.secondaryAction.href}>[{product.secondaryAction.label.toLowerCase()}]</Link> : null}
+                    <Link href={product.path}>[view brief]</Link>
+                    <a href={product.websiteUrl}>[{product.websiteLabel.toLowerCase()}]</a>
                   </div>
                   <p className="terminal-proof"><Check aria-hidden="true" /> {product.accessDescription}</p>
                 </div>
@@ -414,22 +345,19 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
         <section id="projects" className="terminal-section terminal-shell terminal-github" aria-labelledby="projects-title" data-reveal>
           <div className="terminal-github__row terminal-github__row--utilities">
             <div className="terminal-github__rail">
-              <h2><span>*</span> utilities</h2>
-              <p><span>[</span>gh repo list --tools<span>]</span></p>
+              <h2><span>*</span> tools</h2>
+              <p><span>[</span>one catalog · {tools.length} instruments<span>]</span></p>
             </div>
-            <div className="terminal-github__utilities">
-              {githubPortfolio.utilities.map((utility) => (
-                <a key={utility.url} href={utility.url} className="terminal-github__utility">
-                  <div className="terminal-github__title">
-                    <h3>TOTALLYMAJOR/{utility.name}</h3>
-                    <ArrowUpRight aria-hidden="true" />
-                  </div>
-                  <p className="terminal-github__utility-meta">
-                    {utility.stars} {utility.stars === 1 ? 'star' : 'stars'} · {utility.language?.toLowerCase() ?? 'mixed'}
-                  </p>
-                  <p>{utility.description}</p>
-                </a>
-              ))}
+            <div className="terminal-tools-directory">
+              <div>
+                <p className="terminal-command"><span>~/mbmapps/tools</span> $ ls --all</p>
+                <h3>Utilities and simulators now share one home.</h3>
+                <p>Design components, production prompts, cognitive strategies, and decision labs—grouped by purpose with their runtime boundaries visible.</p>
+                <Link href="/tools">Browse all tools <ArrowUpRight aria-hidden="true" /></Link>
+              </div>
+              <ol aria-label="Available MBMApps tools">
+                {tools.map((tool, index) => <li key={tool.id}><span>0{index + 1}</span><strong>{tool.name}</strong><em>{tool.category}</em></li>)}
+              </ol>
             </div>
           </div>
 
@@ -444,11 +372,11 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
               {githubPortfolio.projects.map((project) => (
                 <article key={project.url} className="terminal-github__card">
                   <a href={project.url} className="terminal-github__preview" aria-label={`Open ${project.name} on GitHub`}>
-                    <span
-                      role="img"
-                      aria-label={`${project.name} repository preview`}
-                      style={{ backgroundImage: `url(${JSON.stringify(project.previewUrl).slice(1, -1)})` }}
-                    />
+                    <span aria-hidden="true">
+                      <small>public repository</small>
+                      <strong>{project.name}</strong>
+                      <em>{project.language?.toLowerCase() ?? 'mixed system'}</em>
+                    </span>
                   </a>
                   <div className="terminal-github__body">
                     <div className="terminal-github__title">
@@ -538,9 +466,9 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
               <p><span>$</span> launch --simulator nexamind/agentic-decision-lab</p>
               <strong>Change the facts and watch authority, recommendations, and proof move with them.</strong>
             </div>
-            <a href="/nexamind-agentic-demo/index.html" target="_blank" rel="noreferrer">
-              Try Interactive Simulator <ArrowUpRight aria-hidden="true" />
-            </a>
+            <Link href="/tools#simulation">
+              Explore simulators <ArrowUpRight aria-hidden="true" />
+            </Link>
           </div>
         </section>
 
@@ -562,53 +490,26 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
           </button>
         </section>
 
-        <section id="studio" className="terminal-section terminal-shell" aria-labelledby="studio-section-title" data-reveal>
+        <section id="tools" className="terminal-section terminal-shell" aria-labelledby="tools-section-title" data-reveal>
           <div className="terminal-section__head">
             <div>
-              <h2 id="studio-section-title"><span>*</span> studio</h2>
-              <p><span>$</span> launch --utility component-studio@4</p>
+              <h2 id="tools-section-title"><span>*</span> tools and simulators</h2>
+              <p><span>$</span> ls --all --grouped</p>
             </div>
-            <p>local workspace · choices stay in your browser</p>
+            <p>{tools.length} focused browser instruments</p>
           </div>
-          <div className="terminal-studio-grid">
+          <div className="terminal-studio-grid terminal-tools-home">
             <div>
-              <h3>Component Studio v4</h3>
-              <p>Compose a visual direction, tune its motion system, and export an implementation-ready design pack. The same discipline behind every MBMApps product surface.</p>
+              <h3>One catalog. Clear purposes.</h3>
+              <p>Compose interfaces, structure prompts, and test decision systems. Every tool now lives under one searchable home with its state and runtime boundary attached.</p>
               <div className="terminal-links">
-                <button type="button" onClick={openStudio} aria-haspopup="dialog" aria-controls="component-studio-dialog">[open component studio]</button>
+                <Link href="/tools">[browse all tools]</Link>
                 <a href={siteConfig.social.github}>[see the code]</a>
               </div>
             </div>
-            <div className="terminal-studio-swatches" aria-hidden="true">
-              <span className="swatch swatch--violet">violet / product</span>
-              <span className="swatch swatch--field">field / operations</span>
-              <span className="swatch swatch--amber">amber / commerce</span>
-              <span className="swatch swatch--mono">mono / evidence</span>
-            </div>
-          </div>
-        </section>
-
-        <section id="components" className="terminal-section terminal-shell" aria-labelledby="components-section-title" data-reveal>
-          <div className="terminal-section__head">
-            <div>
-              <h2 id="components-section-title"><span>*</span> components</h2>
-              <p><span>$</span> launch --component nexamind/cause-effect@2</p>
-            </div>
-            <p>interactive lab · deterministic browser-only state</p>
-          </div>
-          <div className="terminal-studio-grid terminal-components-grid">
-            <div>
-              <h3>Cause &amp; Effect Lab</h3>
-              <p>Change a scenario fact and inspect its causal route, authority result, recommendation transition, and memory receipt without leaving MBMApps.</p>
-              <div className="terminal-links">
-                <button type="button" onClick={openComponents} aria-haspopup="dialog" aria-controls="components-dialog">[open components]</button>
-                <a href="/nexamind-cause-effect/index.html" target="_blank" rel="noreferrer">[open in new tab]</a>
-                <a href="/nexamind-agentic-demo/index.html" target="_blank" rel="noreferrer">[try interactive simulator]</a>
-              </div>
-            </div>
-            <div className="component-flow-preview" aria-hidden="true">
-              <span>fact</span><i>→</i><span>cause</span><i>→</i><span>decision</span><i>→</i><span>proof</span>
-            </div>
+            <ol className="terminal-tools-home__list">
+              {tools.map((tool, index) => <li key={tool.id}><span>0{index + 1}</span><strong>{tool.name}</strong><em>{tool.category}</em></li>)}
+            </ol>
           </div>
         </section>
 
@@ -664,37 +565,6 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
           <p className="terminal-chat__note">Nothing is sent until you choose direct delivery or send from your email app.</p>
       </dialog>
 
-      <dialog id="component-studio-dialog" ref={studioDialogRef} className="terminal-studio" aria-labelledby="studio-title" aria-describedby="studio-description" onCancel={(event) => { event.preventDefault(); setStudioOpen(false); }}>
-        <header className="terminal-studio__header">
-          <div>
-            <span>$ launch --utility component-studio@4</span>
-            <h2 id="studio-title"><Layers3 aria-hidden="true" /> Component Studio v4</h2>
-            <p id="studio-description">Compose a visual direction, tune its motion system, and export an implementation-ready design pack.</p>
-          </div>
-          <div className="terminal-studio__actions">
-            <div className="terminal-studio__status"><i /> local workspace · choices stay in your browser</div>
-            <a href="/component-studio.html" target="_blank" rel="noreferrer">[open tab] <ArrowUpRight aria-hidden="true" /></a>
-          </div>
-          <button type="button" onClick={() => setStudioOpen(false)} aria-label="Close Component Studio"><X aria-hidden="true" /></button>
-        </header>
-        {studioLoaded ? <iframe src="/component-studio.html" title="Component Studio v4 interface and motion builder" loading="lazy" allow="clipboard-write" /> : null}
-      </dialog>
-
-      <dialog id="components-dialog" ref={componentsDialogRef} className="terminal-studio terminal-components" aria-labelledby="components-title" aria-describedby="components-description" onCancel={(event) => { event.preventDefault(); setComponentsOpen(false); }}>
-        <header className="terminal-studio__header">
-          <div>
-            <span>$ launch --component nexamind/cause-effect@2</span>
-            <h2 id="components-title"><GitBranch aria-hidden="true" /> Components · Cause &amp; Effect Lab</h2>
-            <p id="components-description">Change a scenario fact and inspect its causal route, authority result, recommendation transition, and memory receipt.</p>
-          </div>
-          <div className="terminal-studio__actions">
-            <div className="terminal-studio__status"><i /> deterministic demo · browser-only state</div>
-            <a href="/nexamind-cause-effect/index.html" target="_blank" rel="noreferrer">[open tab] <ArrowUpRight aria-hidden="true" /></a>
-          </div>
-          <button type="button" onClick={() => setComponentsOpen(false)} aria-label="Close Components"><X aria-hidden="true" /></button>
-        </header>
-        {componentsLoaded ? <iframe src="/nexamind-cause-effect/index.html" title="NexaMind Cause and Effect Lab interactive component" loading="lazy" sandbox="allow-scripts" /> : null}
-      </dialog>
     </div>
   );
 }

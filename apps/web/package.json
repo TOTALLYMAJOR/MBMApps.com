@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "prebuild": "npm run build:embeds",
-    "build:embeds": "npm run build:embed:nexamind && npm run build:embed:cause-effect",
+    "build:embeds": "npm run build:embed:nexamind && npm run build:embed:cause-effect && npm run build:embed:cognitive-strategy",
     "build:embed:nexamind": "node embeds/nexamind-agentic-demo/build.mjs",
     "build:embed:cause-effect": "node embeds/nexamind-cause-effect/build.mjs",
+    "build:embed:cognitive-strategy": "node embeds/cognitive-strategy-utility/build.mjs",
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "eslint .",

@@ -6,6 +6,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { ArrowLeft } from 'lucide-react';
 import { ContentReadBeacon } from '@/components/content-read-beacon';
 import { TerminalArticleShell } from '@/components/terminal-article-shell';
+import { ContentDirectory } from '@/components/editorial-page';
 import { getInsightBySlug, getInsights } from '@/lib/content';
 import { siteConfig } from '@/lib/site';
 import { buildSocialShareUrls } from '@/lib/social-share';
@@ -97,6 +98,7 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
 
   return (
     <TerminalArticleShell>
+      <ContentDirectory current="articles" context={`${post.frontmatter.industry} field note`} />
       <article className="terminal-reader">
         <ContentReadBeacon
           section="insight"

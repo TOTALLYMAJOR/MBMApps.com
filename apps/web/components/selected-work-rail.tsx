@@ -1,13 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import { ArrowUpRight, ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { selectedWorkProjects } from '@/lib/selected-work';
 
 export function SelectedWorkRail() {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [revealedSites, setRevealedSites] = useState<number[]>([]);
   const railRef = useRef<HTMLDivElement>(null);
   const scrollFrameRef = useRef(0);
 
@@ -33,7 +32,7 @@ export function SelectedWorkRail() {
       window.removeEventListener('scroll', onWindowScroll);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
     };
-  }, [revealedSites]);
+  }, []);
 
   useEffect(() => () => {
     if (scrollFrameRef.current) window.cancelAnimationFrame(scrollFrameRef.current);
@@ -68,19 +67,13 @@ export function SelectedWorkRail() {
     });
   }
 
-  function togglePreview(index: number) {
-    setRevealedSites((current) => current.includes(index)
-      ? current.filter((item) => item !== index)
-      : [...current, index]);
-  }
-
   return (
     <section id="commerce" className="terminal-section terminal-shell terminal-commerce" aria-labelledby="commerce-title" data-reveal>
       <div className="terminal-commerce__heading">
         <div>
           <p className="terminal-command"><span>04</span> / selected work</p>
-          <h2 id="commerce-title"><span>*</span> ecommerce + client work</h2>
-          <p>Real businesses. Live websites. Clear paths to action.</p>
+          <h2 id="commerce-title"><span>*</span> selected work</h2>
+          <p>Real products and client work, shown through their actual interfaces.</p>
         </div>
         <div className="terminal-commerce__toolbar">
           <p className="terminal-commerce__command">$ ls --commerce --client-sites</p>
@@ -96,32 +89,19 @@ export function SelectedWorkRail() {
         </div>
       </div>
       <div ref={railRef} className="terminal-commerce__gallery" onScroll={syncSlide} role="region" aria-roledescription="carousel" aria-label="Selected ecommerce and client work" tabIndex={0}>
-        {selectedWorkProjects.map((project, index) => {
-          const isRevealed = revealedSites.includes(index);
-          return (
+        {selectedWorkProjects.map((project, index) => (
             <article key={project.name} className="terminal-commerce__project" role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${selectedWorkProjects.length}: ${project.name}`}>
               <div className="terminal-commerce__preview-shell">
-                {!isRevealed ? (
-                  <button
-                    type="button"
-                    className="terminal-commerce__preview-trigger"
-                    onClick={() => togglePreview(index)}
-                    aria-controls={`commerce-preview-${index}`}
-                    aria-expanded="false"
-                  >
-                    <span>Screenshot hidden until requested</span>
-                    <strong>{project.name}</strong>
-                    <small><Eye aria-hidden="true" /> Preview site</small>
-                  </button>
-                ) : null}
-                <div id={`commerce-preview-${index}`} className="terminal-commerce__revealed" hidden={!isRevealed}>
-                  <a href={project.href} target="_blank" rel="noreferrer" className="terminal-commerce__media" data-parallax aria-label={`Visit ${project.name} website`}>
-                    <Image src={project.image} alt={project.alt} fill sizes="(min-width: 900px) 720px, calc(100vw - 42px)" />
-                  </a>
-                  <button type="button" className="terminal-commerce__hide-preview" onClick={() => togglePreview(index)} aria-controls={`commerce-preview-${index}`} aria-expanded="true">
-                    <EyeOff aria-hidden="true" /> Hide preview
-                  </button>
-                </div>
+                <a href={project.href} target="_blank" rel="noreferrer" className="terminal-commerce__media" data-parallax aria-label={`Visit ${project.name} website`}>
+                  <Image
+                    src={project.image}
+                    alt={project.alt}
+                    fill
+                    sizes="(min-width: 900px) 720px, calc(100vw - 42px)"
+                    quality={90}
+                  />
+                  <span className="terminal-commerce__media-label">Live project <ArrowUpRight aria-hidden="true" /></span>
+                </a>
               </div>
               <div className="terminal-commerce__copy">
                 <span className="terminal-commerce__index">0{index + 1}</span>
@@ -133,8 +113,7 @@ export function SelectedWorkRail() {
                 </div>
               </div>
             </article>
-          );
-        })}
+          ))}
       </div>
     </section>
   );

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Explore live UI components, compose screens, tune a motion system, and export exact implementation choices for a coding agent.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
 <title>Component Studio v4 — build a visual and motion direction</title>
 <style id="appStyles">
 /* component-studio/styles.css */
@@ -554,6 +555,143 @@ pre { background:#100d15; border:1px solid #35283f; border-radius:7px; padding:1
 @media(max-width:600px){.screen-root{min-height:620px}.screen-shell{display:block;min-height:0}.screen-rail{border-right:0;border-bottom:1px solid var(--d-border);padding:17px 22px}.screen-rail-label,.screen-rail-footer{display:none}.screen-rail .d-side{width:100%;padding:6px!important}.screen-rail .d-side{display:flex;gap:3px;flex-wrap:wrap}.screen-rail .d-side button{width:auto;flex:1}.screen-top{padding:18px 22px}.screen-top-right>span{display:none}.screen-main{padding:25px 22px}.screen-heading{gap:22px;margin-bottom:27px}.screen-heading h1{font-size:28px;letter-spacing:-1px}.screen-heading p{font-size:12px}.screen-heading .screen-slot{max-width:none}.screen-sections{grid-template-columns:1fr;gap:23px}.screen-section{grid-column:1!important}.screen-endnote{align-items:flex-start;font-size:8px;gap:9px}.screen-root[data-layout="landing"] .screen-top{padding-inline:22px}.screen-root[data-layout="landing"] .screen-main{padding:23px 22px}.screen-root[data-layout="landing"] .screen-heading h1{font-size:37px;letter-spacing:-1.6px}.screen-root[data-layout="landing"] .screen-heading p{font-size:13px}.screen-landing-nav{padding:20px 22px 0}.screen-landing-nav>.screen-slot{max-width:none}.screen-root[data-layout="landing"] .screen-heading{padding-top:5px}}
 @media(prefers-reduced-motion:reduce){.screen-root *,.screen-root *::before,.screen-root *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
+<style id="studioOrangeTheme">
+/* MBMApps Studio chrome: orange communicates active construction.
+   Component previews retain their selected palette and are intentionally excluded. */
+:root {
+  --studio-orange:#ff8a1f;
+  --studio-orange-soft:#ffb15c;
+  --studio-orange-pale:#ffd29a;
+  --studio-orange-surface:#2b180d;
+  --studio-orange-ink:#241104;
+  --purple:var(--studio-orange);
+  --purple-bg:var(--studio-orange-surface);
+}
+.topbar { box-shadow:inset 0 2px var(--studio-orange),0 12px 32px #0004; }
+.skip-link,
+.btn.primary,
+.brand-mark { background:var(--studio-orange-soft); border-color:var(--studio-orange-soft); color:var(--studio-orange-ink); }
+.btn.primary:hover:not(:disabled) { background:var(--studio-orange-pale); border-color:var(--studio-orange-pale); }
+.brand-mark { box-shadow:0 0 26px rgba(255,138,31,.16); }
+.brand-mark i { background:#5b2607; }
+.count { background:#442712; color:#ffc77f; }
+.nav-item.active { color:#ffc27a; background:#28190f; border-color:#5c3419; }
+.nav-item.active .count { background:#5a3217; color:#ffd09a; }
+.view-tab.active { color:#ffd09a; }
+.preset:hover,
+.recipe-card:hover { border-color:#8b4c20; }
+.preset.active { border-color:#9a5524; background:#251810; }
+.preset.active .preset-tick { border-color:var(--studio-orange-soft); background:var(--studio-orange-soft); box-shadow:inset 0 0 0 4px #251810; }
+.search-box:focus-within { border-color:var(--studio-orange); box-shadow:0 0 0 1px var(--studio-orange); }
+.segments button.active { background:#3a2415; color:#ffe0b8; }
+.mini-switch { background:#633716; }
+.mini-switch::after { background:var(--studio-orange-soft); }
+.catalog-progress__bar { background:linear-gradient(90deg,var(--studio-orange),var(--studio-orange-soft)); }
+.component-tile:hover { border-color:#74401d; }
+.component-tile.selected { border-color:#a75a21; }
+.tile-category,
+.tile-customize,
+.tile-add,
+.empty-state .empty-icon { color:#ffc27a; }
+.tile-customize { background:#2a1b11; border-color:#5e371d; }
+.tile-customize:hover { border-color:#a65b28; background:#382216; }
+.tile-add { border-color:#65401f; }
+.tile-add.selected { color:#ffe0b6; border-color:#b86526; background:#4a2813; }
+.empty-state { border-color:#6b4325; }
+.empty-state .empty-icon { border-color:#75451f; background:#301c0e; }
+.range-row input { accent-color:var(--studio-orange); }
+.state-chip.active { color:#ffd5a3; background:#3b2212; border-color:#91501f; }
+.motion-choice[aria-pressed="true"],
+.motion-preset.active { border-color:var(--studio-orange); box-shadow:0 0 0 1px var(--studio-orange) inset; }
+.motion-preset.active { background:#2c1b10; }
+.motion-scope button.active { background:var(--studio-orange-soft); color:var(--studio-orange-ink); }
+.new-pill { border-color:#855022; background:#3c2414; color:#ffd19b; }
+.direction-tab.active { background:#332015; border-color:#ad6429; color:#ffe5c3; }
+.direction-letter { color:#ffbc6d; border-color:#7e4a27; }
+.device-chrome { background:#27170f; border-color:#6c3c1c; }
+.device-chrome i { background:#b8662a; }
+.inspector-head .tag { border-color:#7b461f; background:#3a2111; color:#ffd09c; }
+.inspector-back,
+.outline-row .icon { color:#ffc179; }
+.screen-look[data-screen-preset="studio"] i { background:linear-gradient(100deg,#17100c 45%,var(--studio-orange) 45%,var(--studio-orange) 64%,#4a2611 64%); border-color:#8c4e22; }
+.screen-look:hover,
+.outline-row:hover,
+.outline-row.active { border-color:#9f5a26; }
+.outline-row:hover,
+.outline-row.active { background:#342013; }
+.section-mini { border-color:#70401e; }
+.section-mini-footer { background:#2d1b10; color:#ffd09c; }
+.picker-option { border-color:#56341d; }
+.handoff-status { border-left-color:var(--studio-orange); color:#ffd5a5; background:#2a190f; }
+@media (prefers-reduced-motion:reduce) {
+  .topbar { box-shadow:inset 0 2px var(--studio-orange); }
+}
+</style>
+<style id="builderWorkspaceStyles">
+/* Canvas-first page builder. The orange rail is functional: it shows the
+   construction sequence and keeps the next useful action visible. */
+body[data-workspace-view="page"] .sidebar { display:none; }
+body[data-workspace-view="page"] .main { margin-left:0; max-width:none; padding-inline:clamp(18px,2.3vw,42px); }
+.build-flow { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); margin:-4px 0 22px; border:1px solid #392a20; border-radius:10px; overflow:hidden; background:#121014; }
+.build-step { position:relative; display:flex; align-items:center; gap:9px; min-height:46px; padding:9px 13px; border:0; border-right:1px solid #392a20; background:transparent; color:#938a87; text-align:left; font-size:10px; }
+.build-step:last-child { border-right:0; }
+.build-step::before { content:attr(data-step); display:grid; place-items:center; width:20px; height:20px; flex:0 0 auto; border:1px solid #5c3a24; border-radius:50%; color:#d7975f; font-size:8px; }
+.build-step strong { display:block; color:#d3cbc7; font-size:10px; font-weight:600; }
+.build-step small { display:block; margin-top:1px; color:#776f6d; font-size:8px; }
+.build-step.active,.build-step:hover { background:#21150e; color:#ffc17b; }
+.build-step.active::before,.build-step.complete::before { border-color:var(--studio-orange); background:var(--studio-orange); color:#241104; }
+.build-step.complete strong { color:#f0c495; }
+.builder-start { margin:0 0 18px; border:1px solid #3a302c; border-radius:10px; background:#151317; }
+.builder-start summary { display:flex; align-items:center; gap:12px; min-height:52px; padding:11px 15px; cursor:pointer; list-style:none; }
+.builder-start summary::-webkit-details-marker { display:none; }
+.builder-start summary .summary-icon { display:grid; place-items:center; width:29px; height:29px; border:1px solid #75451f; border-radius:8px; color:#ffc179; background:#2a190f; }
+.builder-start summary .summary-icon .icon { width:14px; }
+.builder-start summary strong { display:block; font-size:11px; }
+.builder-start summary small { display:block; margin-top:2px; color:#8f8582; font-size:9px; }
+.builder-start summary::after { content:"Open setup"; margin-left:auto; color:#bf8a5e; font-size:9px; }
+.builder-start[open] summary::after { content:"Hide setup"; }
+.builder-start__body { padding:0 15px 16px; border-top:1px solid #332a27; }
+.builder-brief { display:grid; grid-template-columns:minmax(180px,.72fr) minmax(260px,1.28fr); gap:12px; padding:15px 0; }
+.builder-brief .field { margin:0; }
+.builder-brief .field input { min-height:39px; }
+.builder-template-label { display:flex; justify-content:space-between; gap:15px; align-items:end; margin-bottom:9px; }
+.builder-template-label strong { font-size:11px; }
+.builder-template-label span { color:#887d79; font-size:9px; }
+.builder-start .recipe-row { margin:0; }
+.builder-start .recipe-card { padding:10px 12px; }
+.builder-start .recipe-art { width:58px; height:40px; }
+.compose-intro { margin-bottom:16px; }
+.compose-intro h1 { max-width:760px; }
+.compose-intro p { max-width:720px; }
+.compose-workspace { grid-template-columns:230px minmax(0,1fr) 285px; min-height:690px; }
+.page-structure { min-width:0; border-right:1px solid #3a2d25; background:#151317; padding:17px 13px; overflow:auto; }
+.structure-head { display:flex; align-items:start; justify-content:space-between; gap:10px; padding:1px 3px 13px; border-bottom:1px solid #342a26; }
+.structure-head h2 { margin:0; font-size:12px; }
+.structure-head p { margin:3px 0 0; color:#827976; font-size:9px; }
+.structure-list { display:flex; flex-direction:column; gap:5px; margin:13px 0; }
+.structure-item { width:100%; display:grid; grid-template-columns:24px minmax(0,1fr) auto; align-items:center; gap:8px; padding:9px 8px; border:1px solid transparent; border-radius:7px; background:transparent; color:#b9afab; text-align:left; }
+.structure-item:hover,.structure-item.active { border-color:#855025; background:#2a1a11; color:#ffe0ba; }
+.structure-item .icon-wrap { display:grid; place-items:center; width:24px; height:24px; border:1px solid #4a382d; border-radius:6px; color:#e6a365; }
+.structure-item .icon { width:12px; height:12px; }
+.structure-item span:not(.icon-wrap) { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:10px; }
+.structure-item small { color:#8d7e77; font-size:8px; }
+.structure-add { width:100%; margin-top:7px; }
+.structure-tip { margin:14px 3px 0; color:#7f7571; font-size:9px; line-height:1.65; }
+.compose-stage { min-width:0; }
+.screen-inspector { border-left-color:#3a2d25; background:#171419; }
+.compose-toolbar { position:sticky; top:70px; z-index:12; margin:0; padding:10px 12px; border:1px solid #392f2b; border-bottom:0; border-radius:9px 9px 0 0; background:#121014f2; backdrop-filter:blur(12px); }
+.compose-workspace { border-radius:0 0 11px 11px; }
+.builder-handoff { position:sticky; bottom:12px; z-index:18; display:flex; align-items:center; gap:12px; margin:14px auto 0; max-width:920px; padding:10px 11px 10px 15px; border:1px solid #6b3c1d; border-radius:10px; background:#1a120df2; box-shadow:0 16px 45px #0008; backdrop-filter:blur(14px); }
+.builder-handoff__status { min-width:0; flex:1; }
+.builder-handoff__status strong { display:block; color:#f4d1aa; font-size:11px; }
+.builder-handoff__status span { display:block; overflow:hidden; color:#93827a; font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
+.builder-handoff__actions { display:flex; gap:7px; flex-shrink:0; }
+.readiness-dot { width:7px; height:7px; flex:0 0 auto; border-radius:50%; background:#8d6c54; box-shadow:0 0 0 4px #3a2518; }
+.readiness-dot.ready { background:#94d6b1; box-shadow:0 0 0 4px #1d3a2b; }
+@media(max-width:1350px){.compose-workspace{grid-template-columns:205px minmax(0,1fr) 250px}.page-structure{padding-inline:10px}.screen-inspector{padding-inline:12px}}
+@media(max-width:1050px){.compose-workspace{grid-template-columns:210px minmax(0,1fr)}.screen-inspector{grid-column:1/-1;border-left:0;border-top:1px solid #3a2d25}.build-step small{display:none}.builder-brief{grid-template-columns:1fr}}
+@media(max-width:760px){body[data-workspace-view="page"] .main{padding:77px 14px 70px}.build-flow{grid-template-columns:repeat(5,1fr);margin-bottom:14px}.build-step{justify-content:center;padding:8px 4px}.build-step strong,.build-step small{display:none}.build-step::before{width:24px;height:24px}.builder-start summary{padding-inline:12px}.builder-start__body{padding-inline:12px}.compose-workspace{display:flex;flex-direction:column}.page-structure{border-right:0;border-bottom:1px solid #3a2d25;max-height:none}.structure-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.compose-toolbar{top:61px}.builder-handoff{bottom:8px;align-items:flex-start}.builder-handoff__actions{width:100%}.builder-handoff{flex-wrap:wrap}.builder-handoff__actions .btn{flex:1}.builder-handoff__status span{white-space:normal}.builder-start .recipe-row{grid-template-columns:1fr}.builder-template-label span{display:none}}
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to component library</a>
@@ -587,9 +725,9 @@ pre { background:#100d15; border:1px solid #35283f; border-radius:7px; padding:1
 </aside>
 <main class="main" id="main" tabindex="-1">
   <nav class="view-tabs" aria-label="Workspace view">
-    <button type="button" class="view-tab active" data-view="gallery" aria-pressed="true"><span data-icon="grid"></span>Explore components</button>
-    <button type="button" class="view-tab" data-view="board" aria-pressed="false"><span data-icon="board"></span>My design board <span class="count" data-board-count>0</span></button>
-    <button type="button" class="view-tab" data-view="page" aria-pressed="false"><span data-icon="layers"></span>Compose a screen</button>
+    <button type="button" class="view-tab active" data-view="page" aria-pressed="true"><span data-icon="layers"></span>Build page</button>
+    <button type="button" class="view-tab" data-view="gallery" aria-pressed="false"><span data-icon="grid"></span>Components</button>
+    <button type="button" class="view-tab" data-view="board" aria-pressed="false"><span data-icon="board"></span>Saved styles <span class="count" data-board-count>0</span></button>
   </nav>
   <section id="galleryView" aria-labelledby="galleryHeading">
     <div class="intro">
@@ -630,10 +768,27 @@ pre { background:#100d15; border:1px solid #35283f; border-radius:7px; padding:1
   </section>
   <section id="pageView" aria-labelledby="pageHeading" hidden>
     <div class="intro compose-intro">
-      <div><div class="kicker"><span class="dot"></span>FROM COMPONENTS TO A DIRECTION</div><h1 id="pageHeading">Now see the whole picture.</h1><p>Start with a screen. Make it yours. Compare the possibilities.</p></div>
+      <div><div class="kicker"><span class="dot"></span>PAGE BUILDER</div><h1 id="pageHeading">Build the page in one place.</h1><p>Shape the structure, edit the content, tune the visual system, and preview the result without leaving the canvas.</p></div>
       <div class="compose-intro-actions"><button type="button" class="btn ghost small" id="composerSave"><span data-icon="download"></span>Save project</button><button type="button" class="btn ghost small" id="composerOpen"><span data-icon="folder"></span>Open project</button></div>
     </div>
-    <div class="recipe-row" id="recipeRow" aria-label="Start a screen from a layout"></div>
+    <nav class="build-flow" aria-label="Page-building progress">
+      <button type="button" class="build-step active" data-step="1" data-build-jump="structure"><span><strong>Structure</strong><small>Choose the page shape</small></span></button>
+      <button type="button" class="build-step" data-step="2" data-build-jump="content"><span><strong>Content</strong><small>Edit what people see</small></span></button>
+      <button type="button" class="build-step" data-step="3" data-build-jump="style"><span><strong>Style</strong><small>Set the visual direction</small></span></button>
+      <button type="button" class="build-step" data-step="4" data-build-jump="preview"><span><strong>Preview</strong><small>Check every viewport</small></span></button>
+      <button type="button" class="build-step" data-step="5" data-build-jump="export"><span><strong>Export</strong><small>Prepare the handoff</small></span></button>
+    </nav>
+    <details class="builder-start" id="builderStart">
+      <summary><span class="summary-icon"><span data-icon="settings"></span></span><span><strong>Page setup</strong><small>Name the project, define its job, or start another direction.</small></span></summary>
+      <div class="builder-start__body">
+        <div class="builder-brief">
+          <label class="field"><span>Project name</span><input id="composerProjectName" data-project-field="projectName" maxlength="160" placeholder="My interface direction"></label>
+          <label class="field"><span>What must this page help someone do?</span><input id="composerProjectGoal" data-project-field="goal" maxlength="3000" placeholder="For example, understand the offer and request a consultation"></label>
+        </div>
+        <div class="builder-template-label"><strong>Start another page direction</strong><span>Creates a separate direction so the current page stays intact.</span></div>
+        <div class="recipe-row" id="recipeRow" aria-label="Start a screen from a layout"></div>
+      </div>
+    </details>
     <div class="directions-bar">
       <div class="direction-tabs" id="directionTabs" aria-label="Your screen directions"></div>
       <div class="direction-tools">
@@ -650,11 +805,17 @@ pre { background:#100d15; border:1px solid #35283f; border-radius:7px; padding:1
       <button type="button" class="btn small primary" id="chooseScreen"><span data-icon="check"></span>Use this direction</button>
     </div>
     <div class="compose-workspace" id="composeWorkspace">
+      <aside class="page-structure" id="pageStructure" aria-label="Page structure"></aside>
       <div class="compose-stage">
         <div id="composeCanvas" class="compose-canvas"></div>
         <div class="canvas-hint" id="canvasHint"><span data-icon="cursor"></span>Click a section to swap its component or change its configuration.</div>
       </div>
       <aside class="screen-inspector" id="screenInspector" aria-label="Screen and section settings"></aside>
+    </div>
+    <div class="builder-handoff" aria-live="polite">
+      <span class="readiness-dot" id="readinessDot" aria-hidden="true"></span>
+      <div class="builder-handoff__status"><strong id="builderReadiness">Page direction in progress</strong><span id="builderReadinessDetail">Choose a direction when the page is ready for handoff.</span></div>
+      <div class="builder-handoff__actions"><button type="button" class="btn ghost small" id="builderPreview"><span data-icon="play"></span>Preview page</button><button type="button" class="btn primary small" id="builderExport"><span data-icon="upRight"></span>Review & export</button></div>
     </div>
     <p class="compose-boundary">A visual direction, not a working product. Sample data and actions are demonstrations. Choosing a screen marks it for handoff; editing it requires choosing it again.</p>
   </section>
@@ -999,6 +1160,7 @@ function save() {
   },150);
 }
 function renderNavigationShell() {
+  document.body.dataset.workspaceView=app.view;
   $("categoryNav").innerHTML=CATEGORIES.map(category=>{
     const count=category.id==="all"?CATALOG.length:CATALOG.filter(entry=>entry.category===category.id).length;
     return `<button type="button" class="nav-item ${app.category===category.id&&app.view==="gallery"?"active":""}" data-category="${category.id}" aria-pressed="${app.category===category.id&&app.view==="gallery"}">${icon(category.icon)}<span>${category.name}</span><span class="count">${count}</span></button>`;
@@ -1010,7 +1172,7 @@ function renderNavigationShell() {
   });
   document.querySelectorAll("[data-board-count]").forEach(element=>element.textContent=app.board.length);
   $("exportButton").disabled=app.board.length===0 && !(app.composer?.screens.length);
-  $("viewBreadcrumb").textContent={gallery:"Component library",board:"Your design board",page:"Screen composer"}[app.view];
+  $("viewBreadcrumb").textContent={gallery:"Component library",board:"Saved styles",page:"Page builder"}[app.view];
 }
 function renderGlobalControls() {
   $("globalTheme").innerHTML=segmentsMarkup([["dark","Dark","moon"],["light","Light","sun"]],app.global.theme,"global","theme");
@@ -1628,6 +1790,7 @@ let lastHistoryGroup = {key:null,time:0};
 let composerRenderTimer = null;
 let frameResizeObserver = null;
 let composerInitialized = false;
+let activeBuildStage = "structure";
 
 function newScreenId() { return uid().replace("sel-","screen-"); }
 function newSlotId() { return uid().replace("sel-","slot-"); }
@@ -1782,6 +1945,7 @@ function selectScreen(screenId) {
 }
 function chooseScreenDirection(screenId) {
   if(!app.composer.screens.some(screen=>screen.id===screenId))return;
+  activeBuildStage="export";
   changeComposer(()=>{app.composer.chosenId=screenId;});
   notify("Direction chosen for the agent. Other screens stay as alternatives.");
 }
@@ -1807,7 +1971,7 @@ function addScreenFromTemplate(templateId) {
 function selectScreenSlot(slotId) {
   const screen=currentScreen();
   if(!screen?.slots.some(slot=>slot.id===slotId))return;
-  selectedSlotId=slotId;renderInspector();
+  selectedSlotId=slotId;activeBuildStage="content";renderPageStructure();renderInspector();renderBuildFlow();
   for(const frame of document.querySelectorAll("iframe[data-screen-frame]")){
     frame.contentWindow.postMessage({channel:frame.dataset.channel,type:"select",slotId},"*");
   }
@@ -1848,6 +2012,42 @@ function renderComposerToolbar() {
   $("viewportCaption").textContent=app.composer.viewport+"px viewport · scaled to fit";
   $("canvasHint").innerHTML=icon(comparing?"layers":app.composer.mode==="edit"?"cursor":"play")+(comparing?"Compare at the same viewport, then choose one direction for your agent.":app.composer.mode==="edit"?"Click a section to swap its component or change its configuration.":"Try tabs, switches, fields, and buttons. All actions are local demonstrations.");
   updateHistoryButtons();
+}
+function renderBuildFlow() {
+  const screen=currentScreen();
+  const complete={
+    structure:Boolean(screen?.slots.length),
+    content:Boolean(app.goal.trim()&&screen?.content.heading.trim()&&screen?.content.subheading.trim()),
+    style:Boolean(screen?.tokens.theme&&screen?.tokens.accent),
+    preview:app.composer.mode==="interact"||Boolean(app.composer.chosenId),
+    export:Boolean(app.composer.chosenId)
+  };
+  document.querySelectorAll("[data-build-jump]").forEach(button=>{
+    const key=button.dataset.buildJump;
+    button.classList.toggle("active",key===activeBuildStage);
+    button.classList.toggle("complete",complete[key]);
+    button.setAttribute("aria-current",key===activeBuildStage?"step":"false");
+  });
+}
+function renderPageStructure() {
+  const screen=currentScreen();
+  if(!screen)return;
+  $("pageStructure").innerHTML=`
+    <div class="structure-head"><div><h2>Page structure</h2><p>${screen.slots.length} sections · click to edit</p></div><span class="tag">${escapeHtml(SCREEN_TEMPLATES[screen.template].name)}</span></div>
+    <div class="structure-list">${screen.slots.map(item=>`<button type="button" class="structure-item ${item.id===selectedSlotId?"active":""}" data-select-slot="${item.id}" aria-pressed="${item.id===selectedSlotId}"><span class="icon-wrap">${icon(categoryFor(getEntry(item.componentId)).icon)}</span><span>${escapeHtml(item.title)}</span><small>${item.role==="section"?(item.span==="full"?"FULL":"½"):item.role==="action"?"CTA":"NAV"}</small></button>`).join("")}</div>
+    <button type="button" class="btn primary small structure-add" data-add-screen-section ${screen.slots.length>=SECTION_LIMIT?"disabled":""}>${icon("plus")}Add a page section</button>
+    <button type="button" class="btn ghost small structure-add" data-view="gallery">${icon("grid")}Browse all components</button>
+    <p class="structure-tip">Select a section to replace it, change its settings, reorder it, or remove it. Your canvas updates immediately.</p>`;
+}
+function renderBuilderReadiness() {
+  const screen=currentScreen(),chosen=screen?.id===app.composer.chosenId;
+  const missing=[];
+  if(!app.goal.trim())missing.push("add the page goal");
+  if(!chosen)missing.push("choose this direction");
+  $("readinessDot").classList.toggle("ready",chosen&&!missing.length);
+  $("builderReadiness").textContent=chosen&&!missing.length?"Ready to review and export":chosen?"Direction chosen — add the missing context":"Page direction in progress";
+  $("builderReadinessDetail").textContent=missing.length?`Next: ${missing.join(" and ")}.`:`${screen.slots.length} sections · ${app.composer.viewport}px preview · handoff direction confirmed.`;
+  renderBuildFlow();
 }
 function inspectorField(label,value,attribute,limit=100,multiline=false) {
   return `<label class="field"><span>${label}</span>${multiline?`<textarea ${attribute} maxlength="${limit}">${escapeHtml(value)}</textarea>`:`<input ${attribute} maxlength="${limit}" value="${escapeHtml(value)}">`}</label>`;
@@ -1896,9 +2096,7 @@ function renderInspector() {
       </div>
     </div>
     <div class="inspector-detail">
-      <div class="inspector-group"><div class="eyebrow">Sections · click to change</div><div class="screen-outline">${screen.slots.map(item=>`<button type="button" class="outline-row" data-select-slot="${item.id}">${icon(categoryFor(getEntry(item.componentId)).icon)}<span>${escapeHtml(item.title)}</span><small>${item.role==="section"?(item.span==="full"?"FULL":"½"):item.role==="action"?"CTA":"NAV"}</small></button>`).join("")}</div>
-        <button type="button" class="btn ghost small full" data-add-screen-section ${screen.slots.length>=SECTION_LIMIT?"disabled":""} style="margin-top:12px">${icon("plus")}Add a section</button>
-      </div>
+      <div class="inspector-group"><div class="eyebrow">How to build</div><p class="inspector-help">Use Page structure on the left to select or add sections. Click directly inside the page preview to edit a section here.</p></div>
       <div class="inspector-group"><button type="button" class="btn ghost small full" id="deleteScreen" ${app.composer.screens.length<2?"disabled":""}>${icon("trash")}Delete this direction</button><p class="inspector-help">Keep up to four directions. Undo restores screen edits, placements, and deletions during this session.</p></div>
     </div>`;
 }
@@ -1948,12 +2146,16 @@ function renderComposer() {
   ensureComposer();clearTimeout(composerRenderTimer);
   if(selectedSlotId&&!currentScreen().slots.some(slot=>slot.id===selectedSlotId))selectedSlotId=null;
   $("recipeRow").innerHTML=Object.entries(SCREEN_TEMPLATES).map(([key,template])=>`<button type="button" class="recipe-card" data-new-screen="${key}" aria-label="Start a new ${escapeHtml(template.name.toLowerCase())} direction">${recipeArt(key)}<span><strong>${escapeHtml(template.name)}</strong><small>${escapeHtml(template.description)}</small></span>${icon("plus")}</button>`).join("");
+  $("composerProjectName").value=app.projectName;
+  $("composerProjectGoal").value=app.goal;
   renderDirectionTabs();renderComposerToolbar();
   const comparing=app.composer.mode==="compare";
   $("composeWorkspace").classList.toggle("comparing",comparing);
   $("screenInspector").hidden=comparing;
-  if(!comparing)renderInspector();
+  $("pageStructure").hidden=comparing;
+  if(!comparing){renderPageStructure();renderInspector();}
   renderComposerFrames();
+  renderBuilderReadiness();
 }
 
 /** This function is serialized into each isolated, self-contained screen. */
@@ -2144,6 +2346,27 @@ function deleteCurrentScreen() {
 function composerClick(event) {
   const button=event.target.closest("button");
   if(!button||button.disabled)return;
+  if(button.dataset.buildJump){
+    activeBuildStage=button.dataset.buildJump;
+    if(activeBuildStage==="export"){renderBuildFlow();openExport();return;}
+    if(activeBuildStage==="preview"){
+      app.composer.mode="interact";selectedSlotId=null;renderComposer();save();
+      $("composeCanvas").scrollIntoView({behavior:"smooth",block:"start"});return;
+    }
+    if(activeBuildStage==="content"){
+      selectedSlotId=null;renderComposer();document.querySelector('[data-screen-field="content.heading"]')?.focus();return;
+    }
+    if(activeBuildStage==="style"){
+      selectedSlotId=null;renderComposer();$("screenInspector").scrollIntoView({behavior:"smooth",block:"nearest"});return;
+    }
+    selectedSlotId=null;renderComposer();$("pageStructure").scrollIntoView({behavior:"smooth",block:"nearest"});return;
+  }
+  if(button.id==="builderPreview"){
+    activeBuildStage="preview";app.composer.mode="interact";selectedSlotId=null;renderComposer();save();return;
+  }
+  if(button.id==="builderExport"){
+    activeBuildStage="export";renderBuildFlow();openExport();return;
+  }
   if(button.dataset.newScreen){addScreenFromTemplate(button.dataset.newScreen);return;}
   if(button.dataset.screenSelect){selectScreen(button.dataset.screenSelect);return;}
   if(button.dataset.chooseDirection){chooseScreenDirection(button.dataset.chooseDirection);return;}
@@ -2162,7 +2385,7 @@ function composerClick(event) {
   }
   if(button.dataset.selectSlot){selectScreenSlot(button.dataset.selectSlot);return;}
   if(button.hasAttribute("data-inspector-home")){
-    selectedSlotId=null;renderInspector();
+    selectedSlotId=null;activeBuildStage="style";renderPageStructure();renderInspector();renderBuildFlow();
     document.querySelectorAll("iframe[data-screen-frame]").forEach(frame=>frame.contentWindow.postMessage({channel:frame.dataset.channel,type:"select",slotId:null},"*"));return;
   }
   if(button.dataset.swapSlot){openScreenPicker(button.dataset.swapSlot);return;}
@@ -2190,12 +2413,19 @@ function composerClick(event) {
 function composerInput(event) {
   const element=event.target,screen=currentScreen();
   if(!screen)return;
+  if(element.dataset.projectField){
+    app[element.dataset.projectField]=element.value;
+    if(element.dataset.projectField==="projectName")$("projectName").value=element.value;
+    if(element.dataset.projectField==="goal")$("projectGoal").value=element.value;
+    save();renderBuilderReadiness();return;
+  }
   if(element.dataset.screenField){
     const key=element.dataset.screenField;
     changeComposer(()=>{
       if(key==="name")screen.name=element.value;
       else if(key.startsWith("content.")&&Object.hasOwn(screen.content,key.slice(8)))screen.content[key.slice(8)]=element.value;
     },{screenId:screen.id,group:screen.id+"-"+key,render:false});
+    renderBuilderReadiness();
     return;
   }
   if(element.dataset.slotField){

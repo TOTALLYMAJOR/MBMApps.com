@@ -66,6 +66,11 @@ export function QuietPilotPurchaseForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-5 rounded-lg border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+      <div className="border-b border-slate-200 pb-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700">Catering starter workspace</p>
+        <h2 className="mt-2 text-xl font-semibold text-slate-950">Organization details</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Continue to Stripe to review the configured price. You decide whether to pay there.</p>
+      </div>
       <div className="grid gap-5 md:grid-cols-2">
         <label className="space-y-2 text-sm font-medium text-slate-700">
           Organization
@@ -75,7 +80,7 @@ export function QuietPilotPurchaseForm() {
               required
               name="organizationName"
               className="w-full rounded-md border border-slate-300 bg-white py-3 pl-10 pr-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-2 focus:ring-cyan-100"
-              placeholder="Acme Field Services"
+              placeholder="North Shore Catering"
             />
           </span>
         </label>
@@ -85,7 +90,7 @@ export function QuietPilotPurchaseForm() {
           <input
             name="organizationSlug"
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-2 focus:ring-cyan-100"
-            placeholder="acme-field-services"
+            placeholder="north-shore-catering"
           />
         </label>
       </div>
@@ -99,7 +104,7 @@ export function QuietPilotPurchaseForm() {
               required
               name="ownerFullName"
               className="w-full rounded-md border border-slate-300 bg-white py-3 pl-10 pr-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-2 focus:ring-cyan-100"
-              placeholder="Jordan Rivera"
+              placeholder="Maya Thompson"
             />
           </span>
         </label>
@@ -113,7 +118,7 @@ export function QuietPilotPurchaseForm() {
               type="email"
               name="ownerEmail"
               className="w-full rounded-md border border-slate-300 bg-white py-3 pl-10 pr-3 text-sm text-slate-950 outline-none transition focus:border-cyan-600 focus:ring-2 focus:ring-cyan-100"
-              placeholder="jordan@company.com"
+              placeholder="maya@northshorecatering.com"
             />
           </span>
         </label>
@@ -139,7 +144,7 @@ export function QuietPilotPurchaseForm() {
         ) : (
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         )}
-        {state.status === 'loading' ? 'Starting checkout' : 'Continue to payment'}
+        {state.status === 'loading' ? 'Preparing secure checkout' : 'Review price in Stripe'}
       </button>
 
       {state.status === 'error' ? (

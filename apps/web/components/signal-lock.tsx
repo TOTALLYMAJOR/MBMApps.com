@@ -19,6 +19,7 @@ export function SignalLock() {
   const phraseRef = useRef<HTMLInputElement>(null);
   const [sequence, setSequence] = useState<StageId[]>([]);
   const [passphrase, setPassphrase] = useState('');
+  const [showPassphrase, setShowPassphrase] = useState(false);
   const [message, setMessage] = useState('Build the signal path to reveal the entrance control.');
   const [submitting, setSubmitting] = useState(false);
 
@@ -82,10 +83,12 @@ export function SignalLock() {
 
   return (
     <section className={`${styles.signalLock} signal-lock-root`} aria-labelledby="signal-lock-title">
-      <div className={styles.instrument} aria-hidden="true">
-        <span className={styles.orbitOne} />
-        <span className={styles.orbitTwo} />
-        <span className={styles.signalCore} />
+      <div className={styles.atmosphere} aria-hidden="true">
+        <span className={styles.glow} />
+        <span className={`${styles.circuit} ${styles.circuitNorthWest}`}><i /><b /></span>
+        <span className={`${styles.circuit} ${styles.circuitSouthWest}`}><i /><b /></span>
+        <span className={`${styles.circuit} ${styles.circuitNorthEast}`}><i /><b /></span>
+        <span className={`${styles.circuit} ${styles.circuitSouthEast}`}><i /><b /></span>
       </div>
 
       <div className={styles.shell}>
@@ -93,24 +96,21 @@ export function SignalLock() {
           <Link href="/" className={styles.brand} aria-label="MBMApps entrance">
             <strong>MBM</strong><span>Apps</span>
           </Link>
-          <p><i aria-hidden="true" /> Private operating world</p>
+          <p><i aria-hidden="true" /> Protected entrance</p>
         </header>
 
         <div className={styles.layout}>
-          <div className={styles.intro}>
-            <p className={styles.eyebrow}>Signal Lock / access sequence</p>
-            <h1 id="signal-lock-title">Enter through the way we work.</h1>
-            <p className={styles.lede}>Arrange the four stages of a responsible AI workflow. The correct path exposes the final control.</p>
-            <div className={styles.accessNote}>
-              <span>Access model</span>
-              <p>The sequence proves attention. Your invite phrase proves access.</p>
-            </div>
-          </div>
-
           <form className={styles.console} onSubmit={unlock}>
-            <div className={styles.consoleHeader}>
-              <span>01 / construct signal</span>
-              <button type="button" onClick={resetPath} disabled={!sequence.length}>[reset]</button>
+            <div className={styles.identity}>
+              <span className={styles.mark} aria-hidden="true"><i /><i /><i /></span>
+              <p className={styles.eyebrow}>Signal lock / private access</p>
+              <h1 id="signal-lock-title">Enter MBMApps</h1>
+              <p>Connect the operating sequence, then use your owner-issued invite phrase.</p>
+            </div>
+
+            <div className={styles.sequenceHeader}>
+              <span>01 / establish signal path</span>
+              <button type="button" onClick={resetPath} disabled={!sequence.length}>Reset</button>
             </div>
 
             <ol className={styles.path} aria-label="Selected signal path">
@@ -121,16 +121,16 @@ export function SignalLock() {
                     <span>{String(index + 1).padStart(2, '0')}</span>
                     {selected ? (
                       <button type="button" onClick={() => removeStage(index)} aria-label={`Remove ${selected.label} from position ${index + 1}`}>
-                        <strong>{selected.label}</strong><small>{selected.note}</small>
+                        <strong>{selected.label}</strong><small>Remove</small>
                       </button>
-                    ) : <p>Awaiting stage</p>}
+                    ) : <p>Open</p>}
                   </li>
                 );
               })}
             </ol>
 
             <fieldset className={styles.stagePicker}>
-              <legend>Choose the next stage</legend>
+              <legend>Choose next stage</legend>
               <div>
                 {available.map((stage) => (
                   <button key={stage.id} type="button" onClick={() => addStage(stage.id)}>
@@ -142,31 +142,52 @@ export function SignalLock() {
             </fieldset>
 
             <div className={styles.phrase} data-ready={complete ? 'true' : 'false'}>
-              <label htmlFor="signal-passphrase"><span>02 / complete signal</span>Invite phrase</label>
-              <div>
+              <label htmlFor="signal-passphrase"><span>02 / verify access</span>Invite phrase</label>
+              <label className={styles.usernameField} aria-hidden="true">
+                Access realm
+                <input name="username" value="mbmapps-private-access" autoComplete="username" tabIndex={-1} readOnly />
+              </label>
+              <div className={styles.passwordField}>
                 <input
                   ref={phraseRef}
                   id="signal-passphrase"
-                  type="password"
+                  type={showPassphrase ? 'text' : 'password'}
                   autoComplete="current-password"
                   value={passphrase}
                   onChange={(event) => setPassphrase(event.target.value)}
                   disabled={!complete || submitting}
-                  placeholder={complete ? 'Enter the phrase you were given' : 'Complete the path first'}
+                  placeholder={complete ? 'Enter your invite phrase' : 'Complete the path first'}
                 />
-                <button type="submit" disabled={!complete || !passphrase.trim() || submitting}>
-                  {submitting ? 'Validating…' : 'Open entrance'}
+                <button
+                  type="button"
+                  className={styles.reveal}
+                  onClick={() => setShowPassphrase((visible) => !visible)}
+                  disabled={!complete}
+                  aria-pressed={showPassphrase}
+                  aria-label={`${showPassphrase ? 'Hide' : 'Show'} invite phrase`}
+                >
+                  {showPassphrase ? 'Hide' : 'Show'}
                 </button>
               </div>
             </div>
 
-            <p className={styles.status} role="status" aria-live="polite"><span aria-hidden="true">›</span>{message}</p>
+            <button className={styles.submit} type="submit" disabled={!complete || !passphrase.trim() || submitting}>
+              {submitting ? 'Validating…' : 'Continue to private workspace'}
+            </button>
+
+            <p className={styles.status} role="status" aria-live="polite"><span aria-hidden="true">●</span>{message}</p>
+
+            <div className={styles.sessionNote}>
+              <span>Signed session</span>
+              <span>12 hour default</span>
+              <span>Owner controlled</span>
+            </div>
           </form>
         </div>
 
         <footer className={styles.footer}>
           <span>MBMApps / Chicago</span>
-          <span>Signed session · 12 hour default · owner-controlled</span>
+          <Link href="/">Return to public site</Link>
         </footer>
       </div>
     </section>

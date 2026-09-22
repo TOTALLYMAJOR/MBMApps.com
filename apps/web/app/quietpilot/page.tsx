@@ -77,16 +77,17 @@ export default function QuietPilotPage() {
                 The service-operations command center from lead intake to job readiness.
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-indigo-700">
-                QuietPilot gives service operators one calm place to watch leads, quotes, proposals, staffing, inventory, jobs, and payment risk without turning the business into a spreadsheet chase.
+                QuietPilot gives catering operators one calm place to watch leads, quotes, proposals, deposits, staffing, inventory, and job readiness without turning every event into a spreadsheet chase.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link href={quietPilotProduct.purchasePath} className="inline-flex items-center gap-2 rounded-md bg-indigo-950 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-800">
-                  Purchase QuietPilot
+                <Link href={quietPilotProduct.demoPath} className="inline-flex items-center gap-2 rounded-md bg-indigo-950 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-800">
+                  Explore the read-only demo
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
-                <Link href={quietPilotProduct.demoPath} className="inline-flex items-center gap-2 rounded-md border border-indigo-200 bg-white px-4 py-3 text-sm font-semibold text-indigo-950 shadow-sm transition hover:bg-indigo-50">
-                  View Demo
+                <Link href="/contact" className="inline-flex items-center gap-2 rounded-md border border-indigo-200 bg-white px-4 py-3 text-sm font-semibold text-indigo-950 shadow-sm transition hover:bg-indigo-50">
+                  Book a workflow review
                 </Link>
+                <Link href={quietPilotProduct.purchasePath} className="inline-flex items-center px-1 py-3 text-sm font-semibold text-indigo-700 transition hover:text-indigo-950">Review workspace setup</Link>
               </div>
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
                 {[
@@ -161,8 +162,8 @@ export default function QuietPilotPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href={quietPilotProduct.purchasePath} className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-3 text-sm font-semibold text-indigo-950 transition hover:bg-cyan-50">
-              Purchase QuietPilot
+            <Link href={quietPilotProduct.demoPath} className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-3 text-sm font-semibold text-indigo-950 transition hover:bg-cyan-50">
+              Explore the demo
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link href="/contact" className="inline-flex items-center rounded-md border border-white/20 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10">

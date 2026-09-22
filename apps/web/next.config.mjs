@@ -11,6 +11,9 @@ const withMDX = createMDX({
 const nextConfig = {
   outputFileTracingRoot: workspaceRoot,
   pageExtensions: ['ts', 'tsx', 'md', 'mdx'],
+  images: {
+    qualities: [75, 90]
+  },
   experimental: {
     mdxRs: true
   }
