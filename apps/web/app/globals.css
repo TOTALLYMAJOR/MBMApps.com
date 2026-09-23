@@ -1088,9 +1088,32 @@ body::after {
 }
 
 @media (max-width: 760px) {
-  .terminal-home--homepage .terminal-nav__links a,
-  .terminal-home--homepage .terminal-nav__links button {
+  .terminal-home.terminal-home--homepage .terminal-nav .terminal-nav__links a,
+  .terminal-home.terminal-home--homepage .terminal-nav .terminal-nav__links button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
     font-size: 0.66rem;
+  }
+
+  .terminal-home--homepage .terminal-links :is(a, button),
+  .terminal-home--homepage .terminal-github__body .terminal-links a,
+  .terminal-home--homepage .terminal-tools-directory > div > a,
+  .terminal-home--homepage .terminal-contact__actions :is(a, button),
+  .terminal-home--homepage .terminal-disclose {
+    display: inline-flex;
+    align-items: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .northstar-footer a {
+    display: inline-flex;
+    align-items: center;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .terminal-home--homepage .terminal-nav__links a span,
