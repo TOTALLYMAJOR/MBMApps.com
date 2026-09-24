@@ -50,7 +50,7 @@ export default async function ToolsPage() {
               id={tools.find((candidate) => candidate.category === tool.category)?.id === tool.id ? tool.category.toLowerCase() : undefined}
               className={`tool-card${tool.featured ? ' tool-card--featured' : ''}`}
             >
-              <Link href={tool.href} className="tool-card__preview" aria-label={`Open ${tool.name}`}>
+              <Link href={tool.href} prefetch={!tool.href.endsWith('.html')} className="tool-card__preview" aria-label={`Open ${tool.name}`}>
                 <Image src={tool.preview} alt={tool.previewAlt} fill sizes={tool.featured ? '(min-width: 900px) 62vw, 100vw' : '(min-width: 900px) 31vw, 100vw'} priority={index < 2} quality={90} />
                 <span>{tool.category}</span>
               </Link>
@@ -59,7 +59,7 @@ export default async function ToolsPage() {
                 <div className="tool-card__title"><h3>{tool.name}</h3><ArrowUpRight aria-hidden="true" /></div>
                 <p>{tool.description}</p>
                 <div className="tool-card__meta"><span>{tool.meta}</span><span><Check aria-hidden="true" /> {tool.accessDescription}</span></div>
-                <Link className="tool-card__action" href={tool.href}>Open {tool.name} <ArrowUpRight aria-hidden="true" /></Link>
+                <Link className="tool-card__action" href={tool.href} prefetch={!tool.href.endsWith('.html')}>Open {tool.name} <ArrowUpRight aria-hidden="true" /></Link>
               </div>
             </article>
           ))}
