@@ -17,7 +17,7 @@ import {
   syntheticPipeline
 } from '@mbm/contracts';
 import { randomUUID } from 'node:crypto';
-import { Timestamp } from 'firebase-admin/firestore';
+import { Timestamp, type QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import { getFirestoreDb } from './firebase.js';
 
 export class LeadPersistenceUnavailableError extends Error {
@@ -63,7 +63,7 @@ export async function loadMetrics(): Promise<DemoMetric[]> {
     return syntheticMetrics;
   }
 
-  return snapshot.docs.map((doc) => doc.data() as DemoMetric);
+  return snapshot.docs.map((doc: QueryDocumentSnapshot) => doc.data() as DemoMetric);
 }
 
 export async function loadPipeline(): Promise<PipelineSnapshot> {
