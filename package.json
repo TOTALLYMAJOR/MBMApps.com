@@ -9,6 +9,9 @@
   "engines": {
     "node": ">=22"
   },
+  "overrides": {
+    "qs": "6.16.0"
+  },
   "scripts": {
     "postinstall": "npm run build --workspace @mbm/contracts",
     "dev": "npm run dev:docker",
