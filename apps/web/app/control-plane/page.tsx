@@ -5,7 +5,7 @@ import styles from './control-plane.module.css';
 
 export const metadata: Metadata = {
   title: 'Development Control Plane',
-  description: 'Interactive MBMApps demonstration of multi-repository orchestration, Decision Intelligence, Design Intelligence, and proof-led execution.',
+  description: 'Interactive MBMApps simulation of how multi-repository changes can be scoped, routed, and validated without overriding repository-specific authority.',
   alternates: { canonical: '/control-plane' }
 };
 
@@ -13,7 +13,7 @@ export default function ControlPlanePage() {
   return (
     <div className={styles.shell}>
       <div className={styles.contextBar}>
-        <p><Network aria-hidden="true" /> Interactive development systems demo</p>
+        <p><Network aria-hidden="true" /> Interactive development workflow simulation</p>
         <Link href="/apps">Browse MBMApps applications <ArrowRight aria-hidden="true" /></Link>
       </div>
       <iframe

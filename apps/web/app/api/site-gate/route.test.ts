@@ -65,4 +65,22 @@ describe('Signal Lock entrance route', () => {
     expect(response.headers.get('set-cookie')).toContain('HttpOnly');
     expect(response.headers.get('set-cookie')).toContain('SameSite=strict');
   });
+
+  it('opens the simulated entrance without credentials', async () => {
+    const response = await POST(request({ mode: 'simulation', next: '/tools' }, '192.0.2.4'));
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true, next: '/tools' });
+    expect(response.headers.get('set-cookie')).toContain('mbmapps_signal_access=');
+    expect(response.headers.get('set-cookie')).toContain('HttpOnly');
+  });
+
+  it('opens the public portfolio when the configured gate is disabled', async () => {
+    process.env.MBMAPPS_GATE_ENABLED = 'false';
+    const response = await POST(request({ mode: 'simulation', next: '/apps' }, '192.0.2.5'));
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true, next: '/apps' });
+    expect(response.headers.get('set-cookie')).toBeNull();
+  });
 });

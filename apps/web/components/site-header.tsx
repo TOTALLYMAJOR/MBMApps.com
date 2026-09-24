@@ -10,16 +10,16 @@ import { cn } from '@/lib/utils';
 const primaryNavigation = [
   { href: '/apps', label: 'Apps' },
   { href: '/tools', label: 'Tools' },
+  { href: '/case-studies', label: 'Work' },
   { href: '/control-plane', label: 'Control Plane' },
   { href: '/insights', label: 'Articles' },
   { href: '/#approach', label: 'Approach' },
-  { href: '/#studio', label: 'Studio', panel: 'studio' },
-  { href: '/#components', label: 'Components', panel: 'components' },
   { href: '/about', label: 'About' }
 ];
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const quietPilotJourney = pathname.startsWith('/quietpilot') || pathname === '/demo';
   const [light, setLight] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -51,11 +51,6 @@ export function SiteHeader() {
     window.dispatchEvent(new CustomEvent('mbm-theme-change', { detail: { light: next } }));
   }
 
-  function openPanel(panel: string | undefined) {
-    if (!panel || pathname !== '/') return;
-    window.dispatchEvent(new CustomEvent('mbm-open-panel', { detail: { panel } }));
-  }
-
   // The homepage owns its terminal navigation. Rendering the shared header
   // there creates two competing navigation bars; inner routes keep this one.
   if (pathname === '/') return null;
@@ -71,9 +66,11 @@ export function SiteHeader() {
         <nav className="northstar-nav" aria-label="Primary navigation">
           {primaryNavigation.map((item) => {
             const active = item.href === '/apps'
-              ? pathname.startsWith('/apps')
+              ? pathname.startsWith('/apps') || quietPilotJourney
               : item.href === '/tools'
                 ? pathname.startsWith('/tools')
+              : item.href === '/case-studies'
+                ? pathname.startsWith('/case-studies')
               : item.href === '/control-plane'
                 ? pathname.startsWith('/control-plane')
               : item.href === '/insights'
@@ -87,7 +84,6 @@ export function SiteHeader() {
                 href={item.href}
                 className={cn('northstar-nav-link', active && 'active')}
                 aria-current={active ? 'page' : undefined}
-                onClick={() => openPanel(item.panel)}
               >
                 {item.label}
               </Link>
@@ -105,7 +101,9 @@ export function SiteHeader() {
             <span>[t] {light ? 'dark' : 'light'}</span>
           </button>
           <Link className="northstar-header-link" href="/contact">Start a conversation</Link>
-          <Link className="northstar-header-cta" href="/apps">Browse apps</Link>
+          <Link className="northstar-header-cta" href={quietPilotJourney ? '/demo' : '/apps'}>
+            {quietPilotJourney ? 'View demo' : 'Browse apps'}
+          </Link>
         </div>
       </div>
     </header>

@@ -42,7 +42,7 @@ const scenarios = {
     blocked: [],
     active: ['e1','e2','e4','e5','e6','e9','e11','e12'],
     repos: 2,
-    summary: 'A commercial rule changes. The control plane locates the authoritative source, recomputes downstream consequences, routes implementation to dependent repositories, and keeps unrelated design work intact.',
+    summary: 'This scenario traces a commercial rule from its authoritative source through downstream consequences and dependent repositories while unrelated design work remains intact.',
     impacts: [
       ['Decision Intelligence','REVISE','Commercial assumptions and consequence models change.'],
       ['Design Intelligence','RETAIN','No UX change unless the policy creates a new user-visible state.'],
@@ -61,7 +61,7 @@ const scenarios = {
     blocked: [],
     active: ['e1','e3','e4','e8','e9','e10','e11','e13'],
     repos: 2,
-    summary: 'A customer-facing workflow changes. The control plane separates experience intent from business authority so presentation work cannot silently redefine pricing or operational truth.',
+    summary: 'This scenario separates experience intent from business authority so presentation work cannot silently redefine pricing or operational truth.',
     impacts: [
       ['Decision Intelligence','RETAIN','The current business decision remains authoritative.'],
       ['Design Intelligence','REVISE','Hierarchy, flow, interaction states, and accessibility change.'],
@@ -80,7 +80,7 @@ const scenarios = {
     blocked: [],
     active: edgeIds,
     repos: 3,
-    summary: 'A shared contract changes shape or meaning. Before code moves, the control plane expands dependency analysis, finds producers and consumers, and creates coordinated work across repositories.',
+    summary: 'This scenario maps a shared contract change across producers, consumers, and repositories before coordinated implementation begins.',
     impacts: [
       ['Decision Intelligence','RECONSIDER','Determine whether semantics changed or only representation.'],
       ['Design Intelligence','RECONSIDER','Identify UI consumers of the changed contract.'],
@@ -99,7 +99,7 @@ const scenarios = {
     blocked: ['proof'],
     active: ['e1','e2','e4','e5','e9','e11'],
     repos: 1,
-    summary: 'Implementation completes, but validation contradicts the expected outcome. The control plane refuses completion, classifies the failure, and limits rework to the invalid branch.',
+    summary: 'This scenario shows validation blocking completion, classifying the failure, and limiting rework to the invalid branch.',
     impacts: [
       ['Validation','BLOCK','Evidence does not support completion.'],
       ['Agent Orchestration','REPLAN','Classify the failure before retrying.'],
@@ -302,7 +302,7 @@ function ControlGraph({ scenario, run, replay }) {
       </div>
 
       <SequenceRail run={run} failure={scenario.mode === 'Fail closed'} reduced={reduced} />
-      <div className="graphCaption"><span>Objective → control plane → reasoning → repositories → proof.</span><b>~8 sec</b></div>
+      <div className="graphCaption"><span>Objective → simulated control plane → reasoning → repositories → proof.</span><b>~8 sec</b></div>
     </section>
   );
 }
@@ -381,9 +381,9 @@ export default function App() {
         </header>
 
         <motion.section className="hero" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .85, ease: [.22,1,.36,1] }}>
-          <div className="eyebrow">Forward-deployed systems demo</div>
-          <h1>One change.<br />Multiple systems.<br /><span>One governed outcome.</span></h1>
-          <p>A multi-repository development control plane combining Decision Intelligence, Design Intelligence, agent orchestration, evidence, validation, and execution governance.</p>
+          <div className="eyebrow">Interactive workflow simulation</div>
+          <h1>One change.<br />Multiple systems.<br /><span>One evidence-backed path.</span></h1>
+          <p>Explore a model of how Decision Intelligence, Design Intelligence, agent orchestration, evidence, validation, and repository-specific authority can coordinate multi-repository change.</p>
         </motion.section>
 
         <div className="scenarioGrid" role="group" aria-label="Choose a system event">
@@ -423,7 +423,7 @@ export default function App() {
 
         <section className="principle">
           <b>Operating principle</b>
-          <p>Ripple does not mean blast radius. The control plane preserves unaffected work, routes only necessary execution, and requires proof before completion.</p>
+          <p>In this simulation, ripple does not mean blast radius. The model keeps unaffected work visible, routes only the work implied by the scenario, and treats proof as the completion condition.</p>
         </section>
       </div>
     </main>

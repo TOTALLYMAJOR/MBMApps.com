@@ -402,7 +402,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} onKeyDown={handleFormKeyDown} className="northstar-card space-y-6 p-6 md:p-8">
+    <form onSubmit={onSubmit} onKeyDown={handleFormKeyDown} className="northstar-card terminal-intake__form space-y-6 p-6 md:p-8">
       <div className="flex items-center justify-between border-b border-white/10 pb-5">
         <p className="northstar-kicker">Project intake</p>
         <span className="instrument-chip instrument-chip--ember instrument-chip--live">

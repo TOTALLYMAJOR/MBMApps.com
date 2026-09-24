@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
+import { ContentDirectory } from '@/components/editorial-page';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -18,6 +19,7 @@ const principles = [
 export default function AboutPage() {
   return (
     <div className="terminal-home terminal-page">
+      <ContentDirectory current="studio" context="Identity, principles, and operating facts" />
       <section className="terminal-shell terminal-pagehead">
         <p className="terminal-command"><span>~/mbmapps/about</span> $ whoami --long</p>
         <h1>about the studio<span className="terminal-cursor" aria-hidden="true" /></h1>
@@ -45,7 +47,7 @@ export default function AboutPage() {
 
       <section className="terminal-section terminal-shell terminal-contact" aria-label="Start a conversation">
         <div><p className="terminal-command"><span>~/mbmapps/about</span> $ next</p><h2><span>*</span> working on something that needs proof?</h2><p>Tell the studio what needs to work better. You will get a direct reply, not a funnel.</p></div>
-        <div className="terminal-contact__actions"><Link href="/contact">[contact the studio]</Link><Link href="/#components">[explore components]</Link></div>
+        <div className="terminal-contact__actions"><Link href="/contact">[contact the studio]</Link><Link href="/tools">[explore tools]</Link></div>
       </section>
     </div>
   );

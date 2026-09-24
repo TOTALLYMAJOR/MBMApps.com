@@ -4,6 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { ContentReadBeacon } from '@/components/content-read-beacon';
 import { EventBeacon } from '@/components/event-beacon';
+import { ContentDirectory } from '@/components/editorial-page';
 import { getCaseStudies, getCaseStudyBySlug } from '@/lib/content';
 import { siteConfig } from '@/lib/site';
 
@@ -55,7 +56,9 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
   };
 
   return (
-    <article className="terminal-case-study mx-auto w-full max-w-3xl px-6 py-16 lg:px-8">
+    <>
+      <ContentDirectory current="work" context={`${caseStudy.frontmatter.industry} case study`} />
+      <article className="terminal-case-study mx-auto w-full max-w-3xl px-6 py-16 lg:px-8">
       <EventBeacon
         event="case_study_viewed"
         path={`/case-studies/${slug}`}
@@ -104,6 +107,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
         <MDXRemote source={caseStudy.content} />
       </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
-    </article>
+      </article>
+    </>
   );
 }

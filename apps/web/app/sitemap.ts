@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getCaseStudies, getInsights } from '@/lib/content';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
+import { tools } from '@/lib/tools';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const insights = await getInsights();
@@ -11,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '',
     '/apps',
     '/tools',
-    '/tools/prompt-register',
+    ...tools.map((tool) => tool.href),
     '/control-plane',
     ...projectScreens.map((project) => project.path),
     '/services',

@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, CircleDot, FolderGit2 } from 'lucide-react';
 import { getProjectBySlug, projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
+import { ContentDirectory } from '@/components/editorial-page';
 
 type ProductPageProps = { params: Promise<{ slug: string }> };
 
@@ -15,15 +16,16 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const product = getProjectBySlug((await params).slug);
   if (!product) return { title: 'Application' };
+  const canonicalPath = product.id === 'quietpilot' ? '/quietpilot' : product.path;
 
   return {
     title: product.name,
     description: product.description,
-    alternates: { canonical: product.websiteUrl },
+    alternates: { canonical: canonicalPath },
     openGraph: {
       title: `${product.name} — An MBMApps product`,
       description: product.description,
-      url: product.websiteUrl,
+      url: `${siteConfig.url}${canonicalPath}`,
       type: 'website',
       images: [{ url: product.screenshot.src, alt: product.screenshot.alt }]
     }
@@ -33,6 +35,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 export default async function ProductPage({ params }: ProductPageProps) {
   const product = getProjectBySlug((await params).slug);
   if (!product) notFound();
+  const primaryDestination = product.id === 'quietpilot' ? '/quietpilot' : product.websiteUrl;
+  const primaryDestinationLabel = product.id === 'quietpilot' ? 'View the QuietPilot product tour' : product.websiteLabel;
 
   const scenario = [
     ['Trigger', product.scenario.trigger],
@@ -55,6 +59,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className={`portfolio-home portfolio-product-page portfolio-accent--${product.accentToken}`}>
+      <ContentDirectory current="apps" context={`${product.name} product brief`} />
       <header className="portfolio-product-page__hero">
         <div className="portfolio-grid" aria-hidden="true" />
         <div className="northstar-container portfolio-product-page__hero-layout">
@@ -68,9 +73,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <p>{product.description}</p>
             <p className="portfolio-catalog-card__access"><CircleDot aria-hidden="true" /> {product.status} · {product.accessDescription}</p>
             <div className="portfolio-actions">
-              <a href={product.websiteUrl} className="portfolio-button portfolio-button--product" data-product={product.analyticsId}>
-                {product.websiteLabel} <ArrowUpRight aria-hidden="true" />
+              <a href={primaryDestination} className="portfolio-button portfolio-button--product" data-product={product.analyticsId}>
+                {primaryDestinationLabel} <ArrowUpRight aria-hidden="true" />
               </a>
+              {product.id === 'quietpilot' ? <a href={product.websiteUrl} className="portfolio-text-link">Open product site <ArrowUpRight aria-hidden="true" /></a> : null}
               {product.secondaryAction ? <Link href={product.secondaryAction.href} className="portfolio-text-link">{product.secondaryAction.label} <ArrowRight aria-hidden="true" /></Link> : null}
             </div>
           </div>
@@ -134,7 +140,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <p className="portfolio-eyebrow">Dedicated product destination</p>
           <h2>Continue with {product.name}.</h2>
           <div className="portfolio-actions portfolio-actions--centered">
-            <a href={product.websiteUrl} className="portfolio-button portfolio-button--product" data-product={product.analyticsId}>{product.websiteLabel} <ArrowUpRight aria-hidden="true" /></a>
+            <a href={primaryDestination} className="portfolio-button portfolio-button--product" data-product={product.analyticsId}>{primaryDestinationLabel} <ArrowUpRight aria-hidden="true" /></a>
             <Link href="/apps" className="portfolio-text-link">Compare all applications <ArrowRight aria-hidden="true" /></Link>
           </div>
         </div>

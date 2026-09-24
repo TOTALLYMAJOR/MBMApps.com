@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ArrowUpRight } from 'lucide-react';
 import { NorthstarPageHero } from '@/components/northstar-page-hero';
+import { ContentDirectory } from '@/components/editorial-page';
 import { getCaseStudies } from '@/lib/content';
 
 export const metadata: Metadata = {
@@ -14,6 +15,7 @@ export default async function CaseStudiesPage() {
 
   return (
     <div className="pb-20">
+      <ContentDirectory current="work" context={`${caseStudies.length} evidence-backed records`} />
       <NorthstarPageHero
         eyebrow="Selected work"
         title="Proof under real operating constraints."

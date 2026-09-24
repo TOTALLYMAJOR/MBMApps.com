@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
-import { CheckCircle2, CreditCard, LockKeyhole, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, ClipboardCheck, CreditCard, LockKeyhole } from 'lucide-react';
 import { QuietPilotPurchaseForm } from './purchase-form';
 import { quietPilotProduct, siteConfig } from '@/lib/site';
 
@@ -29,9 +29,9 @@ function firstParam(value: string | string[] | undefined) {
 }
 
 const purchaseFlowSteps: Array<{ label: string; icon: LucideIcon }> = [
-  { label: 'Stripe Checkout', icon: CreditCard },
-  { label: 'Secret webhook', icon: ShieldCheck },
-  { label: 'Org activation', icon: LockKeyhole }
+  { label: 'Review workspace setup', icon: ClipboardCheck },
+  { label: 'Confirm price in Stripe', icon: CreditCard },
+  { label: 'Activate after verified payment', icon: LockKeyhole }
 ];
 
 export default async function QuietPilotPurchasePage({ searchParams }: PageProps) {
@@ -45,10 +45,10 @@ export default async function QuietPilotPurchasePage({ searchParams }: PageProps
           <div>
             <p className="text-xs font-semibold uppercase text-cyan-700">QuietPilot by MBMApps</p>
             <h1 className="mt-4 max-w-3xl font-display text-3xl font-semibold leading-tight text-slate-950 md:text-5xl">
-              Purchase QuietPilot and issue a new operator organization.
+              Review your QuietPilot workspace setup.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600">
-              Payment is handled by Stripe. Once Stripe confirms the checkout is paid, MBMApps sends the activation request to QuietPilot.
+              Add the organization owner and workspace details, then review the exact configured price in Stripe before choosing to pay. Activation starts only after Stripe reports the Checkout Session as paid.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
@@ -63,7 +63,7 @@ export default async function QuietPilotPurchasePage({ searchParams }: PageProps
                 rel="noreferrer"
                 className="inline-flex items-center rounded-md border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-cyan-500 hover:text-cyan-800"
               >
-                Open existing org
+                Sign in to an existing org
               </Link>
             </div>
           </div>
@@ -100,12 +100,13 @@ export default async function QuietPilotPurchasePage({ searchParams }: PageProps
           ) : null}
 
           <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-950">Activation handoff</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700">Before payment</p>
+            <h2 className="mt-2 text-lg font-semibold text-slate-950">Know what this form does</h2>
             <div className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
               {[
-                'Buyer details become Stripe Checkout metadata.',
-                'The Stripe webhook verifies the paid Checkout Session.',
-                'QuietPilot receives the tenant activation request with verified payment evidence.'
+                'This form prepares a one-time Stripe Checkout session. It does not charge you.',
+                'Stripe shows the configured product and exact price before payment.',
+                'A new organization is requested only after verified payment evidence.'
               ].map((item) => (
                 <p key={item} className="flex gap-3">
                   <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-cyan-700" aria-hidden="true" />
@@ -113,6 +114,10 @@ export default async function QuietPilotPurchasePage({ searchParams }: PageProps
                 </p>
               ))}
             </div>
+            <p className="mt-5 border-t border-slate-200 pt-4 text-sm leading-6 text-slate-600">
+              Need migration, integrations, multiple locations, or commercial terms reviewed first?{' '}
+              <Link href="/contact" className="font-semibold text-cyan-700">Book a workflow review.</Link>
+            </p>
           </div>
         </aside>
 

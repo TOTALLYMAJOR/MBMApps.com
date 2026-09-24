@@ -83,7 +83,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${bricolageGrotesk.variable} ${ibmPlexMono.variable} ${instrumentSerif.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${spaceGrotesk.variable} ${inter.variable} ${bricolageGrotesk.variable} ${ibmPlexMono.variable} ${instrumentSerif.variable}`}
+    >
       <body className="text-ink antialiased">
         <a href="#main-content" className="skip-link">Skip to content</a>
         <FireflyField />

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/contact-form';
 import { siteConfig } from '@/lib/site';
+import { ContentDirectory } from '@/components/editorial-page';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -13,6 +14,7 @@ export default function ContactPage() {
 
   return (
     <div className="terminal-home terminal-page">
+      <ContentDirectory current="contact" context="Direct, structured studio intake" />
       <section className="terminal-shell terminal-pagehead">
         <p className="terminal-command"><span>~/mbmapps/contact</span> $ start</p>
         <h1>start a conversation<span className="terminal-cursor" aria-hidden="true" /></h1>

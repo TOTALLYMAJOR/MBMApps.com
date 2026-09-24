@@ -5,6 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { TerminalArticleShell } from '@/components/terminal-article-shell';
 import { LinkedInPostEmbed } from '@/components/linkedin-post-embed';
 import { getInsights } from '@/lib/content';
+import { ContentDirectory } from '@/components/editorial-page';
 
 export const metadata: Metadata = {
   title: 'Articles',
@@ -17,6 +18,7 @@ export default async function InsightsPage() {
 
   return (
     <TerminalArticleShell>
+      <ContentDirectory current="articles" context={`${insights.length} field notes from implementation`} />
       <header className="terminal-shell terminal-article-index__hero">
         <div>
           <p className="terminal-command"><span>~/mbmapps</span> $ ls --articles</p>

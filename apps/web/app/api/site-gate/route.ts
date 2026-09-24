@@ -21,6 +21,13 @@ const entranceSchema = z.object({
   next: z.string().max(2048).optional()
 });
 
+const simulationSchema = z.object({
+  mode: z.literal('simulation'),
+  next: z.string().max(2048).optional()
+});
+
+const requestSchema = z.union([simulationSchema, entranceSchema]);
+
 function clientKey(request: Request) {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     || request.headers.get('x-real-ip')?.trim()
@@ -43,10 +50,6 @@ function refused(message: string, status: number, field?: 'sequence' | 'passphra
 
 export async function POST(request: Request) {
   const configuration = getGateConfiguration();
-  if (!configuration.enabled) {
-    return refused('The entrance is not configured.', 503);
-  }
-
   const key = clientKey(request);
   const state = attemptState(key);
   if (state.count >= MAX_ATTEMPTS) {
@@ -65,20 +68,29 @@ export async function POST(request: Request) {
     return refused('The entrance request could not be read.', 400);
   }
 
-  const parsed = entranceSchema.safeParse(body);
+  const parsed = requestSchema.safeParse(body);
   if (!parsed.success) {
     state.count += 1;
-    return refused('Complete the signal path and enter the invite phrase.', 400);
+    return refused('The entrance request is incomplete.', 400);
   }
 
-  if (!isCorrectSignalPath(parsed.data.sequence)) {
-    state.count += 1;
-    return refused('The signal path is out of sequence.', 400, 'sequence');
+  if (!configuration.enabled) {
+    if ('mode' in parsed.data) {
+      return NextResponse.json({ ok: true, next: safeReturnPath(parsed.data.next) });
+    }
+    return refused('The entrance is not configured.', 503);
   }
 
-  if (!passphraseMatches(parsed.data.passphrase, configuration.passphrase)) {
-    state.count += 1;
-    return refused('That invite phrase does not complete the signal.', 401, 'passphrase');
+  if (!('mode' in parsed.data)) {
+    if (!isCorrectSignalPath(parsed.data.sequence)) {
+      state.count += 1;
+      return refused('The signal path is out of sequence.', 400, 'sequence');
+    }
+
+    if (!passphraseMatches(parsed.data.passphrase, configuration.passphrase)) {
+      state.count += 1;
+      return refused('That invite phrase does not complete the signal.', 401, 'passphrase');
+    }
   }
 
   attempts.delete(key);

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowUpRight, Check } from 'lucide-react';
 import { NorthstarPageHero } from '@/components/northstar-page-hero';
 import { ServicesSwitchboard } from '@/components/services-switchboard';
+import { ContentDirectory } from '@/components/editorial-page';
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -54,6 +55,7 @@ export default function ServicesPage() {
   return (
     <>
       <div className="pb-20">
+        <ContentDirectory current="approach" context="Choose by operating constraint" />
         <NorthstarPageHero
           eyebrow="Engineering services"
           title="Engineering outcomes, not feature factories."
