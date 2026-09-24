@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=22"
   },
   "scripts": {
     "postinstall": "npm run build --workspace @mbm/contracts",
