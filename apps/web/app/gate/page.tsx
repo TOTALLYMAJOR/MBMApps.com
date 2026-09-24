@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 import { SignalLock } from '@/components/signal-lock';
 
 export const metadata: Metadata = {
-  title: 'Private sign in',
-  description: 'Owner-controlled entrance to the private MBMApps operating world.',
+  title: 'Entrance simulation',
+  description: 'A simulated entrance to the MBMApps portfolio. No account or credentials required.',
   robots: { index: false, follow: false }
 };
 
