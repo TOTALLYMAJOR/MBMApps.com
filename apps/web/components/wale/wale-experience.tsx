@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, Pause, Play } from 'lucide-react';
 import { AbyssArrival } from './abyss-arrival';
-import { abyssContract, entryTarget, viewportPresenceMode } from './abyss-model';
+import { abyssContract, entryTarget, viewportFocusTarget, viewportPresenceMode } from './abyss-model';
 import type { LandingViewport } from './abyss-model';
 import { ComparisonScene } from './comparison-scene';
 import { DecisionScene } from './decision-scene';
@@ -24,17 +24,20 @@ const sceneLabels: Record<ExperienceScene, string> = {
 export function WaleExperience() {
   const reduceMotion = useHydrationStableReducedMotion();
   const [viewport, setViewport] = useState<LandingViewport>('abyss');
-  const viewportRef = useRef<HTMLDivElement>(null);
+  const arrivalViewportRef = useRef<HTMLDivElement>(null);
+  const precisionViewportRef = useRef<HTMLDivElement>(null);
   const handoffTimerRef = useRef<number | null>(null);
+  const focusTarget = viewportFocusTarget(viewport);
 
   const focusViewport = useCallback(() => {
-    if (document.activeElement && viewportRef.current?.contains(document.activeElement)) return;
-    const heading = viewportRef.current?.querySelector<HTMLElement>('h1');
+    const activeViewportRef = focusTarget === 'precision' ? precisionViewportRef : arrivalViewportRef;
+    if (document.activeElement && activeViewportRef.current?.contains(document.activeElement)) return;
+    const heading = activeViewportRef.current?.querySelector<HTMLElement>('h1');
     if (heading) {
       heading.tabIndex = -1;
       heading.focus({ preventScroll: true });
     }
-  }, []);
+  }, [focusTarget]);
 
   useEffect(() => {
     const timer = window.setTimeout(focusViewport, reduceMotion ? 280 : 420);
@@ -73,7 +76,7 @@ export function WaleExperience() {
     <AnimatePresence mode={viewportPresenceMode} initial={false}>
       <motion.div
         key={viewportKey}
-        ref={viewportRef}
+        ref={focusTarget === 'precision' ? precisionViewportRef : arrivalViewportRef}
         className={styles.experienceViewport}
         initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}

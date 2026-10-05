@@ -6,6 +6,7 @@ import {
   abyssLogRows,
   entryTarget,
   sablefinIdentity,
+  viewportFocusTarget,
   viewportPresenceMode
 } from '../components/wale/abyss-model';
 import {
@@ -106,6 +107,12 @@ describe('Wale abyss arrival model', () => {
 
   it('mounts the incoming viewport before the outgoing viewport finishes exiting', () => {
     expect(viewportPresenceMode).toBe('sync');
+  });
+
+  it('keeps arrival and precision focus targets isolated across overlapping exits', () => {
+    expect(viewportFocusTarget('precision')).toBe('precision');
+    expect(viewportFocusTarget('abyss')).toBe('arrival');
+    expect(viewportFocusTarget('handoff')).toBe('arrival');
   });
 
   it('preserves a single named SABLEFIN specimen', () => {

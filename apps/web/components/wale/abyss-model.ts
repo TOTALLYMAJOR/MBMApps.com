@@ -18,8 +18,13 @@ export interface AbyssLogRow {
 }
 
 export type LandingViewport = 'abyss' | 'handoff' | 'precision';
+export type ViewportFocusTarget = 'arrival' | 'precision';
 
 export const viewportPresenceMode = 'sync' as const;
+
+export function viewportFocusTarget(viewport: LandingViewport): ViewportFocusTarget {
+  return viewport === 'precision' ? 'precision' : 'arrival';
+}
 
 export const abyssContract = {
   documentScroll: false,
