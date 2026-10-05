@@ -1,0 +1,483 @@
+.intro {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.srOnly,
+.motionStatus {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.protocolLabel {
+  position: absolute;
+  z-index: 11;
+  top: 105px;
+  right: max(24px, calc((100vw - 1500px) / 2));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #526d69;
+  font: 500 8px/1 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.13em;
+}
+.protocolLabel i {
+  width: 28px;
+  height: 1px;
+  background: rgba(91, 204, 191, 0.35);
+}
+.introCopy {
+  position: absolute;
+  z-index: 10;
+  top: clamp(118px, 14.5vh, 156px);
+  left: max(24px, calc((100vw - 1500px) / 2));
+  width: min(43vw, 650px);
+}
+.eyebrow {
+  margin: 0 0 18px;
+  color: var(--wale-teal);
+  font: 600 10px/1.2 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.introCopy h1 {
+  margin: 0;
+  color: #f3fffc;
+  font: 700 clamp(82px, 9.4vw, 156px)/0.78 var(--font-bricolage-grotesk), sans-serif;
+  letter-spacing: -0.05em;
+  text-shadow: 0 0 52px rgba(59, 216, 198, 0.14);
+}
+.systemLine {
+  max-width: 15ch;
+  margin: clamp(24px, 3.6vh, 42px) 0 0;
+  color: #c5d2d0;
+  font: 400 clamp(25px, 2.5vw, 41px)/1.04 var(--font-instrument-serif), serif;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.systemLineVisual {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.28em;
+}
+.systemWord {
+  position: relative;
+  display: inline-block;
+  color: #d7e5e2;
+  text-shadow: 0 0 14px rgba(183, 221, 215, 0.18), 0 0 40px rgba(59, 216, 198, 0.1);
+  will-change: filter, opacity, transform;
+}
+.systemWord::after {
+  position: absolute;
+  inset: -0.08em -0.12em;
+  z-index: -1;
+  color: rgba(154, 195, 190, 0.2);
+  content: attr(data-word);
+  filter: blur(12px);
+  transform: translate3d(0.08em, -0.03em, 0);
+}
+.introLede {
+  max-width: 57ch;
+  margin: 18px 0 0;
+  color: #8ea29f;
+  font-size: clamp(13px, 0.95vw, 16px);
+  line-height: 1.62;
+}
+.introCoordinates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 22px;
+  color: #536f6b;
+  font: 500 8px/1 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.09em;
+}
+.introCoordinates span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.introCoordinates svg {
+  width: 11px;
+  height: 11px;
+  color: var(--wale-teal);
+}
+.telemetry {
+  position: absolute;
+  z-index: 12;
+  right: max(24px, calc((100vw - 1500px) / 2));
+  bottom: clamp(46px, 6.5vh, 70px);
+  width: min(39vw, 590px);
+  border: 1px solid rgba(112, 236, 220, 0.22);
+  background: rgba(2, 10, 11, 0.86);
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.44),
+    inset 0 0 54px rgba(29, 169, 158, 0.035);
+  backdrop-filter: blur(12px);
+}
+.telemetryChrome,
+.telemetryFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #647a77;
+  font: 500 8px/1 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.telemetryChrome {
+  min-height: 35px;
+  border-bottom: 1px solid rgba(112, 236, 220, 0.14);
+  padding-inline: 13px;
+}
+.telemetryChrome > span:nth-child(2) {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #95aaa7;
+}
+.telemetryPause {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  padding: 0 4px;
+  background: transparent;
+  color: #7f9490;
+  cursor: pointer;
+  font: 500 8px/1 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.telemetryPause:hover {
+  color: #d9e9e6;
+}
+.telemetryPause svg {
+  width: 10px;
+  height: 10px;
+}
+.telemetryChrome svg {
+  width: 11px;
+  height: 11px;
+  color: var(--wale-teal);
+}
+.windowSignals {
+  display: flex;
+  gap: 5px;
+}
+.windowSignals i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #2f5451;
+}
+.telemetryBoundary {
+  display: grid;
+  min-height: 36px;
+  grid-template-columns: 14px minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(112, 236, 220, 0.12);
+  padding: 0 13px;
+  color: #d2bb86;
+  font: 500 8px/1.3 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.telemetryBoundary svg {
+  width: 12px;
+  height: 12px;
+}
+.telemetryBoundary svg:last-child {
+  color: #667a76;
+}
+.telemetryWindow {
+  position: relative;
+  height: 178px;
+  overflow: hidden;
+  mask-image: linear-gradient(transparent, #000 11%, #000 88%, transparent);
+}
+.telemetryTrack {
+  display: grid;
+  margin: 0;
+  padding: 48px 15px 30px;
+  list-style: none;
+  will-change: transform;
+}
+.telemetryTrack li {
+  display: grid;
+  min-height: 31px;
+  grid-template-columns: 70px 52px minmax(0, 1fr);
+  align-items: center;
+  border-top: 1px solid rgba(112, 236, 220, 0.06);
+  color: #718481;
+  font: 500 8.5px/1.2 var(--font-ibm-plex-mono), monospace;
+}
+.telemetryTrack time {
+  color: #415c59;
+}
+.telemetryTrack b {
+  color: #5baaa1;
+  font-size: 8px;
+  letter-spacing: 0.07em;
+}
+.telemetryTrack li[data-tone='quiet'] {
+  color: #536764;
+}
+.telemetryTrack li[data-tone='warning'] {
+  color: #bcae86;
+}
+.telemetryTrack li[data-tone='warning'] b {
+  color: #d2bb86;
+}
+.telemetryTrack li[data-tone='bright'] {
+  color: #d8e9e6;
+}
+.telemetryTrack li[data-tone='bright'] b {
+  color: var(--wale-teal-bright);
+}
+.scanLine {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--wale-teal), transparent);
+  opacity: 0.42;
+  animation: telemetry-scan 3.8s linear infinite;
+}
+@keyframes telemetry-scan {
+  0% { transform: translateY(-170px); opacity: 0; }
+  12% { opacity: 0.4; }
+  88% { opacity: 0.4; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+.telemetryFooter {
+  min-height: 33px;
+  border-top: 1px solid rgba(112, 236, 220, 0.13);
+  padding-inline: 13px;
+}
+.telemetryFooter > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #93aaa6;
+}
+.telemetryFooter svg {
+  width: 11px;
+  height: 11px;
+  color: var(--wale-teal);
+}
+.localLaunch {
+  position: absolute;
+  z-index: 14;
+  bottom: 36px;
+  left: max(24px, calc((100vw - 1500px) / 2));
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #5f7471;
+  font: 500 8px/1 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.localLaunch a {
+  display: inline-flex;
+  min-height: 39px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(145, 255, 234, 0.34);
+  padding: 0 13px;
+  color: #bed0cd;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+.localLaunch a:hover {
+  border-color: var(--wale-teal);
+  background: rgba(59, 216, 198, 0.08);
+  color: #fff;
+}
+.localLaunch span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.localLaunch svg {
+  width: 13px;
+  height: 13px;
+}
+.entryCue {
+  position: absolute;
+  z-index: 16;
+  bottom: 16px;
+  left: 50%;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  border: 0;
+  padding: 5px 14px;
+  background: transparent;
+  color: #bfd0cd;
+  cursor: pointer;
+  font: 600 9px/1 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.2em;
+  transform: translateX(-50%);
+}
+.entryCue svg {
+  width: 25px;
+  height: 25px;
+  color: #56c9ff;
+  animation: entry-pulse 1.65s ease-in-out infinite;
+}
+@keyframes entry-pulse {
+  0%, 100% { opacity: 0.3; transform: translateY(-2px); }
+  50% { opacity: 1; transform: translateY(4px); }
+}
+@media (max-width: 1120px) {
+  .introCopy {
+    width: 48vw;
+  }
+  .telemetry {
+    width: min(43vw, 520px);
+  }
+}
+@media (max-width: 760px) {
+  .protocolLabel {
+    display: none;
+  }
+  .introCopy {
+    top: 90px;
+    left: 18px;
+    width: calc(100% - 36px);
+  }
+  .eyebrow {
+    margin-bottom: 13px;
+    font-size: 8px;
+  }
+  .introCopy h1 {
+    font-size: clamp(68px, 24vw, 98px);
+  }
+  .systemLine {
+    max-width: 13ch;
+    margin-top: 17px;
+    font-size: clamp(24px, 7.6vw, 33px);
+  }
+  .introLede {
+    max-width: 42ch;
+    margin-top: 12px;
+    font-size: 10.5px;
+    line-height: 1.48;
+  }
+  .introCoordinates {
+    display: none;
+  }
+  .telemetry {
+    right: 16px;
+    bottom: 58px;
+    left: 16px;
+    width: auto;
+  }
+  .telemetryChrome {
+    min-height: 28px;
+  }
+  .telemetryBoundary {
+    min-height: 28px;
+    font-size: 9px;
+  }
+  .telemetryWindow {
+    height: 105px;
+  }
+  .telemetryTrack {
+    padding-top: 25px;
+  }
+  .telemetryTrack li {
+    min-height: 27px;
+    grid-template-columns: 56px 42px minmax(0, 1fr);
+    font-size: 9px;
+  }
+  .telemetryTrack b {
+    font-size: 8px;
+  }
+  .telemetryFooter {
+    min-height: 27px;
+    font-size: 8px;
+  }
+  .localLaunch {
+    display: none;
+  }
+  .entryCue {
+    bottom: 4px;
+  }
+}
+@media (max-height: 760px) and (min-width: 761px) {
+  .introCopy {
+    top: 102px;
+  }
+  .introCopy h1 {
+    font-size: clamp(74px, 8vw, 124px);
+  }
+  .systemLine {
+    margin-top: 17px;
+    font-size: clamp(23px, 2.3vw, 35px);
+  }
+  .introLede {
+    margin-top: 12px;
+    line-height: 1.45;
+  }
+  .introCoordinates {
+    margin-top: 15px;
+  }
+  .telemetry {
+    bottom: 40px;
+  }
+  .telemetryWindow {
+    height: 138px;
+  }
+}
+@media (max-height: 700px) and (max-width: 760px) {
+  .introCopy {
+    top: 77px;
+  }
+  .eyebrow {
+    display: none;
+  }
+  .introCopy h1 {
+    font-size: 67px;
+  }
+  .systemLine {
+    margin-top: 12px;
+    font-size: 23px;
+  }
+  .introLede {
+    display: none;
+  }
+  .telemetry {
+    bottom: 47px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .systemWord {
+    will-change: auto;
+  }
+  .telemetryWindow {
+    mask-image: none;
+  }
+  .telemetryTrack {
+    transform: translateY(-650px);
+    will-change: auto;
+  }
+  .scanLine {
+    display: none;
+  }
+  .entryCue svg {
+    opacity: 1;
+    transform: none;
+  }
+}
