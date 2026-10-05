@@ -43,7 +43,7 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: 'MBMApps | Engineering Growth Platforms',
+    default: 'Wale | Interactive Development Intelligence',
     template: '%s | MBMApps'
   },
   description: siteConfig.description,
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
       url: '/api/og',
       width: 1200,
       height: 630,
-      alt: 'MBMApps purpose-built software and operating systems',
+      alt: 'Wale interactive development intelligence by MBMApps',
       type: 'image/png'
     }]
   },
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     images: [{
       url: '/api/og',
-      alt: 'MBMApps purpose-built software and operating systems'
+      alt: 'Wale interactive development intelligence by MBMApps'
     }]
   }
 };
