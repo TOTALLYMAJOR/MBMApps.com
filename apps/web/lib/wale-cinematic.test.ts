@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { abyssBubbles, abyssContract, abyssCopy, abyssLogRows, entryTarget, sablefinIdentity } from '../components/wale/abyss-model';
+import {
+  abyssBubbles,
+  abyssContract,
+  abyssCopy,
+  abyssLogRows,
+  entryTarget,
+  sablefinIdentity,
+  viewportPresenceMode
+} from '../components/wale/abyss-model';
 import {
   budgetFromSlider,
   budgetProjection,
@@ -94,6 +102,10 @@ describe('Wale abyss arrival model', () => {
     expect(entryTarget('abyss', true)).toBe('precision');
     expect(entryTarget('handoff', false)).toBe('handoff');
     expect(entryTarget('precision', false)).toBe('precision');
+  });
+
+  it('mounts the incoming viewport before the outgoing viewport finishes exiting', () => {
+    expect(viewportPresenceMode).toBe('sync');
   });
 
   it('preserves a single named SABLEFIN specimen', () => {

@@ -19,6 +19,8 @@ export interface AbyssLogRow {
 
 export type LandingViewport = 'abyss' | 'handoff' | 'precision';
 
+export const viewportPresenceMode = 'sync' as const;
+
 export const abyssContract = {
   documentScroll: false,
   viewports: ['abyss', 'precision'],

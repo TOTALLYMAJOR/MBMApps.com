@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, Pause, Play } from 'lucide-react';
 import { AbyssArrival } from './abyss-arrival';
-import { abyssContract, entryTarget } from './abyss-model';
+import { abyssContract, entryTarget, viewportPresenceMode } from './abyss-model';
 import type { LandingViewport } from './abyss-model';
 import { ComparisonScene } from './comparison-scene';
 import { DecisionScene } from './decision-scene';
@@ -70,7 +70,7 @@ export function WaleExperience() {
   const viewportKey = viewport === 'precision' ? 'precision' : 'abyss';
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <AnimatePresence mode={viewportPresenceMode} initial={false}>
       <motion.div
         key={viewportKey}
         ref={viewportRef}
