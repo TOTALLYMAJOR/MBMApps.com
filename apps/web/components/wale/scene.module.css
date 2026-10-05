@@ -1,0 +1,181 @@
+.scene {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  right: -5vw;
+  width: min(74vw, 1140px);
+  transform: translateY(-50%);
+  filter: drop-shadow(0 30px 84px rgba(0, 139, 143, 0.18));
+  pointer-events: none;
+}
+.scene svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.fieldGrid {
+  fill: none;
+  stroke: rgba(62, 176, 181, 0.09);
+  stroke-width: 1;
+}
+.fieldGrid circle {
+  stroke-dasharray: 3 12;
+  opacity: 0.45;
+}
+.gridAccent {
+  stroke: rgba(91, 223, 209, 0.16);
+}
+.constraintWall > path:first-child {
+  opacity: 0.74;
+}
+.wallEdge {
+  fill: none;
+  stroke: rgba(98, 232, 215, 0.32);
+  stroke-width: 2;
+}
+.wallBands {
+  fill: none;
+  stroke: rgba(210, 154, 101, 0.18);
+  stroke-width: 5;
+}
+.apertureOuter {
+  fill: none;
+  stroke: #543826;
+  stroke-width: 40;
+  filter: url('#aperture-glow');
+}
+.apertureInner {
+  fill: none;
+  stroke: rgba(105, 241, 224, 0.48);
+  stroke-width: 3;
+  filter: drop-shadow(0 0 8px rgba(59, 216, 198, 0.72));
+}
+.apertureBolts {
+  fill: #201a16;
+  stroke: rgba(105, 241, 224, 0.42);
+  stroke-width: 1.5;
+}
+.cracks {
+  fill: none;
+  stroke: rgba(93, 226, 211, 0.54);
+  stroke-linecap: square;
+  stroke-width: 3;
+}
+.signalAnomaly {
+  filter: drop-shadow(0 0 11px rgba(83, 197, 255, 0.82));
+}
+.signalBody {
+  fill: #a8dcff;
+}
+.signalFin {
+  fill: #6fb6e3;
+}
+.signalAnomaly circle:not(.signalPing) {
+  fill: #061113;
+}
+.signalPing {
+  fill: none;
+  stroke: #8de6ff;
+  stroke-width: 2;
+  transform-origin: 1009px 292px;
+}
+.interceptorTail,
+.interceptorDorsal {
+  fill: #087c82;
+}
+.interceptorDorsal {
+  stroke: rgba(145, 255, 234, 0.24);
+  stroke-width: 1;
+}
+.interceptorBrow,
+.interceptorJaw {
+  fill: #053f49;
+}
+.interceptorEyeSocket {
+  fill: #031014;
+}
+.interceptorEye {
+  fill: url('#sonar-eye');
+  filter: drop-shadow(0 0 8px #68ffe8);
+}
+.interceptorGills {
+  fill: none;
+  stroke: rgba(3, 55, 62, 0.62);
+  stroke-width: 6;
+}
+.seamA,
+.seamB,
+.seamC {
+  fill: none;
+  stroke: rgba(108, 255, 232, 0.38);
+  stroke-linecap: square;
+  stroke-width: 2.4;
+  filter: drop-shadow(0 0 4px rgba(82, 235, 214, 0.48));
+}
+.seamB {
+  opacity: 0.62;
+}
+.seamC {
+  opacity: 0.78;
+}
+.sonarArc {
+  fill: none;
+  stroke: #7ffae7;
+  stroke-linecap: square;
+  stroke-width: 2;
+}
+.velocityField {
+  fill: none;
+  stroke: #68ddff;
+  stroke-linecap: square;
+  stroke-width: 2.4;
+  filter: drop-shadow(0 0 8px #3ddaff);
+}
+.breachRing,
+.breachFlash {
+  fill: none;
+  stroke: var(--wale-teal-bright);
+  stroke-linecap: square;
+  stroke-width: 3.5;
+  filter: drop-shadow(0 0 11px var(--wale-teal));
+}
+.breachFlash {
+  stroke-width: 1.5;
+}
+.shards > g > path {
+  fill: #5c402c;
+  stroke: #63d8c9;
+  stroke-width: 1.2;
+}
+.shardLabel path {
+  fill: none;
+  stroke: rgba(145, 255, 234, 0.7);
+  stroke-width: 1;
+}
+.shardLabel text {
+  fill: #b8d8d2;
+  font: 600 8px var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.12em;
+}
+@media (max-width: 1120px) {
+  .scene {
+    right: -2vw;
+    width: 88vw;
+  }
+}
+@media (max-width: 760px) {
+  .scene {
+    top: 51%;
+    right: -5vw;
+    width: 130vw;
+    opacity: 0.76;
+  }
+  .shardLabel {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene {
+    filter: drop-shadow(0 20px 60px rgba(0, 139, 143, 0.15));
+  }
+}
