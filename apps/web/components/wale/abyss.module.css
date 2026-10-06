@@ -44,14 +44,24 @@
 .root *::after { box-sizing: border-box; }
 
 .root button { -webkit-tap-highlight-color: transparent; }
-.root button:focus-visible,
-.root h1:focus-visible { outline: 2px solid var(--abyss-teal); outline-offset: 4px; }
+.root button:focus-visible { outline: 2px solid var(--abyss-teal); outline-offset: 4px; }
+.root h1:focus-visible { outline: none; }
+.root h1:focus-visible::before {
+  position: absolute;
+  top: .12em;
+  left: -13px;
+  width: 2px;
+  height: 1.05em;
+  background: var(--abyss-blue);
+  content: '';
+  opacity: .58;
+}
 
 .depthField,
 .bubbleField,
 .logField { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-.depthField { background: radial-gradient(ellipse at 63% 54%, rgba(22, 91, 104, .18), transparent 44%), linear-gradient(180deg, #020607 0%, #031014 63%, #02090b 100%); }
-.depthField i { position: absolute; border: 1px solid rgba(53, 134, 144, .11); border-radius: 50%; opacity: .44; }
+.depthField { background: radial-gradient(ellipse at 63% 54%, rgba(22, 91, 104, .16), transparent 48%), linear-gradient(180deg, #020607 0%, #031014 63%, #02090b 100%); }
+.depthField i { position: absolute; border: 1px solid rgba(53, 134, 144, .08); border-radius: 50%; opacity: .34; }
 .depthField i:nth-child(1) { width: 68vw; height: 68vw; top: -42vw; right: -18vw; }
 .depthField i:nth-child(2) { width: 50vw; height: 50vw; bottom: -38vw; left: -22vw; }
 .depthField i:nth-child(3) { width: 28vw; height: 28vw; top: 31%; left: 38%; opacity: .18; }
@@ -62,13 +72,13 @@
   left: var(--bubble-x);
   width: var(--bubble-size);
   height: var(--bubble-size);
-  border: 1px solid rgba(92, 202, 196, .58);
+  border: 1px solid rgba(92, 202, 196, .4);
   border-radius: 50%;
   opacity: 0;
-  animation: bubbleRise var(--bubble-duration) linear var(--bubble-delay) infinite;
+  animation: bubbleRise var(--bubble-duration) cubic-bezier(.37,0,.63,1) var(--bubble-delay) infinite;
 }
 
-.logField { z-index: 2; opacity: .76; }
+.logField { z-index: 2; opacity: .64; }
 .logField p {
   position: absolute;
   bottom: -9vh;
@@ -82,7 +92,7 @@
   font: 500 12px/1.3 var(--font-ibm-plex-mono), monospace;
   letter-spacing: .04em;
   opacity: 0;
-  animation: signalRise var(--log-duration) linear var(--log-delay) infinite;
+  animation: signalRise var(--log-duration) cubic-bezier(.37,0,.63,1) var(--log-delay) infinite;
 }
 .logField span { color: #386f76; }
 .logField b { color: var(--abyss-green); font-weight: 650; }
@@ -98,13 +108,13 @@
   height: 76px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(55, 135, 142, .24);
+  border-bottom: 1px solid rgba(55, 135, 142, .16);
   opacity: 0;
   transform: translateY(-6px);
-  animation: revealOnce 600ms cubic-bezier(.22,.8,.32,1) 650ms forwards;
+  animation: revealOnce 720ms cubic-bezier(.2,.72,.18,1) 650ms forwards;
 }
 .smallBrand { display: inline-flex; align-items: center; gap: 10px; }
-.smallMark { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(82, 188, 184, .42); color: var(--abyss-teal); }
+.smallMark { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(82, 188, 184, .28); color: var(--abyss-teal); }
 .smallMark svg { width: 25px; height: 25px; }
 .smallMark path:first-child { fill: currentColor; }
 .smallMark path:last-child { fill: none; stroke: var(--abyss-void); stroke-width: 3; stroke-linecap: round; }
@@ -124,20 +134,20 @@
   width: min(620px, 52vw);
   transform: translateY(-47%);
 }
-.heroBrand { display: flex; align-items: center; gap: 13px; margin-bottom: 32px; opacity: 0; transform: translateY(6px); animation: revealOnce 700ms cubic-bezier(.16,1,.3,1) 1.15s forwards; }
+.heroBrand { display: flex; align-items: center; gap: 13px; margin-bottom: 32px; opacity: 0; transform: translateY(6px); animation: revealOnce 850ms cubic-bezier(.2,.72,.18,1) 1.15s forwards; }
 .heroBrand > span { display: grid; width: 50px; height: 50px; place-items: center; color: var(--abyss-teal); }
 .heroBrand svg { width: 46px; height: 46px; }
 .heroBrand path:first-child { fill: currentColor; }
 .heroBrand path:last-child { fill: none; stroke: var(--abyss-void); stroke-width: 3; stroke-linecap: round; }
 .heroBrand strong { color: var(--abyss-green); font: 650 clamp(34px, 4.2vw, 66px)/.9 var(--font-bricolage-grotesk), Arial, sans-serif; letter-spacing: .16em; }
 .heroBrand small { align-self: flex-end; margin: 0 0 3px -3px; color: var(--abyss-muted); font: 600 12px/1 var(--font-ibm-plex-mono), monospace; letter-spacing: .12em; }
-.eyebrow { margin: 0 0 13px; color: var(--abyss-teal); font: 650 12px/1.3 var(--font-ibm-plex-mono), monospace; letter-spacing: .14em; opacity: 0; transform: translateY(6px); animation: revealOnce 500ms cubic-bezier(.22,.8,.32,1) 1.55s forwards; }
-.hero h1 { margin: 0; font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -.035em; }
+.eyebrow { margin: 0 0 13px; color: var(--abyss-teal); font: 650 12px/1.3 var(--font-ibm-plex-mono), monospace; letter-spacing: .14em; opacity: 0; transform: translateY(6px); animation: revealOnce 700ms cubic-bezier(.2,.72,.18,1) 1.55s forwards; }
+.hero h1 { position: relative; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -.035em; }
 .hero h1 span,
 .hero h1 strong { display: block; opacity: 0; transform: translateY(6px); }
-.hero h1 span { max-width: 22ch; color: #9bd4cf; font-size: clamp(27px, 3vw, 47px); line-height: 1.04; animation: revealOnce 650ms cubic-bezier(.16,1,.3,1) 1.85s forwards; }
-.hero h1 strong { max-width: 18ch; margin-top: 8px; color: var(--abyss-teal); font-size: clamp(35px, 4vw, 63px); font-weight: 400; line-height: .96; animation: revealOnce 650ms cubic-bezier(.16,1,.3,1) 2.3s forwards; }
-.support { max-width: 62ch; margin: 20px 0 0; color: #79a9aa; font-size: clamp(13px, 1.05vw, 16px); line-height: 1.55; opacity: 0; transform: translateY(6px); animation: revealOnce 600ms cubic-bezier(.22,.8,.32,1) 2.75s forwards; }
+.hero h1 span { max-width: 22ch; color: #9bd4cf; font-size: clamp(27px, 3vw, 47px); line-height: 1.04; animation: revealOnce 850ms cubic-bezier(.2,.72,.18,1) 1.85s forwards; }
+.hero h1 strong { max-width: 18ch; margin-top: 8px; color: var(--abyss-teal); font-size: clamp(35px, 4vw, 63px); font-weight: 400; line-height: .96; animation: revealOnce 850ms cubic-bezier(.2,.72,.18,1) 2.3s forwards; }
+.support { max-width: 62ch; margin: 20px 0 0; color: #79a9aa; font-size: clamp(13px, 1.05vw, 16px); line-height: 1.55; opacity: 0; transform: translateY(6px); animation: revealOnce 800ms cubic-bezier(.2,.72,.18,1) 2.75s forwards; }
 
 .sablefinTrack {
   --fish-x-start: -24vw;
@@ -151,7 +161,7 @@
   width: min(47vw, 680px);
   opacity: 0;
   transform: translate3d(var(--fish-x-start), var(--fish-y-start), 0) scale(.67);
-  animation: sablefinTransit 18s cubic-bezier(.42,0,.24,1) 1.1s infinite;
+  animation: sablefinTransit 20s cubic-bezier(.42,0,.2,1) 1.1s infinite;
   pointer-events: none;
 }
 
@@ -176,10 +186,10 @@
 .root[data-handoff='true'] .logField,
 .root[data-handoff='true'] .entrySlot,
 .root[data-handoff='true'] .boundary,
-.root[data-handoff='true'] .motionControl { opacity: .08; transition: opacity 360ms cubic-bezier(.22,.8,.32,1); }
+.root[data-handoff='true'] .motionControl { opacity: .08; transition: opacity 360ms cubic-bezier(.2,.72,.18,1); }
 .root[data-handoff='true'] .hero { transform: translateY(-47%) scale(.985); }
-.root[data-handoff='true'] .sablefinTrack { animation: handoffLead 820ms cubic-bezier(.76,0,.24,1) forwards; }
-.root[data-handoff='true'] .handoffAperture { animation: apertureHandoff 820ms cubic-bezier(.76,0,.24,1) forwards; }
+.root[data-handoff='true'] .sablefinTrack { animation: handoffLead 820ms cubic-bezier(.64,0,.2,1) forwards; }
+.root[data-handoff='true'] .handoffAperture { animation: apertureHandoff 820ms cubic-bezier(.64,0,.2,1) forwards; }
 
 .srSummary {
   position: absolute;
@@ -199,7 +209,7 @@
   opacity: 0;
   transform: translateY(6px);
   pointer-events: none;
-  transition: opacity 320ms cubic-bezier(.22,.8,.32,1), transform 320ms cubic-bezier(.22,.8,.32,1);
+  transition: opacity 380ms cubic-bezier(.2,.72,.18,1), transform 380ms cubic-bezier(.2,.72,.18,1);
 }
 .entrySlot[data-available='true'] { opacity: 1; transform: none; pointer-events: auto; }
 .entrySlot button,
@@ -209,7 +219,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  border: 1px solid rgba(86, 201, 189, .56);
+  border: 1px solid rgba(86, 201, 189, .4);
   background: #061113;
   color: var(--abyss-green);
   cursor: pointer;
@@ -244,16 +254,16 @@
 
 @keyframes revealOnce { to { opacity: 1; transform: none; } }
 @keyframes bubbleRise {
-  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.72); }
-  10% { opacity: var(--bubble-opacity); }
-  74% { opacity: var(--bubble-opacity); }
-  100% { opacity: 0; transform: translate3d(var(--bubble-drift), -112vh, 0) scale(1.08); }
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.78); }
+  14% { opacity: var(--bubble-opacity); }
+  70% { opacity: var(--bubble-opacity); }
+  100% { opacity: 0; transform: translate3d(var(--bubble-drift), -112vh, 0) scale(1.04); }
 }
 @keyframes signalRise {
   0%, 8% { opacity: 0; transform: translate3d(0, 0, 0); }
-  20% { opacity: .68; }
-  58% { opacity: .5; }
-  72%, 100% { opacity: 0; transform: translate3d(0, -114vh, 0); }
+  22% { opacity: .58; }
+  56% { opacity: .44; }
+  76%, 100% { opacity: 0; transform: translate3d(0, -114vh, 0); }
 }
 @keyframes sablefinTransit {
   0%, 12% { opacity: 0; transform: translate3d(var(--fish-x-start), var(--fish-y-start), 0) scale(.67); }
@@ -274,6 +284,51 @@
   44% { opacity: 1; transform: translate3d(-50%, -50%, 0) scaleX(1) scaleY(1); }
   62% { opacity: 1; transform: translate3d(-50%, -50%, 0) scaleX(1) scaleY(2); }
   100% { opacity: 1; transform: translate3d(-50%, -50%, 0) scaleX(1.04) scaleY(600); }
+}
+
+@media (min-width: 1800px) {
+  .header { right: 72px; left: 72px; height: 92px; }
+  .smallMark { width: 42px; height: 42px; }
+  .smallMark svg { width: 29px; height: 29px; }
+  .smallBrand strong { font-size: 17px; }
+  .localBadge { font-size: 13px; }
+  .hero { left: 8vw; width: min(820px, 44vw); }
+  .heroBrand { margin-bottom: 38px; }
+  .heroBrand > span { width: 58px; height: 58px; }
+  .heroBrand svg { width: 54px; height: 54px; }
+  .heroBrand strong { font-size: clamp(58px, 3.25vw, 72px); }
+  .hero h1 span { font-size: clamp(48px, 2.65vw, 60px); }
+  .hero h1 strong { font-size: clamp(64px, 3.4vw, 82px); }
+  .support { max-width: 68ch; font-size: 18px; }
+  .logField p { width: min(540px, 32vw); font-size: 13px; }
+  .sablefinTrack { width: min(43vw, 820px); }
+  .entrySlot { right: 72px; bottom: 94px; }
+  .boundary { left: 72px; bottom: 30px; }
+  .motionControl { right: 72px; bottom: 18px; }
+}
+
+@media (min-width: 2560px) {
+  .header { right: 144px; left: 144px; height: 120px; }
+  .smallMark { width: 48px; height: 48px; }
+  .smallMark svg { width: 34px; height: 34px; }
+  .smallBrand strong { font-size: 19px; }
+  .smallBrand small, .localBadge { font-size: 14px; }
+  .hero { width: min(1120px, 44vw); }
+  .heroBrand { margin-bottom: 46px; }
+  .heroBrand > span { width: 76px; height: 76px; }
+  .heroBrand svg { width: 70px; height: 70px; }
+  .heroBrand strong { font-size: 90px; }
+  .heroBrand small { font-size: 15px; }
+  .eyebrow { font-size: 15px; }
+  .hero h1 span { font-size: 84px; }
+  .hero h1 strong { font-size: 112px; }
+  .support { font-size: 22px; }
+  .logField p { width: min(620px, 30vw); font-size: 15px; }
+  .sablefinTrack { width: min(43vw, 1100px); }
+  .entrySlot { right: 144px; bottom: 120px; }
+  .entrySlot button, .motionControl { min-height: 50px; font-size: 14px; }
+  .boundary { left: 144px; bottom: 40px; font-size: 14px; }
+  .motionControl { right: 144px; bottom: 24px; }
 }
 
 @media (max-width: 900px) {
