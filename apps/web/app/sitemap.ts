@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const baseRoutes: MetadataRoute.Sitemap = [
     '',
+    '/wale',
     '/apps',
     '/tools',
     ...tools.map((tool) => tool.href),
@@ -25,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${siteConfig.url}${path}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
-    priority: path === '' ? 1 : path === '/apps' ? 0.9 : 0.7
+    priority: path === '' ? 1 : path === '/wale' ? 0.95 : path === '/apps' ? 0.9 : 0.7
   }));
 
   const insightRoutes: MetadataRoute.Sitemap = insights.map((post) => ({
