@@ -12,6 +12,7 @@ import { siteConfig } from '@/lib/site';
 import { OperatingWorldSphere, type OperatingWorldMode } from '@/components/operating-world-sphere';
 import { groupGitHubProjects, type GitHubProject } from '@/lib/github-projects';
 import { tools } from '@/lib/tools';
+import { WaleHomeChapter } from '@/components/wale/wale-home-chapter';
 
 type ChatLine = { from: 'studio' | 'visitor'; text: string };
 type ChatDeliveryState = { status: 'idle' | 'sending' | 'saved' | 'sent' | 'error'; message: string };
@@ -249,12 +250,8 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
           <div className="terminal-nav__links">
             <a className="terminal-nav__brand" href="#home" aria-label="MBMApps home"><BrandMark /></a>
             <a href="#wale"><span>[01]</span> wale</a>
-            <a href="#apps"><span>[02]</span> apps</a>
-            <Link href="/tools"><span>[03]</span> tools</Link>
-            <Link href="/control-plane"><span>[04]</span> control plane</Link>
-            <a href="#approach"><span>[05]</span> approach</a>
-            <Link href="/insights"><span>[06]</span> articles</Link>
-            <button className="terminal-nav__contact" type="button" onClick={openChat}><span>[07]</span> contact</button>
+            <Link href="/apps/quoteflow"><span>[02]</span> quote pilot</Link>
+            <Link href="/apps/leaguepilot"><span>[03]</span> league pilot</Link>
           </div>
           <button type="button" onClick={toggleTheme} aria-label={`Switch to ${light ? 'dark' : 'light'} theme`}>
             {light ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
@@ -303,17 +300,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
           </aside>
         </section>
 
-        <section id="wale" className="terminal-section terminal-shell terminal-contact" aria-labelledby="wale-title" data-reveal>
-          <div>
-            <p className="terminal-command"><span>~/mbmapps/wale</span> $ launch --current</p>
-            <h2 id="wale-title"><span>*</span> Wale — interactive development intelligence</h2>
-            <p>Inspect the development environment around a repository, surface its strongest constraint, compare bounded interventions, and keep approval with the operator.</p>
-          </div>
-          <div className="terminal-contact__actions">
-            <Link href="/wale">Enter Wale <ArrowUpRight aria-hidden="true" /></Link>
-            <a href="#apps">Browse product systems</a>
-          </div>
-        </section>
+        <WaleHomeChapter />
 
         <section className="terminal-section terminal-shell" aria-labelledby="stack-title" data-reveal>
           <h2 id="stack-title"><span>*</span> stack</h2>

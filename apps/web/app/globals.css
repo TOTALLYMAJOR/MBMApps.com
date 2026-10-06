@@ -3478,6 +3478,15 @@ body:has(.terminal-home--homepage) > canvas { display: none !important; }
 
 .terminal-home section[id] { scroll-margin-top: 4.5rem; }
 
+.terminal-wale-chapter {
+  position: relative;
+  z-index: 50;
+  min-height: 100svh;
+  overflow: hidden;
+  scroll-margin-top: 0;
+  background: #020607;
+}
+
 .terminal-home--light {
   --term-bg: #f2f0eb;
   --term-panel: #fbfaf6;

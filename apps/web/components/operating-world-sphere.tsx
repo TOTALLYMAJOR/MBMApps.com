@@ -111,7 +111,7 @@ export function OperatingWorldSphere({
       const evidence = new THREE.Group();
       world.add(rear, media, front, evidence);
 
-      const cubeSourceGeometry = new THREE.BoxGeometry(0.18, 0.18, 0.18);
+      const cubeSourceGeometry = new THREE.OctahedronGeometry(0.16, 0);
       const cubeEdgeGeometry = new THREE.EdgesGeometry(cubeSourceGeometry);
       const cubeCount = reducedMotion ? 220 : compact ? 380 : 560;
       const cubeData: Array<{
@@ -143,14 +143,14 @@ export function OperatingWorldSphere({
       const frontCubeData = cubeData.filter((cube) => cube.front);
       const rearCubeData = cubeData.filter((cube) => !cube.front);
       const frontCubeMaterial = new THREE.LineBasicMaterial({
-        color: 0xffffff,
+        color: 0xff8a1f,
         transparent: true,
         opacity: 0.32,
         blending: THREE.AdditiveBlending,
         depthWrite: false
       });
       const rearCubeMaterial = new THREE.LineBasicMaterial({
-        color: 0xdcecff,
+        color: 0xb83b0b,
         transparent: true,
         opacity: 0.09,
         blending: THREE.AdditiveBlending,
@@ -263,7 +263,7 @@ export function OperatingWorldSphere({
         const mesh = new THREE.Mesh(
           new THREE.SphereGeometry(0.045 + Math.random() * 0.035, 8, 8),
           new THREE.MeshBasicMaterial({
-            color: 0xf8fbff,
+            color: 0xffa14d,
             transparent: true,
             opacity: 0.08
           })
@@ -283,7 +283,7 @@ export function OperatingWorldSphere({
           next.position.clone()
         ]);
         const material = new THREE.LineBasicMaterial({
-          color: 0xf8fbff,
+          color: 0xff8a1f,
           transparent: true,
           opacity: 0.015,
           blending: THREE.AdditiveBlending,
@@ -299,7 +299,7 @@ export function OperatingWorldSphere({
         const ring = new THREE.Mesh(
           new THREE.TorusGeometry(radius, 0.008 + index * 0.004, 6, 72),
           new THREE.MeshBasicMaterial({
-            color: 0xf8fbff,
+            color: 0xff8a1f,
             transparent: true,
             opacity: 0,
             blending: THREE.AdditiveBlending,
@@ -325,7 +325,7 @@ export function OperatingWorldSphere({
         const boundary = new THREE.Mesh(
           new THREE.TorusGeometry(spec.radius, 0.006 + index * 0.003, 6, 80),
           new THREE.MeshBasicMaterial({
-            color: 0xf8fbff,
+            color: 0xff8a1f,
             transparent: true,
             opacity: 0,
             blending: THREE.AdditiveBlending,
@@ -349,7 +349,7 @@ export function OperatingWorldSphere({
       const stars = new THREE.Points(
         starGeometry,
         new THREE.PointsMaterial({
-          color: 0xf4f9ff,
+          color: 0xffb26b,
           size: 0.022,
           transparent: true,
           opacity: 0.34,
