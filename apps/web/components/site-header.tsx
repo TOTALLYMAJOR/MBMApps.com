@@ -53,7 +53,7 @@ export function SiteHeader() {
 
   // The homepage owns its terminal navigation. Rendering the shared header
   // there creates two competing navigation bars; inner routes keep this one.
-  if (pathname === '/') return null;
+  if (pathname === '/' || pathname === '/wale') return null;
 
   return (
     <header className="northstar-header" data-scrolled={scrolled ? 'true' : 'false'}>

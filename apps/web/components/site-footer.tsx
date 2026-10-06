@@ -15,6 +15,7 @@ export function SiteFooter() {
           <div>
             <p className="northstar-kicker">Applications</p>
             <div className="northstar-footer__links">
+              <Link className="northstar-footer-link" href="/wale">Wale</Link>
               {projectScreens.map((product) => <a key={product.slug} className="northstar-footer-link" href={product.websiteUrl}>{product.name}</a>)}
             </div>
           </div>
@@ -34,7 +35,7 @@ export function SiteFooter() {
         <div className="northstar-footer__meta">
           <p>© {new Date().getFullYear()} {siteConfig.legalName} · chicago, usa · built for clear decisions</p>
           <div className="instrument-strip">
-            <span className="instrument-chip"><span className="instrument-chip__dot" aria-hidden="true" />{projectScreens.length} products live</span>
+            <span className="instrument-chip"><span className="instrument-chip__dot" aria-hidden="true" />{projectScreens.length + 1} products live</span>
             <a className="northstar-footer-link" href={siteConfig.social.github}>GitHub / TOTALLYMAJOR</a>
           </div>
         </div>

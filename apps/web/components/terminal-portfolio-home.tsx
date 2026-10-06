@@ -248,12 +248,13 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
         <div className="terminal-shell terminal-nav__inner">
           <div className="terminal-nav__links">
             <a className="terminal-nav__brand" href="#home" aria-label="MBMApps home"><BrandMark /></a>
-            <a href="#apps"><span>[01]</span> apps</a>
-            <Link href="/tools"><span>[02]</span> tools</Link>
-            <Link href="/control-plane"><span>[03]</span> control plane</Link>
-            <a href="#approach"><span>[04]</span> approach</a>
-            <Link href="/insights"><span>[05]</span> articles</Link>
-            <button className="terminal-nav__contact" type="button" onClick={openChat}><span>[06]</span> contact</button>
+            <a href="#wale"><span>[01]</span> wale</a>
+            <a href="#apps"><span>[02]</span> apps</a>
+            <Link href="/tools"><span>[03]</span> tools</Link>
+            <Link href="/control-plane"><span>[04]</span> control plane</Link>
+            <a href="#approach"><span>[05]</span> approach</a>
+            <Link href="/insights"><span>[06]</span> articles</Link>
+            <button className="terminal-nav__contact" type="button" onClick={openChat}><span>[07]</span> contact</button>
           </div>
           <button type="button" onClick={toggleTheme} aria-label={`Switch to ${light ? 'dark' : 'light'} theme`}>
             {light ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
@@ -280,7 +281,8 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
             <p className="terminal-subline">Focused products · explicit authority · evidence-backed decisions</p>
             <p className="terminal-lede">We build focused operating systems for catering, youth sports, and quote-to-event work. Teams can see what is known, what is blocked, and what needs a human decision.</p>
             <div className="terminal-links terminal-hero__actions">
-              <a className="terminal-hero__primary" href="#apps">Explore products <ArrowUpRight aria-hidden="true" /></a>
+              <a className="terminal-hero__primary" href="#wale">Explore Wale <ArrowUpRight aria-hidden="true" /></a>
+              <a href="#apps">Explore products</a>
               <a href="#approach">See how we work</a>
               <Link href="/control-plane">Explore control-plane simulation</Link>
               <button type="button" onClick={openChat}>Start a conversation</button>
@@ -299,6 +301,18 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
               <div><span>response</span><strong>direct studio contact</strong></div>
             </div>
           </aside>
+        </section>
+
+        <section id="wale" className="terminal-section terminal-shell terminal-contact" aria-labelledby="wale-title" data-reveal>
+          <div>
+            <p className="terminal-command"><span>~/mbmapps/wale</span> $ launch --current</p>
+            <h2 id="wale-title"><span>*</span> Wale — interactive development intelligence</h2>
+            <p>Inspect the development environment around a repository, surface its strongest constraint, compare bounded interventions, and keep approval with the operator.</p>
+          </div>
+          <div className="terminal-contact__actions">
+            <Link href="/wale">Enter Wale <ArrowUpRight aria-hidden="true" /></Link>
+            <a href="#apps">Browse product systems</a>
+          </div>
         </section>
 
         <section className="terminal-section terminal-shell" aria-labelledby="stack-title" data-reveal>
