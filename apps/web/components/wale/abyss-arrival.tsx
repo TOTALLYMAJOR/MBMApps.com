@@ -12,6 +12,9 @@ import styles from './abyss.module.css';
 interface AbyssArrivalProps {
   reducedMotion: boolean;
   transitioning: boolean;
+  active?: boolean;
+  embedded?: boolean;
+  captureNavigation?: boolean;
   onEnter: (skipMotion?: boolean) => void;
 }
 
@@ -30,20 +33,27 @@ type LogStyle = CSSProperties & {
   '--log-delay': string;
 };
 
-export function AbyssArrival({ reducedMotion, transitioning, onEnter }: AbyssArrivalProps) {
+export function AbyssArrival({
+  reducedMotion,
+  transitioning,
+  active = true,
+  embedded = false,
+  captureNavigation = true,
+  onEnter
+}: AbyssArrivalProps) {
   const [paused, setPaused] = useState(false);
   const [settled, setSettled] = useState(false);
   const entryAvailable = reducedMotion || settled;
   const motionState = reducedMotion ? 'reduced' : paused ? 'paused' : 'playing';
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || !active) return;
     const timer = window.setTimeout(() => setSettled(true), abyssContract.entryAvailableMs);
     return () => window.clearTimeout(timer);
-  }, [reducedMotion]);
+  }, [active, reducedMotion]);
 
   useEffect(() => {
-    if (!entryAvailable || transitioning) return;
+    if (!captureNavigation || !active || !entryAvailable || transitioning) return;
     const handleKey = (event: KeyboardEvent) => {
       if (event.key !== 'ArrowDown') return;
       event.preventDefault();
@@ -60,10 +70,17 @@ export function AbyssArrival({ reducedMotion, transitioning, onEnter }: AbyssArr
       window.removeEventListener('keydown', handleKey);
       window.removeEventListener('wheel', handleWheel);
     };
-  }, [entryAvailable, onEnter, paused, transitioning]);
+  }, [active, captureNavigation, entryAvailable, onEnter, paused, transitioning]);
 
   return (
-    <section className={styles.root} data-motion={motionState} data-handoff={transitioning} aria-labelledby="abyss-heading">
+    <section
+      className={styles.root}
+      data-motion={motionState}
+      data-handoff={transitioning}
+      data-active={active}
+      data-embedded={embedded}
+      aria-labelledby="abyss-heading"
+    >
       <div className={styles.depthField} aria-hidden="true">
         <i /><i /><i />
       </div>
