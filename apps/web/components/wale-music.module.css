@@ -1,0 +1,6 @@
+.music{position:fixed;z-index:16;left:24px;bottom:13px;color:#d7e3f6}
+.music button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid #66788a60;border-radius:30px;background:#080d15ed;color:inherit;font-size:12px;transition:background .22s,border-color .22s}
+.music button:hover{background:#142237;border-color:#8cb8ff}
+.music button[aria-pressed=true]{color:#a7ccff;border-color:#4775ad}
+.music p{position:absolute;left:0;bottom:50px;width:240px;padding:12px;border:1px solid #66788a60;border-radius:8px;background:#080d15;font-size:12px;line-height:1.5}
+@media(max-width:1000px){.music{left:auto;right:18px;bottom:18px}.music p{left:auto;right:0}}
