@@ -73,3 +73,8 @@
 @media(prefers-reduced-motion:reduce){.chapterCopy>*,.chapterBottom>.largeVerb,.chapterBottom>.chapterDetail{opacity:1}}
 /* Keep the quiet text edge, but do not shade the left half of the particle band. */
 @media(min-width:1001px){.sceneShade{background:linear-gradient(90deg,#080a0ed6 0%,#080a0e99 24%,transparent 42%),linear-gradient(0deg,#080a0e1f,transparent 24%)}}
+/* Keep launch prerequisites legible without reducing the rest of the field. */
+@media(min-width:1001px){
+  .repositoryContent{position:relative;isolation:isolate}
+  .repositoryContent::before{content:"";position:absolute;z-index:-1;inset:-28px -32px;background:#080a0ef7;border-radius:48px;box-shadow:0 0 44px 30px #080a0eef;pointer-events:none}
+}

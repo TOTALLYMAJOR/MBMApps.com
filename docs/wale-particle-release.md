@@ -48,8 +48,10 @@ Release must pass `npm run validate`, local smoke checks, browser verification
 of `/wale`, and the protected `validate` GitHub check before merge. Provider
 READY and live route verification are separate from local tests.
 
-Known inherited limits: frame rate depends on hardware; narrow desktop framing
-may crop the particle ring and bright particles can cross repository copy.
+Browser review added a quiet backing behind desktop repository content to
+prevent bright particles obscuring the launch prerequisites. Other field
+lighting is unchanged. Known inherited limits: frame rate depends on hardware;
+narrow desktop framing may crop the particle ring.
 The existing dependency audit has advisories; dependencies are unchanged here.
 No legal-clearance or real repository analysis claim is made.
 
