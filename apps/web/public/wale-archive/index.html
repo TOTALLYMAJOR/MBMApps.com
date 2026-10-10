@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
+
+  <meta name="theme-color" content="#080b10" />
+
+  <meta
+    name="description"
+    content="WALE — an interactive study of discovery, evidence, and evolving development intelligence."
+  />
+
+  <title>WALE — The Living Archive</title>
+
+  <link rel="stylesheet" href="./styles.css" />
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="viewport" aria-hidden="true"></div>
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <div
+    id="journey-progress"
+    class="progress-track"
+    role="progressbar"
+    aria-label="Journey progress"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="0"
+  >
+    <div id="progress-fill"></div>
+  </div>
+
+  <header class="header">
+    <a class="brand" href="#discover" aria-label="WALE, beginning">
+      <span class="brand-symbol" aria-hidden="true">
+        <i></i>
+        <i></i>
+        <i></i>
+      </span>
+
+      <span>WALE</span>
+    </a>
+
+    <p class="edition">
+      The living archive
+      <span>Observatory / 003</span>
+    </p>
+
+    <div class="header-actions">
+      <button
+        id="artwork-button"
+        class="text-button"
+        type="button"
+        aria-pressed="false"
+        disabled
+      >
+        Artwork
+      </button>
+
+      <button
+        id="play-button"
+        class="text-button"
+        type="button"
+        aria-pressed="false"
+        disabled
+      >
+        Play journey
+      </button>
+
+      <button
+        id="studio-button"
+        class="pill-button"
+        type="button"
+        disabled
+      >
+        Art direction
+        <span aria-hidden="true">↗</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section
+      id="discover"
+      class="chapter"
+      aria-labelledby="discover-title"
+    >
+      <div class="copy">
+        <p class="eyebrow">01 / Discovery</p>
+
+        <h1 id="discover-title">
+          Intelligence,<br />
+          <em>with lineage.</em>
+        </h1>
+
+        <p class="description">
+          An observatory for development intelligence.
+          Discover useful patterns, question them,
+          and carry forward what the evidence supports.
+        </p>
+
+        <a class="journey-link" href="#hypothesize">
+          Enter the archive
+          <span aria-hidden="true">↓</span>
+        </a>
+
+        <p class="logic">Observation → possibility</p>
+      </div>
+    </section>
+
+    <section
+      id="hypothesize"
+      class="chapter"
+      aria-labelledby="hypothesize-title"
+    >
+      <div class="copy">
+        <p class="eyebrow">02 / Association</p>
+
+        <h2 id="hypothesize-title">
+          A pattern<br />
+          <em>takes shape.</em>
+        </h2>
+
+        <p class="description">
+          Isolated signals become candidate improvements.
+          Their origin stays attached as relationships
+          begin to emerge.
+        </p>
+
+        <p class="logic">Possibility → hypothesis</p>
+      </div>
+    </section>
+
+    <section
+      id="evaluate"
+      class="chapter"
+      aria-labelledby="evaluate-title"
+    >
+      <div class="copy">
+        <p class="eyebrow">03 / Evaluation</p>
+
+        <h2 id="evaluate-title">
+          Beautiful ideas.<br />
+          <em>Better questions.</em>
+        </h2>
+
+        <p class="description">
+          Not every promising signal should become behavior.
+          Test the assumptions. Keep uncertainty visible.
+          Let unsupported candidates fall away.
+        </p>
+
+        <p class="logic">Hypothesis → evidence</p>
+      </div>
+    </section>
+
+    <section
+      id="integrate"
+      class="chapter"
+      aria-labelledby="integrate-title"
+    >
+      <div class="copy">
+        <p class="eyebrow">04 / Integration</p>
+
+        <h2 id="integrate-title">
+          Progress,<br />
+          <em>with provenance.</em>
+        </h2>
+
+        <p class="description">
+          Supported improvements enter the development system.
+          Their lineage, intended effect, and review conditions
+          remain part of the record.
+        </p>
+
+        <p class="logic">Evidence → capability</p>
+      </div>
+    </section>
+
+    <section
+      id="evolve"
+      class="chapter"
+      aria-labelledby="evolve-title"
+    >
+      <div class="copy">
+        <p class="eyebrow">05 / Emergence</p>
+
+        <h2 id="evolve-title">
+          More capable.<br />
+          <em>Still accountable.</em>
+        </h2>
+
+        <p class="description">
+          An evolving system should become more coherent,
+          not more opaque. Every new capability opens
+          another field of questions.
+        </p>
+
+        <a class="journey-link" href="#discover">
+          Begin again
+          <span aria-hidden="true">↗</span>
+        </a>
+
+        <p class="logic">Capability → new possibility</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="scene-hint" class="scene-hint" aria-hidden="true">
+    Move to disturb the field<br />
+    Select a luminous specimen to inspect
+  </div>
+
+  <footer class="footer">
+    <div class="footer-note">
+      Interactive research concept
+      <span>Not live AI telemetry</span>
+    </div>
+
+    <nav class="chapter-nav" aria-label="Journey stages">
+      <a href="#discover" aria-label="Discover" aria-current="step">
+        <span>01</span>
+        <b>Discover</b>
+      </a>
+
+      <a href="#hypothesize" aria-label="Hypothesize">
+        <span>02</span>
+        <b>Hypothesize</b>
+      </a>
+
+      <a href="#evaluate" aria-label="Evaluate">
+        <span>03</span>
+        <b>Evaluate</b>
+      </a>
+
+      <a href="#integrate" aria-label="Integrate">
+        <span>04</span>
+        <b>Integrate</b>
+      </a>
+
+      <a href="#evolve" aria-label="Evolve">
+        <span>05</span>
+        <b>Evolve</b>
+      </a>
+    </nav>
+
+    <div class="footer-progress">
+      <span id="stage-readout">Discovery</span>
+      <strong id="progress-number" aria-hidden="true">000%</strong>
+    </div>
+  </footer>
+
+  <aside
+    id="specimen-panel"
+    class="specimen-panel"
+    aria-labelledby="specimen-title"
+    hidden
+  >
+    <button
+      id="specimen-close"
+      class="close-button"
+      type="button"
+      aria-label="Close specimen"
+    >
+      ×
+    </button>
+
+    <p id="specimen-id" class="eyebrow"></p>
+
+    <h3 id="specimen-title" tabindex="-1"></h3>
+
+    <p id="specimen-summary"></p>
+
+    <dl>
+      <div>
+        <dt>Origin</dt>
+        <dd id="specimen-origin"></dd>
+      </div>
+
+      <div>
+        <dt>Evidence to request</dt>
+        <dd id="specimen-evidence"></dd>
+      </div>
+
+      <div>
+        <dt>Integration condition</dt>
+        <dd id="specimen-contract"></dd>
+      </div>
+    </dl>
+
+    <p class="specimen-disclaimer">
+      Illustrative candidate. No live evaluation is represented.
+    </p>
+  </aside>
+
+  <dialog id="studio-dialog" aria-labelledby="studio-title">
+    <div class="studio-header">
+      <div>
+        <p class="eyebrow">The director's desk</p>
+        <h2 id="studio-title">Shape the atmosphere.</h2>
+      </div>
+
+      <button
+        id="studio-close"
+        class="close-button"
+        type="button"
+        aria-label="Close art direction"
+      >
+        ×
+      </button>
+    </div>
+
+    <p class="studio-description">
+      Adjust the field while it runs.
+      Capture exports the artwork without the interface.
+    </p>
+
+    <label class="quality-control">
+      <span>Rendering quality</span>
+
+      <select id="quality-select">
+        <option value="light">Light</option>
+        <option value="studio">Studio</option>
+        <option value="cinema">Cinema</option>
+      </select>
+    </label>
+
+    <p class="small-note">
+      Changing quality reloads the scene.
+    </p>
+
+    <div id="settings-controls" class="settings-controls"></div>
+
+    <div class="studio-actions">
+      <button
+        id="motion-button"
+        class="panel-button"
+        type="button"
+        aria-pressed="true"
+      >
+        Motion: On
+      </button>
+
+      <button
+        id="sound-button"
+        class="panel-button"
+        type="button"
+        aria-pressed="false"
+      >
+        Sound: Off
+      </button>
+
+      <button id="capture-button" class="panel-button" type="button">
+        Capture PNG
+      </button>
+
+      <button id="reset-button" class="panel-button" type="button">
+        Reset look
+      </button>
+    </div>
+
+    <section class="specimen-directory" aria-labelledby="directory-title">
+      <p class="eyebrow">Inspectable specimens</p>
+      <h3 id="directory-title">Candidate improvements</h3>
+      <div id="specimen-buttons"></div>
+    </section>
+
+    <p id="render-stats" class="render-stats"></p>
+  </dialog>
+
+  <div id="loading" class="loading" role="status">
+    <div class="loading-symbol" aria-hidden="true"></div>
+    <p id="loading-message">Preparing the living archive…</p>
+    <span>Procedural geometry / GPU simulation</span>
+  </div>
+
+  <p id="toast" class="toast" role="status" hidden></p>
+
+  <noscript>
+    <style>
+      #loading { display: none; }
+    </style>
+
+    <p class="loading">
+      Enable JavaScript to enter the living archive.
+    </p>
+  </noscript>
+
+  <script type="module">
+    import("./src/main.js").catch(error => {
+      console.error(error);
+
+      document.querySelector("#viewport").hidden = true;
+      document.querySelector("#loading").hidden = false;
+
+      document.querySelector("#loading-message").textContent =
+        "The archive could not start. Serve the files over localhost, " +
+        "check your internet connection, and use a WebGL 2-capable browser. " +
+        (error instanceof Error ? error.message : "");
+    });
+  </script>
+</body>
+</html>
