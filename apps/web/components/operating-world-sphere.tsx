@@ -43,6 +43,36 @@ type OperatingWorldSphereProps = {
   showControls?: boolean;
 };
 
+// Renderer-local tokens: Three.js materials require numeric colors, so the
+// complete crystal palette lives here instead of drifting across scene setup.
+const CRYSTAL_PALETTE = {
+  core: 0x08131f,
+  facetLine: 0xf7fcff,
+  frontFragment: 0xf8fdff,
+  rearFragment: 0x86b8d8,
+  evidenceNode: 0xffffff,
+  evidenceLink: 0xcbeaff,
+  proofRing: 0xe9f8ff,
+  authorityBoundary: 0xaedcff,
+  star: 0xd9f1ff
+} as const;
+
+const WORLD_SCALE = {
+  default: 0.86,
+  compact: 0.9
+} as const;
+
+function createSeededRandom(seed: number) {
+  let state = seed >>> 0;
+  return () => {
+    state += 0x6d2b79f5;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 export function OperatingWorldSphere({
   mode = 'observe',
   progress,
@@ -76,6 +106,7 @@ export function OperatingWorldSphere({
       if (stopped || !mount) return;
 
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const random = createSeededRandom(compact ? 0x6d626d31 : 0x6d626d32);
       const scene = new THREE.Scene();
       scene.fog = new THREE.FogExp2(0x03050d, 0.05);
 
@@ -98,12 +129,60 @@ export function OperatingWorldSphere({
       scene.add(world);
 
       const coreMaterial = new THREE.MeshBasicMaterial({
-        color: 0x07101b,
+        color: CRYSTAL_PALETTE.core,
         transparent: true,
-        opacity: 0.72
+        opacity: 0.7
       });
       const core = new THREE.Mesh(new THREE.SphereGeometry(3.72, 28, 24), coreMaterial);
-      world.add(core);
+
+      const crystalGeometry = new THREE.IcosahedronGeometry(3.76, 3);
+      const crystalPositions = crystalGeometry.getAttribute('position');
+      const crystalColors = new Float32Array(crystalPositions.count * 3);
+      const crystalColor = new THREE.Color();
+      for (let index = 0; index < crystalPositions.count; index += 3) {
+        const faceCenterY = (
+          crystalPositions.getY(index) +
+          crystalPositions.getY(index + 1) +
+          crystalPositions.getY(index + 2)
+        ) / 3;
+        const faceCenterZ = (
+          crystalPositions.getZ(index) +
+          crystalPositions.getZ(index + 1) +
+          crystalPositions.getZ(index + 2)
+        ) / 3;
+        const lightness = THREE.MathUtils.clamp(0.62 + faceCenterY * 0.025 + faceCenterZ * 0.035, 0.54, 0.88);
+        crystalColor.setHSL(0.56 + random() * 0.025, 0.58, lightness);
+        for (let vertex = 0; vertex < 3; vertex += 1) {
+          const colorIndex = (index + vertex) * 3;
+          crystalColors[colorIndex] = crystalColor.r;
+          crystalColors[colorIndex + 1] = crystalColor.g;
+          crystalColors[colorIndex + 2] = crystalColor.b;
+        }
+      }
+      crystalGeometry.setAttribute('color', new THREE.BufferAttribute(crystalColors, 3));
+
+      const crystalFaceMaterial = new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.11,
+        side: THREE.FrontSide,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const crystalLineMaterial = new THREE.MeshBasicMaterial({
+        color: CRYSTAL_PALETTE.facetLine,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.22,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const crystalShell = new THREE.Group();
+      crystalShell.add(
+        new THREE.Mesh(crystalGeometry, crystalFaceMaterial),
+        new THREE.Mesh(crystalGeometry, crystalLineMaterial)
+      );
+      world.add(core, crystalShell);
 
       const rear = new THREE.Group();
       const media = new THREE.Group();
@@ -124,7 +203,7 @@ export function OperatingWorldSphere({
       for (let i = 0; i < cubeCount; i += 1) {
         const u = 1 - (2 * (i + 0.5)) / cubeCount;
         const phi = Math.PI * (3 - Math.sqrt(5)) * i;
-        const radius = 3.84 + (Math.random() - 0.5) * 0.42;
+        const radius = 3.84 + (random() - 0.5) * 0.42;
         const ring = Math.sqrt(1 - u * u);
         const base = new THREE.Vector3(
           Math.cos(phi) * ring * radius,
@@ -134,8 +213,8 @@ export function OperatingWorldSphere({
         const frontFacing = base.z > 0;
         cubeData.push({
           base,
-          rotation: new THREE.Euler(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI),
-          scale: 0.52 + Math.random() * 1.22,
+          rotation: new THREE.Euler(random() * Math.PI, random() * Math.PI, random() * Math.PI),
+          scale: 0.52 + random() * 1.22,
           front: frontFacing
         });
       }
@@ -143,14 +222,14 @@ export function OperatingWorldSphere({
       const frontCubeData = cubeData.filter((cube) => cube.front);
       const rearCubeData = cubeData.filter((cube) => !cube.front);
       const frontCubeMaterial = new THREE.LineBasicMaterial({
-        color: 0xff8a1f,
+        color: CRYSTAL_PALETTE.frontFragment,
         transparent: true,
         opacity: 0.32,
         blending: THREE.AdditiveBlending,
         depthWrite: false
       });
       const rearCubeMaterial = new THREE.LineBasicMaterial({
-        color: 0xb83b0b,
+        color: CRYSTAL_PALETTE.rearFragment,
         transparent: true,
         opacity: 0.09,
         blending: THREE.AdditiveBlending,
@@ -211,7 +290,7 @@ export function OperatingWorldSphere({
         rows.forEach((row, index) => ctx.fillText(row, 36, 118 + index * 40));
         ctx.globalAlpha = 0.28;
         for (let i = 0; i < 36; i += 1) {
-          ctx.fillRect(Math.random() * 690, 82 + Math.random() * 300, 45 + Math.random() * 190, 1);
+          ctx.fillRect(random() * 690, 82 + random() * 300, 45 + random() * 190, 1);
         }
         return new THREE.CanvasTexture(canvas);
       }
@@ -256,14 +335,14 @@ export function OperatingWorldSphere({
 
       const evidenceNodes: Array<InstanceType<typeof THREE.Mesh>> = [];
       for (let i = 0; i < 18; i += 1) {
-        const a = Math.random() * Math.PI * 2;
-        const u = Math.random() * 1.6 - 0.8;
-        const radius = 3.0 + Math.random() * 0.6;
+        const a = random() * Math.PI * 2;
+        const u = random() * 1.6 - 0.8;
+        const radius = 3.0 + random() * 0.6;
         const ring = Math.sqrt(1 - u * u);
         const mesh = new THREE.Mesh(
-          new THREE.SphereGeometry(0.045 + Math.random() * 0.035, 8, 8),
+          new THREE.SphereGeometry(0.045 + random() * 0.035, 8, 8),
           new THREE.MeshBasicMaterial({
-            color: 0xffa14d,
+            color: CRYSTAL_PALETTE.evidenceNode,
             transparent: true,
             opacity: 0.08
           })
@@ -283,7 +362,7 @@ export function OperatingWorldSphere({
           next.position.clone()
         ]);
         const material = new THREE.LineBasicMaterial({
-          color: 0xff8a1f,
+          color: CRYSTAL_PALETTE.evidenceLink,
           transparent: true,
           opacity: 0.015,
           blending: THREE.AdditiveBlending,
@@ -299,7 +378,7 @@ export function OperatingWorldSphere({
         const ring = new THREE.Mesh(
           new THREE.TorusGeometry(radius, 0.008 + index * 0.004, 6, 72),
           new THREE.MeshBasicMaterial({
-            color: 0xff8a1f,
+            color: CRYSTAL_PALETTE.proofRing,
             transparent: true,
             opacity: 0,
             blending: THREE.AdditiveBlending,
@@ -325,7 +404,7 @@ export function OperatingWorldSphere({
         const boundary = new THREE.Mesh(
           new THREE.TorusGeometry(spec.radius, 0.006 + index * 0.003, 6, 80),
           new THREE.MeshBasicMaterial({
-            color: 0xff8a1f,
+            color: CRYSTAL_PALETTE.authorityBoundary,
             transparent: true,
             opacity: 0,
             blending: THREE.AdditiveBlending,
@@ -341,15 +420,15 @@ export function OperatingWorldSphere({
       const starCount = reducedMotion ? 220 : 600;
       const starPositions = new Float32Array(starCount * 3);
       for (let i = 0; i < starCount; i += 1) {
-        starPositions[i * 3] = (Math.random() - 0.5) * 20;
-        starPositions[i * 3 + 1] = (Math.random() - 0.5) * 13;
-        starPositions[i * 3 + 2] = -2 - Math.random() * 12;
+        starPositions[i * 3] = (random() - 0.5) * 20;
+        starPositions[i * 3 + 1] = (random() - 0.5) * 13;
+        starPositions[i * 3 + 2] = -2 - random() * 12;
       }
       starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
       const stars = new THREE.Points(
         starGeometry,
         new THREE.PointsMaterial({
-          color: 0xffb26b,
+          color: CRYSTAL_PALETTE.star,
           size: 0.022,
           transparent: true,
           opacity: 0.34,
@@ -437,11 +516,17 @@ export function OperatingWorldSphere({
         world.rotation.x += ((-pointerY * 0.07) - world.rotation.x) * 0.032;
         world.position.x += ((((compact ? 0 : -0.18) + pointerX * 0.14)) - world.position.x) * 0.045;
         world.position.y += ((-pointerY * 0.08) - world.position.y) * 0.035;
-        world.scale.setScalar(1 + pulse * 0.006 + pointerVelocity * 0.018);
+        const baseWorldScale = compact ? WORLD_SCALE.compact : WORLD_SCALE.default;
+        world.scale.setScalar(baseWorldScale * (1 + pulse * 0.006 + pointerVelocity * 0.018));
+
+        crystalShell.rotation.y -= 0.00018 + proveWeight * 0.00012;
+        crystalShell.rotation.z += 0.00007;
+        crystalFaceMaterial.opacity = 0.11 + pulse * 0.035 + verifyWeight * 0.035 + proveWeight * 0.055;
+        crystalLineMaterial.opacity = 0.28 + pulse * 0.075 + shipWeight * 0.05 + proveWeight * 0.1;
 
         frontCubeMaterial.opacity =
-          0.2 + 0.08 * pulse + verifyWeight * 0.07 + shipWeight * 0.05 + proveWeight * 0.11;
-        rearCubeMaterial.opacity = 0.045 + 0.025 * pulse + proveWeight * 0.055;
+          0.28 + 0.1 * pulse + verifyWeight * 0.08 + shipWeight * 0.06 + proveWeight * 0.12;
+        rearCubeMaterial.opacity = 0.065 + 0.035 * pulse + proveWeight * 0.065;
         frontCubes.rotation.x += 0.00035 + pointerVelocity * 0.0008;
         frontCubes.rotation.y += 0.00024 + pointerVelocity * 0.0006;
         rearCubes.rotation.x -= 0.00012;
@@ -507,12 +592,13 @@ export function OperatingWorldSphere({
         });
 
         coreMaterial.opacity =
-          0.82 -
-          reactive * 0.08 -
-          shipWeight * 0.06 -
-          proveWeight * (0.12 + 0.06 * pulse);
+          0.68 -
+          reactive * 0.06 -
+          shipWeight * 0.05 -
+          proveWeight * (0.1 + 0.04 * pulse);
         stars.rotation.y = t * 0.0016;
         renderer.render(scene, camera);
+        mount.dataset.ready = 'true';
       };
 
       animate();
@@ -527,6 +613,11 @@ export function OperatingWorldSphere({
         rearCubeGeometry.dispose();
         frontCubeMaterial.dispose();
         rearCubeMaterial.dispose();
+        core.geometry.dispose();
+        coreMaterial.dispose();
+        crystalGeometry.dispose();
+        crystalFaceMaterial.dispose();
+        crystalLineMaterial.dispose();
         mediaPanels.forEach((panel) => {
           panel.geometry.dispose();
           const material = panel.material as InstanceType<typeof THREE.MeshBasicMaterial>;
@@ -556,6 +647,7 @@ export function OperatingWorldSphere({
     }
 
     boot().catch(() => {
+      delete mount.dataset.ready;
       mount.dataset.failed = 'true';
     });
 
