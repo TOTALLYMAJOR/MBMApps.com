@@ -252,6 +252,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
             <a href="#wale"><span>[01]</span> wale</a>
             <Link href="/apps/quoteflow"><span>[02]</span> quote pilot</Link>
             <Link href="/apps/leaguepilot"><span>[03]</span> league pilot</Link>
+            <Link href="/discuss"><span>[04]</span> discuss ai</Link>
           </div>
           <button type="button" onClick={toggleTheme} aria-label={`Switch to ${light ? 'dark' : 'light'} theme`}>
             {light ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}

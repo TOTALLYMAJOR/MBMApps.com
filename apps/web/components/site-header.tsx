@@ -13,6 +13,7 @@ const primaryNavigation = [
   { href: '/case-studies', label: 'Work' },
   { href: '/control-plane', label: 'Control Plane' },
   { href: '/insights', label: 'Articles' },
+  { href: '/discuss', label: 'Discuss' },
   { href: '/#approach', label: 'Approach' },
   { href: '/about', label: 'About' }
 ];
@@ -75,6 +76,8 @@ export function SiteHeader() {
                 ? pathname.startsWith('/control-plane')
               : item.href === '/insights'
                 ? pathname.startsWith('/insights')
+              : item.href === '/discuss'
+                ? pathname.startsWith('/discuss')
               : item.href === '/about'
                 ? pathname.startsWith('/about')
                 : false;
