@@ -14,6 +14,9 @@ type DiscordCommunityInput = {
   inviteUrl?: string;
 };
 
+const MBMAPPS_DISCORD_SERVER_ID = '1558575907621568593';
+const MBMAPPS_DISCORD_INVITE_URL = 'https://discord.gg/4DdamZUuW';
+
 function isDiscordInviteUrl(value: string) {
   try {
     const url = new URL(value);
@@ -34,8 +37,8 @@ function isDiscordInviteUrl(value: string) {
 }
 
 export function resolveDiscordCommunityConfig({
-  serverId = process.env.DISCORD_SERVER_ID,
-  inviteUrl = process.env.DISCORD_INVITE_URL
+  serverId = process.env.DISCORD_SERVER_ID ?? MBMAPPS_DISCORD_SERVER_ID,
+  inviteUrl = process.env.DISCORD_INVITE_URL ?? MBMAPPS_DISCORD_INVITE_URL
 }: DiscordCommunityInput = {}): DiscordCommunityConfig {
   const normalizedServerId = (serverId ?? '').trim();
   const normalizedInviteUrl = (inviteUrl ?? '').trim();
