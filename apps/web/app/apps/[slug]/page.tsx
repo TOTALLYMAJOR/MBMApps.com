@@ -1,3 +1,4 @@
+import { LiveProductSite } from '@/components/live-product-site';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -56,6 +57,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
     url: product.websiteUrl,
     publisher: { '@type': 'Organization', name: siteConfig.legalName, url: siteConfig.url }
   };
+
+  if (product.id === 'leaguepilot') {
+    return <>
+      <LiveProductSite slug="leaguepilot" id="leaguepilot" label="LeaguePilot" standalone />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+    </>;
+  }
 
   return (
     <div className={`portfolio-home portfolio-product-page portfolio-accent--${product.accentToken}`}>

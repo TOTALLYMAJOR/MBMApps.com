@@ -33,7 +33,7 @@ describe('project catalog', () => {
   it('resolves project subpages by slug', () => {
     expect(getProjectBySlug('quietpilot')?.name).toBe('QuietPilot');
     expect(getProjectBySlug('leaguepilot')?.websiteUrl).toBe('https://www.leaguepilot.us');
-    expect(getProjectBySlug('quoteflow')?.category).toBe('Quote-to-event operations');
+    expect(getProjectBySlug('quoteflow')).toMatchObject({ category: 'Quote-to-event operations', websiteUrl: 'https://quotepilot.mbmapps.com', websiteLabel: 'Open QuotePilot' });
   });
 
   it('exposes evidence and access context for every app', () => {
