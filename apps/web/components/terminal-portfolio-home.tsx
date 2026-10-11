@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Check, ChevronDown, Mail, MessageSquare, Moon, Send, Sun, X } from 'lucide-react';
 import { currentConsentPolicyVersion, type ChatLeadDeliveryResponse } from '@mbm/contracts';
 import { BrandMark } from '@/components/brand-mark';
+import { ProductDestinationLink } from '@/components/product-destination-link';
 import { SelectedWorkRail } from '@/components/selected-work-rail';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
@@ -295,7 +296,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
             <div className="terminal-status__mark">MBM</div>
             <div className="terminal-status__cards">
               <div><span>status</span><strong><i /> open for new engagements</strong></div>
-              <div><span>portfolio</span><strong>{projectScreens.length} products live</strong></div>
+              <div><span>portfolio</span><strong>{projectScreens.length} products listed</strong></div>
               <div><span>response</span><strong>direct studio contact</strong></div>
             </div>
           </aside>
@@ -337,7 +338,7 @@ export function TerminalPortfolioHome({ githubProjects }: { githubProjects: GitH
                   <div className="terminal-tags">{product.capabilities.slice(0, 4).map((item) => <span key={item.label}>{item.label}</span>)}</div>
                   <div className="terminal-links">
                     <Link href={product.path}>[view brief]</Link>
-                    <a href={product.websiteUrl}>[{product.websiteLabel.toLowerCase()}]</a>
+                    <ProductDestinationLink href={product.experienceHref}>[{product.websiteLabel.toLowerCase()}]</ProductDestinationLink>
                   </div>
                   <p className="terminal-proof"><Check aria-hidden="true" /> {product.accessDescription}</p>
                 </div>

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, CircleDot } from 'lucide-react';
 import { ProductAbstractArt } from '@/components/product-abstract-art';
+import { ProductDestinationLink } from '@/components/product-destination-link';
 import { ProductRouter } from '@/components/product-router';
 import { projectScreens } from '@/lib/projects';
 
@@ -49,7 +50,7 @@ export function AppPanelHome() {
               <p className="portfolio-eyebrow">Independent software studio</p>
               <span className="instrument-chip instrument-chip--ember instrument-chip--live">
                 <span className="instrument-chip__dot" aria-hidden="true" />
-                {projectScreens.length} products live
+                {projectScreens.length} products listed
               </span>
             </div>
             <h1 id="portfolio-hero-title" className="portfolio-display">
@@ -94,7 +95,7 @@ export function AppPanelHome() {
           <div className="portfolio-section-heading portfolio-section-heading--split">
             <div>
               <p className="portfolio-eyebrow">The applications</p>
-              <h2 id="application-index-title">Three products. Three operating environments.</h2>
+              <h2 id="application-index-title">{projectScreens.length} products. Distinct operating environments.</h2>
             </div>
             <p>One standard: make the next action clear.</p>
           </div>
@@ -123,9 +124,9 @@ export function AppPanelHome() {
                 </div>
                 <div className="portfolio-product-card__footer">
                   <span><CircleDot aria-hidden="true" /> {product.accessDescription}</span>
-                  <a href={product.websiteUrl} data-product={product.analyticsId}>
+                  <ProductDestinationLink href={product.experienceHref} dataProduct={product.analyticsId}>
                     {product.websiteLabel} <ArrowUpRight aria-hidden="true" />
-                  </a>
+                  </ProductDestinationLink>
                 </div>
               </article>
             ))}
@@ -164,9 +165,9 @@ export function AppPanelHome() {
                 </dl>
                 <p className="portfolio-proof-boundary"><strong>Authority boundary:</strong> {product.proofBoundary}</p>
                 <div className="portfolio-actions">
-                  <a href={product.websiteUrl} className="portfolio-button portfolio-button--product" data-product={product.analyticsId}>
+                  <ProductDestinationLink href={product.experienceHref} className="portfolio-button portfolio-button--product" dataProduct={product.analyticsId}>
                     {product.websiteLabel} <ArrowUpRight aria-hidden="true" />
-                  </a>
+                  </ProductDestinationLink>
                   <Link href={product.path} className="portfolio-text-link">View product brief <ArrowRight aria-hidden="true" /></Link>
                 </div>
               </div>
@@ -226,15 +227,15 @@ export function AppPanelHome() {
           <h2 id="paths-title">Start with the product closest to your operation.</h2>
           <div className="portfolio-path-list">
             {projectScreens.map((product, index) => (
-              <a key={product.slug} href={product.websiteUrl} data-product={product.analyticsId}>
+              <ProductDestinationLink key={product.slug} href={product.experienceHref} dataProduct={product.analyticsId}>
                 <span>0{index + 1}</span>
                 <strong>{product.operatingEnvironment}</strong>
                 <small>{product.name}</small>
                 <ArrowUpRight aria-hidden="true" />
-              </a>
+              </ProductDestinationLink>
             ))}
             <Link href="/contact">
-              <span>04</span>
+              <span>0{projectScreens.length + 1}</span>
               <strong>A specialized workflow that needs custom software</strong>
               <small>MBMApps Studio</small>
               <ArrowRight aria-hidden="true" />

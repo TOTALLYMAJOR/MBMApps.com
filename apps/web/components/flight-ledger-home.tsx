@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight, CircleDot } from 'lucide-react';
+import { ProductDestinationLink } from '@/components/product-destination-link';
 import { getInsights } from '@/lib/content';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
@@ -89,9 +90,9 @@ export async function FlightLedgerHome() {
                 <div className="ledger-row__status">
                   <span><CircleDot aria-hidden="true" /> {product.accessDescription}</span>
                   <div className="ledger-row__links">
-                    <a href={product.websiteUrl} data-product={product.analyticsId}>
+                    <ProductDestinationLink href={product.experienceHref} dataProduct={product.analyticsId}>
                       {product.websiteLabel} <ArrowUpRight aria-hidden="true" />
-                    </a>
+                    </ProductDestinationLink>
                     <Link href={product.path}>Product brief <ArrowRight aria-hidden="true" /></Link>
                   </div>
                 </div>

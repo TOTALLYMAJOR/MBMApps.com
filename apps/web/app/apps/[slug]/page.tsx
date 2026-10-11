@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, Check, CircleDot, FolderGit2 } fro
 import { getProjectBySlug, projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
 import { ContentDirectory } from '@/components/editorial-page';
+import { ProductDestinationLink } from '@/components/product-destination-link';
 
 type ProductPageProps = { params: Promise<{ slug: string }> };
 
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 export default async function ProductPage({ params }: ProductPageProps) {
   const product = getProjectBySlug((await params).slug);
   if (!product) notFound();
-  const primaryDestination = product.id === 'quietpilot' ? '/quietpilot' : product.websiteUrl;
+  const primaryDestination = product.id === 'quietpilot' ? '/quietpilot' : product.experienceHref;
   const primaryDestinationLabel = product.id === 'quietpilot' ? 'View the QuietPilot product tour' : product.websiteLabel;
 
   const scenario = [
@@ -73,9 +74,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <p>{product.description}</p>
             <p className="portfolio-catalog-card__access"><CircleDot aria-hidden="true" /> {product.status} · {product.accessDescription}</p>
             <div className="portfolio-actions">
-              <a href={primaryDestination} className="portfolio-button portfolio-button--product" data-product={product.analyticsId}>
+              <ProductDestinationLink href={primaryDestination} className="portfolio-button portfolio-button--product" dataProduct={product.analyticsId}>
                 {primaryDestinationLabel} <ArrowUpRight aria-hidden="true" />
-              </a>
+              </ProductDestinationLink>
               {product.id === 'quietpilot' ? <a href={product.websiteUrl} className="portfolio-text-link">Open product site <ArrowUpRight aria-hidden="true" /></a> : null}
               {product.secondaryAction ? <Link href={product.secondaryAction.href} className="portfolio-text-link">{product.secondaryAction.label} <ArrowRight aria-hidden="true" /></Link> : null}
             </div>

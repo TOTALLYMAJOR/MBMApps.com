@@ -4556,6 +4556,10 @@ body::after,
   grid-template-columns: minmax(0, 1.1fr) minmax(22rem, 0.9fr);
 }
 
+.terminal-home--homepage .terminal-product--layout-4 {
+  grid-column: 1 / -1;
+}
+
 .terminal-home--homepage .terminal-product--layout-1 .terminal-product__image,
 .terminal-home--homepage .terminal-product--layout-2 .terminal-product__image {
   aspect-ratio: 16 / 8.4;
@@ -5236,7 +5240,8 @@ body::after,
 
   .terminal-home--homepage .terminal-product--layout-1,
   .terminal-home--homepage .terminal-product--layout-2,
-  .terminal-home--homepage .terminal-product--layout-3 {
+  .terminal-home--homepage .terminal-product--layout-3,
+  .terminal-home--homepage .terminal-product--layout-4 {
     grid-column: 1 / -1;
   }
 

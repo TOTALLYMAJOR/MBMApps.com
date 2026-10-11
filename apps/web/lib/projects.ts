@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { CalendarDays, FileCheck2, Route } from 'lucide-react';
+import { CalendarDays, FileCheck2, Route, Workflow } from 'lucide-react';
 
 export type ProductAccent = 'violet' | 'field' | 'amber';
 
@@ -40,6 +40,7 @@ export type ProductRecord = {
   accentToken: ProductAccent;
   icon: LucideIcon;
   path: string;
+  experienceHref: string;
   websiteUrl: string;
   websiteLabel: string;
   analyticsId: string;
@@ -58,6 +59,60 @@ export type ProductRecord = {
 };
 
 export const products: [ProductRecord, ...ProductRecord[]] = [
+  {
+    id: 'wale',
+    slug: 'wale',
+    name: 'Wale',
+    shortName: 'W',
+    parentLabel: 'An MBMApps development system',
+    category: 'System discovery and improvement',
+    audience: ['Repository owners', 'Engineering leads', 'Agentic development teams'],
+    operatingEnvironment: 'Repository-scoped development systems and evidence',
+    headline: 'Make the whole system work.',
+    supportingStatement:
+      'Audit controls, diagnose the leading constraint, prepare bounded improvements, and verify evidence with feedback.',
+    description:
+      'Wale is a repository-first development intelligence system that audits instructions, tools, hooks, packages, architecture, quality, and evidence before preparing bounded improvements for human review.',
+    problemStatement:
+      'Development environments accumulate powerful controls without one trustworthy view of what exists, what is effective, and what should change next.',
+    capabilities: [
+      { label: 'Control map', description: 'Choose the instructions, tools, integrations, packages, and evidence Wale should audit.' },
+      { label: 'Constraint diagnosis', description: 'Explain the strongest supported bottleneck and the unknowns that could change it.' },
+      { label: 'Advisory catalog', description: 'Compare bounded recommendations, permissions, tradeoffs, and verification requirements.' },
+      { label: 'Guided implementation', description: 'Select individual capabilities and prepare an approval-gated implementation plan.' },
+      { label: 'Outcome verification', description: 'Compare evidence after an intervention without overstating effectiveness or cost.' }
+    ],
+    scenario: {
+      trigger: 'A repository has accumulated instructions, hooks, plugins, MCPs, packages, and validation rules.',
+      decision: 'The owner must determine which controls are current, which constraints matter, and which improvements are justified.',
+      systemResponse: 'Wale inspects the selected repository, reports evidence health, ranks supported findings, and prepares selectable recommendations.',
+      authorityBoundary: 'The owner approves scope and changes; AgentFlow remains the execution owner when implementation is authorized.',
+      resultingClarity: 'The team sees what exists, what remains unknown, and the next responsible improvement.'
+    },
+    screenshot: {
+      src: '/product-screens/wale.svg',
+      alt: 'Concept artwork for Wale showing a teal whale crossing a gridded system landscape.',
+      caption:
+        'Concept artwork for the public Wale experience. Repository assessment requires a separately started local bridge and an explicitly selected repository.',
+      maturity: 'Public product experience with local repository bridge'
+    },
+    accentToken: 'field',
+    icon: Workflow,
+    path: '/apps/wale',
+    experienceHref: '/wale',
+    websiteUrl: 'https://mbmapps.com/wale',
+    websiteLabel: 'Open Wale archive',
+    analyticsId: 'wale',
+    status: 'Public product experience',
+    accessDescription: 'Public archive available; repository analysis requires the local Wale bridge',
+    proofBoundary:
+      'The public site has no ambient filesystem access. An assessment or prepared plan does not prove approval, execution, deployment, effectiveness, or efficiency.',
+    sourceRepository: {
+      label: 'TOTALLYMAJOR/design-intelligence',
+      href: 'https://github.com/TOTALLYMAJOR/design-intelligence'
+    },
+    visible: true
+  },
   {
     id: 'quietpilot',
     slug: 'quietpilot',
@@ -96,6 +151,7 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     accentToken: 'violet',
     icon: Route,
     path: '/apps/quietpilot',
+    experienceHref: 'https://www.quietpilot.us',
     websiteUrl: 'https://www.quietpilot.us',
     websiteLabel: 'Explore QuietPilot',
     analyticsId: 'quietpilot',
@@ -152,6 +208,7 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     accentToken: 'field',
     icon: CalendarDays,
     path: '/apps/leaguepilot',
+    experienceHref: 'https://www.leaguepilot.us',
     websiteUrl: 'https://www.leaguepilot.us',
     websiteLabel: 'Explore LeaguePilot',
     analyticsId: 'leaguepilot',
@@ -205,6 +262,7 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     accentToken: 'amber',
     icon: FileCheck2,
     path: '/apps/quoteflow',
+    experienceHref: 'https://tonicatering.web.app',
     websiteUrl: 'https://tonicatering.web.app',
     websiteLabel: 'Open QuoteFlow',
     analyticsId: 'quoteflow',

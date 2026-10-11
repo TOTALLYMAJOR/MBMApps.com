@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ProductDestinationLink } from '@/components/product-destination-link';
 import { projectScreens } from '@/lib/projects';
 
 type RouterSelection = 'quietpilot' | 'leaguepilot' | 'quoteflow' | 'studio';
@@ -67,9 +68,9 @@ export function ProductRouter() {
               <ul>
                 {selectedProduct.capabilities.slice(0, 3).map((capability) => <li key={capability.label}>{capability.label}</li>)}
               </ul>
-              <a href={selectedProduct.websiteUrl} data-product={selectedProduct.analyticsId}>
+              <ProductDestinationLink href={selectedProduct.experienceHref} dataProduct={selectedProduct.analyticsId}>
                 {selectedProduct.websiteLabel} <ArrowUpRight aria-hidden="true" />
-              </a>
+              </ProductDestinationLink>
             </>
           ) : (
             <>
