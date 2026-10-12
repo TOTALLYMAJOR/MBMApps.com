@@ -14,7 +14,6 @@ const primaryNavigation = [
   { href: '/control-plane', label: 'Control Plane' },
   { href: '/insights', label: 'Articles' },
   { href: '/discuss', label: 'Discuss' },
-  { href: '/#approach', label: 'Approach' },
   { href: '/about', label: 'About' }
 ];
 
@@ -52,9 +51,8 @@ export function SiteHeader() {
     window.dispatchEvent(new CustomEvent('mbm-theme-change', { detail: { light: next } }));
   }
 
-  // The homepage owns its terminal navigation. Rendering the shared header
-  // there creates two competing navigation bars; inner routes keep this one.
-  if (pathname === '/' || pathname === '/wale') return null;
+  // These complete landing pages own their navigation.
+  if (pathname === '/' || pathname === '/wale' || pathname === '/quietpilot') return null;
 
   return (
     <header className="northstar-header" data-scrolled={scrolled ? 'true' : 'false'}>

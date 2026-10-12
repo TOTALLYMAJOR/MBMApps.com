@@ -262,12 +262,12 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     accentToken: 'amber',
     icon: FileCheck2,
     path: '/apps/quoteflow',
-    experienceHref: 'https://tonicatering.web.app',
-    websiteUrl: 'https://tonicatering.web.app',
-    websiteLabel: 'Open QuoteFlow',
+    experienceHref: 'https://quotepilot.mbmapps.com',
+    websiteUrl: 'https://quotepilot.mbmapps.com',
+    websiteLabel: 'Open QuotePilot',
     analyticsId: 'quoteflow',
-    status: 'Deployed staff application',
-    accessDescription: 'Staff sign-in required',
+    status: 'Public product site and staff workspace',
+    accessDescription: 'Public product site; staff sign-in for the workspace',
     proofBoundary:
       'Proposal approval, payment verification, booking, and production readiness remain distinct states with separate authority.',
     sourceRepository: {
