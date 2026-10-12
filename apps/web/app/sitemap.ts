@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const baseRoutes: MetadataRoute.Sitemap = [
     '',
+    '/concepts',
     '/wale',
     '/apps',
     '/tools',
