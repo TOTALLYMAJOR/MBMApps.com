@@ -1591,7 +1591,7 @@
 }
 
 /* This route owns its complete landing composition. */
-:global(body:has([data-landing-design="catering-platform"]) .northstar-footer),
-:global(body:has([data-landing-design="catering-platform"]) .firefly-field) {
+:global(body):has(.page) :global(.northstar-footer),
+:global(body):has(.page) :global(.firefly-field) {
   display: none;
 }
