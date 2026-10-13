@@ -1,8 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { webcrypto } from 'node:crypto';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { currentConsentPolicyVersion } from '@mbm/contracts';
 import { POST } from '@/app/api/chat/route';
+import { createGateToken, GATE_COOKIE_NAME } from '@/lib/site-gate';
 
 const originalEnv = { ...process.env };
+const secret = 'a-signing-secret-with-at-least-thirty-two-characters';
+let memberToken = '';
+let guestToken = '';
 
 const validPayload = {
   replyTo: 'visitor@example.com',
@@ -17,10 +22,14 @@ const validPayload = {
   }
 };
 
-function makeRequest(payload: unknown) {
+function makeRequest(payload: unknown, token = memberToken) {
   return new Request('https://mbmapps.com/api/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Origin: 'https://mbmapps.com' },
+    headers: {
+      'Content-Type': 'application/json',
+      Origin: 'https://mbmapps.com',
+      Cookie: `${GATE_COOKIE_NAME}=${token}`
+    },
     body: JSON.stringify(payload)
   });
 }
@@ -35,11 +44,31 @@ function persistenceReceipt() {
 }
 
 describe('chat intake route', () => {
+  beforeAll(async () => {
+    Object.defineProperty(globalThis, 'crypto', { value: webcrypto, configurable: true });
+    memberToken = await createGateToken(secret, 'member');
+    guestToken = await createGateToken(secret, 'guest');
+  });
+
   beforeEach(() => {
-    process.env = { ...originalEnv, BACKEND_API_URL: 'https://api.example.com' };
+    process.env = {
+      ...originalEnv,
+      BACKEND_API_URL: 'https://api.example.com',
+      MBMAPPS_GATE_SECRET: secret
+    };
     delete process.env.RESEND_API_KEY;
     delete process.env.RESEND_FROM_EMAIL;
     delete process.env.CHAT_FORWARD_TO;
+  });
+
+  it('denies guest access before parsing or forwarding chat content', async () => {
+    const fetchMock = vi.fn<typeof fetch>();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await POST(makeRequest(validPayload, guestToken));
+
+    expect(response.status).toBe(403);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   afterEach(() => {
@@ -79,6 +108,10 @@ describe('chat intake route', () => {
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({ state: 'persisted', notification: 'unavailable' });
     expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://api.example.com/v1/chat',
+      expect.objectContaining({ headers: expect.objectContaining({ Authorization: `Bearer ${memberToken}` }) })
+    );
   });
 
   it('keeps a persisted lead successful when provider delivery fails', async () => {

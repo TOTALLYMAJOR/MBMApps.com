@@ -235,6 +235,47 @@
 .entrance h1 { margin: 0; font: 500 clamp(52px, 9vw, 102px)/.88 var(--font-bricolage-grotesk), sans-serif; letter-spacing: -.065em; }
 .intro { max-width: 500px; margin: 28px auto 38px; color: var(--lock-muted); font-size: 14px; line-height: 1.7; }
 
+.providerGrid {
+  width: min(520px, 92vw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.providerGrid button {
+  min-height: 66px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  color: var(--lock-ink);
+  border: 1px solid #3b3832;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #171512, #0d0d0c);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .28);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.providerGrid button:hover:not(:disabled) {
+  border-color: var(--lock-orange);
+  background: #18120f;
+  transform: translateY(-2px);
+}
+
+.providerGrid button:focus-visible {
+  outline: 2px solid #ffd1bb;
+  outline-offset: 3px;
+}
+
+.providerGrid button:disabled { color: #8d877d; cursor: wait; }
+.providerGrid button span { font: 600 13px var(--font-bricolage-grotesk), sans-serif; }
+.providerGrid button small { color: var(--lock-muted); font: 9px var(--font-ibm-plex-mono), monospace; text-transform: uppercase; letter-spacing: .08em; }
+.providerGrid .guestButton { grid-column: 1 / -1; border-color: #664431; }
+
 .enterFrame {
   width: min(320px, 82vw);
   margin: 0 auto;
@@ -304,7 +345,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .enterFrame,
-  .enterButton svg { transition: none; }
+  .enterButton svg,
+  .providerGrid button { transition: none; }
   .enterFrame::before { animation: none; opacity: .65; }
 }
 
@@ -313,4 +355,6 @@
   .entrance h1 { font-size: clamp(50px, 16vw, 72px); }
   .intro { margin: 24px auto 34px; font-size: 13px; }
   .enterButton { min-height: 64px; }
+  .providerGrid { grid-template-columns: 1fr; }
+  .providerGrid .guestButton { grid-column: auto; }
 }

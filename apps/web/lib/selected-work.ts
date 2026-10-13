@@ -10,6 +10,15 @@ export type SelectedWorkProject = {
 
 export const selectedWorkProjects: readonly SelectedWorkProject[] = [
   {
+    name: 'Little Legend Studios',
+    type: 'Cinematic product site / personalized keepsakes / guided story worlds',
+    description: 'A cinematic product site for personalized story-world keepsakes, combining a narrative landing experience with clear parent entry points.',
+    href: 'https://little-legend-studios-web.vercel.app/',
+    image: '/product-screens/little-legend-studios.png',
+    alt: 'Little Legend Studios product website introducing cinematic story-world keepsakes for families.',
+    visitLabel: 'visit site'
+  },
+  {
     name: 'Wake for Warriors',
     type: 'Ecommerce storefront / Shopify integration / mission-driven brand',
     description: 'A purpose-driven commerce concept that keeps the storefront experience connected to the Wake for Warriors mission before shoppers continue into Shopify.',
@@ -26,6 +35,15 @@ export const selectedWorkProjects: readonly SelectedWorkProject[] = [
     image: '/product-screens/jour-et-nuit.png',
     alt: 'Jour et Nuit Concierge website presenting business readiness and growth consulting services.',
     visitLabel: 'visit site'
+  },
+  {
+    name: 'Arena Advisor',
+    type: 'Game UI / champion comparison / decision support',
+    description: 'A League-inspired interface that brings champion selection, party context, comparison, and Arena decision support into one focused operating surface.',
+    href: 'https://github.com/TOTALLYMAJOR/league-lobby-preview',
+    image: '/product-screens/arena-advisor.png',
+    alt: 'Arena Advisor game interface with champion cards, roster search, party context, and comparison actions.',
+    visitLabel: 'view source'
   },
   {
     name: 'PerformancePilot Wheelchair Rugby',

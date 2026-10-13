@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getProjectBySlug, projectScreens } from '@/lib/projects';
+import { getProjectBySlug, homepagePortfolio, projectScreens } from '@/lib/projects';
 
 describe('project catalog', () => {
   it('lists the approved MBMApps applications', () => {
@@ -54,5 +54,26 @@ describe('project catalog', () => {
       expect(JSON.stringify(project).toLowerCase()).not.toContain('coming soon');
       expect(JSON.stringify(project).toLowerCase()).not.toContain('app three');
     }
+  });
+
+  it('publishes one canonical homepage taxonomy without changing catalog visibility', () => {
+    expect(homepagePortfolio.map(({ slug, kind, featured }) => ({ slug, kind, featured }))).toEqual([
+      { slug: 'wale', kind: 'Development system', featured: true },
+      { slug: 'quoteflow', kind: 'Product system', featured: true },
+      { slug: 'quietpilot', kind: 'Product', featured: true },
+      { slug: 'leaguepilot', kind: 'Product', featured: false },
+      { slug: 'sportpilot', kind: 'Website preview', featured: false },
+      { slug: 'master-sc', kind: 'Protected showcase', featured: false },
+    ]);
+
+    expect(homepagePortfolio.map((item) => item.href)).toEqual([
+      '/wale',
+      'https://quotepilot.mbmapps.com',
+      'https://www.quietpilot.us',
+      'https://www.leaguepilot.us',
+      'https://sportpilot.mbmapps.com/',
+      '/MasterSC',
+    ]);
+    expect(projectScreens.map((project) => project.slug)).toEqual(['wale', 'quietpilot', 'leaguepilot', 'quoteflow']);
   });
 });

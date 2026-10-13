@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { GATE_COOKIE_NAME, getGateConfiguration, verifyGateToken } from '@/lib/site-gate';
+import { GATE_COOKIE_NAME, getGateConfiguration, readGateSession } from '@/lib/site-gate';
 
 function isPublicEntrancePath(pathname: string) {
   return pathname === '/gate'
@@ -11,12 +11,33 @@ function isPublicEntrancePath(pathname: string) {
 
 export async function middleware(request: NextRequest) {
   const configuration = getGateConfiguration();
-  if (!configuration.enabled || isPublicEntrancePath(request.nextUrl.pathname)) {
+  if (isPublicEntrancePath(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
 
+  if (!configuration.configured) {
+    if (request.nextUrl.pathname.startsWith('/api/')) {
+      return NextResponse.json({ ok: false, message: 'Site access is not configured.' }, { status: 503 });
+    }
+    return redirectToEntrance(request);
+  }
+
   const token = request.cookies.get(GATE_COOKIE_NAME)?.value;
-  if (await verifyGateToken(token, configuration.secret)) {
+  const session = await readGateSession(token, configuration.secret);
+  if (session?.role === 'member') {
+    return NextResponse.next();
+  }
+
+  if (session?.role === 'guest') {
+    if (request.nextUrl.pathname === '/discuss') {
+      const home = request.nextUrl.clone();
+      home.pathname = '/';
+      home.search = '';
+      return NextResponse.redirect(home);
+    }
+    if (request.nextUrl.pathname === '/api/chat') {
+      return NextResponse.json({ ok: false, message: 'Member access is required.' }, { status: 403 });
+    }
     return NextResponse.next();
   }
 
@@ -27,6 +48,10 @@ export async function middleware(request: NextRequest) {
     );
   }
 
+  return redirectToEntrance(request);
+}
+
+function redirectToEntrance(request: NextRequest) {
   const entrance = request.nextUrl.clone();
   entrance.pathname = '/gate';
   entrance.search = '';

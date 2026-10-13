@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { CalendarDays, FileCheck2, Route, Workflow } from 'lucide-react';
+import { CalendarDays, Crosshair, FileCheck2, Route, Workflow } from 'lucide-react';
 
 export type ProductAccent = 'violet' | 'field' | 'amber';
 
@@ -57,6 +57,71 @@ export type ProductRecord = {
   };
   visible: boolean;
 };
+
+// Homepage destination only: do not invent a catalog brief or source/release claims.
+export const sportPilotPreview = {
+  slug: 'sportpilot',
+  name: 'SportPilot',
+  websiteUrl: 'https://sportpilot.mbmapps.com/'
+} as const satisfies Pick<ProductRecord, 'slug' | 'name' | 'websiteUrl'>;
+
+export const masterScProduct = {
+  id: 'master-sc',
+  slug: 'master-sc',
+  name: 'SC2 Master Coach',
+  shortName: 'MSC',
+  parentLabel: 'An MBMApps local-first coaching system',
+  category: 'Replay intelligence and guided execution',
+  audience: ['Competitive players', 'Replay reviewers', 'Practice-focused coaches'],
+  operatingEnvironment: 'Local Windows desktop and loopback interface',
+  headline: 'Read the field. Build the response.',
+  supportingStatement:
+    'Turn replay evidence into a bounded practice decision without claiming live game control.',
+  description:
+    'SC2 Master Coach is a local-first desktop coaching system that connects replay review, tactical explanation, and guided execution while keeping sample, runtime, and release states distinct.',
+  problemStatement:
+    'Replay observations are difficult to improve from when the evidence, decision, and next practice action are separated.',
+  capabilities: [
+    { label: 'Replay intelligence', description: 'Organize local replay evidence into a readable review sequence.' },
+    { label: 'Checkpoint coaching', description: 'Connect supply checkpoints to specific observations and bounded responses.' },
+    { label: 'Guided execution', description: 'Explain the next practice decision without controlling a live game.' },
+    { label: 'Local-first operation', description: 'Keep the coaching workflow on the player’s machine and loopback interface.' }
+  ],
+  scenario: {
+    trigger: 'A player finishes a match and needs to understand one decision that changed the game.',
+    decision: 'The player must separate replay evidence from assumptions and choose a focused practice response.',
+    systemResponse: 'Master Coach structures the local replay review into checkpoints, signals, and a bounded next action.',
+    authorityBoundary: 'The player retains every game and practice decision; the system does not control live play.',
+    resultingClarity: 'The review ends with one evidence-linked adjustment instead of a generic list of mistakes.'
+  },
+  screenshot: {
+    src: '/product-screens/master-sc.svg',
+    alt: 'Original abstract MasterSC concept artwork showing a tactical relay and three coaching doctrines.',
+    caption:
+      'Concept artwork for the protected MasterSC showcase. It is not a live game capture or proof of runtime operation.',
+    maturity: 'Protected interactive portfolio showcase'
+  },
+  accentToken: 'amber',
+  icon: Crosshair,
+  path: '/MasterSC',
+  experienceHref: '/MasterSC',
+  websiteUrl: 'https://mbmapps.com/MasterSC',
+  websiteLabel: 'Open MasterSC showcase',
+  analyticsId: 'master-sc',
+  status: 'Interactive portfolio showcase',
+  accessDescription: 'Available to authenticated guest and member sessions',
+  proofBoundary:
+    'The interface uses deterministic sample state. It does not prove live game data, local runtime operation, deployment, release acceptance, coaching outcomes, or Blizzard affiliation.',
+  sourceRepository: {
+    label: 'TOTALLYMAJOR/SC2-Master-Coach',
+    href: 'https://github.com/TOTALLYMAJOR/SC2-Master-Coach'
+  },
+  secondaryAction: {
+    label: 'Download public v1.13.0',
+    href: 'https://github.com/TOTALLYMAJOR/SC2-Master-Coach/releases/tag/v1.13.0'
+  },
+  visible: false
+} satisfies ProductRecord;
 
 export const products: [ProductRecord, ...ProductRecord[]] = [
   {
@@ -131,7 +196,9 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
     capabilities: [
       { label: 'Quotes and proposals', description: 'Keep commercial context connected to the event.' },
       { label: 'Payment verification', description: 'Separate payment context from provider-backed proof.' },
-      { label: 'Staffing and inventory', description: 'Surface coverage gaps and missing stock evidence.' },
+      { label: 'Inventory', description: 'Surface stock requirements and missing inventory evidence.' },
+      { label: 'Staffing', description: 'Surface coverage gaps and staffing requirements.' },
+      { label: 'Partner portals', description: 'Grant-scoped event collaboration; private operations remain protected.' },
       { label: 'Readiness review', description: 'Show blockers and the next responsible action.' }
     ],
     scenario: {
@@ -275,7 +342,8 @@ export const products: [ProductRecord, ...ProductRecord[]] = [
       href: 'https://github.com/TOTALLYMAJOR/quoteflow'
     },
     visible: true
-  }
+  },
+  masterScProduct
 ] satisfies [ProductRecord, ...ProductRecord[]];
 
 export const projectScreens = products.filter((product) => product.visible) as [ProductRecord, ...ProductRecord[]];
@@ -283,3 +351,81 @@ export const projectScreens = products.filter((product) => product.visible) as [
 export function getProjectBySlug(slug: string) {
   return projectScreens.find((product) => product.slug === slug);
 }
+
+export type HomepagePortfolioKind =
+  | 'Development system'
+  | 'Product system'
+  | 'Product'
+  | 'Website preview'
+  | 'Protected showcase';
+
+export type HomepagePortfolioItem = {
+  slug: string;
+  name: string;
+  href: string;
+  kind: HomepagePortfolioKind;
+  status: string;
+  featured: boolean;
+};
+
+function requireProduct(slug: string) {
+  const product = products.find((candidate) => candidate.slug === slug);
+  if (!product) throw new Error(`Missing canonical product record: ${slug}`);
+  return product;
+}
+
+const wale = requireProduct('wale');
+const quoteFlow = requireProduct('quoteflow');
+const quietPilot = requireProduct('quietpilot');
+const leaguePilot = requireProduct('leaguepilot');
+
+export const homepagePortfolio = [
+  {
+    slug: wale.slug,
+    name: wale.name,
+    href: wale.experienceHref,
+    kind: 'Development system',
+    status: wale.status,
+    featured: true,
+  },
+  {
+    slug: quoteFlow.slug,
+    name: quoteFlow.name,
+    href: quoteFlow.experienceHref,
+    kind: 'Product system',
+    status: quoteFlow.status,
+    featured: true,
+  },
+  {
+    slug: quietPilot.slug,
+    name: quietPilot.name,
+    href: quietPilot.websiteUrl,
+    kind: 'Product',
+    status: quietPilot.status,
+    featured: true,
+  },
+  {
+    slug: leaguePilot.slug,
+    name: leaguePilot.name,
+    href: leaguePilot.websiteUrl,
+    kind: 'Product',
+    status: leaguePilot.status,
+    featured: false,
+  },
+  {
+    slug: sportPilotPreview.slug,
+    name: sportPilotPreview.name,
+    href: sportPilotPreview.websiteUrl,
+    kind: 'Website preview',
+    status: 'External website preview',
+    featured: false,
+  },
+  {
+    slug: masterScProduct.slug,
+    name: masterScProduct.name,
+    href: masterScProduct.experienceHref,
+    kind: 'Protected showcase',
+    status: masterScProduct.status,
+    featured: false,
+  },
+] as const satisfies readonly HomepagePortfolioItem[];

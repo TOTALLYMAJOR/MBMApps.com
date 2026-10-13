@@ -239,6 +239,22 @@ export const apiErrorSchema = z.object({
 
 export type ApiError = z.infer<typeof apiErrorSchema>;
 
+export const siteAccessRoleSchema = z.enum(['guest', 'member']);
+export const siteAccessTokenVersion = 'v2' as const;
+
+export type SiteAccessRole = z.infer<typeof siteAccessRoleSchema>;
+
+export const siteAccessVerificationRequestSchema = z.object({
+  idToken: z.string().min(20).max(8192)
+});
+
+export const siteAccessVerificationResponseSchema = z.object({
+  ok: z.literal(true),
+  role: siteAccessRoleSchema
+});
+
+export type SiteAccessVerificationResponse = z.infer<typeof siteAccessVerificationResponseSchema>;
+
 export const utmAttributionSchema = z.object({
   source: z.string().max(120).optional(),
   medium: z.string().max(120).optional(),

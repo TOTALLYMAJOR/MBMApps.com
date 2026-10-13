@@ -11,11 +11,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseRoutes: MetadataRoute.Sitemap = [
     '',
     '/wale',
+    '/conceptdesigns',
+    '/MasterSC',
     '/apps',
     '/tools',
     ...tools.map((tool) => tool.href),
     '/control-plane',
-    '/discuss',
     ...projectScreens.map((project) => project.path),
     '/services',
     '/case-studies',

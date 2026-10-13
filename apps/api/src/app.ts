@@ -13,10 +13,13 @@ import {
   leadFilteredResponseSchema,
   leadPersistenceResponseSchema,
   operationalOutcomeResponseSchema,
+  siteAccessVerificationRequestSchema,
+  siteAccessVerificationResponseSchema,
   telemetryResponseSchema,
   type ApiError,
   type ChatLeadSubmission,
-  type ContactSubmission
+  type ContactSubmission,
+  type SiteAccessRole
 } from '@mbm/contracts';
 import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
@@ -32,6 +35,12 @@ import {
   storeContact,
   storeTelemetry
 } from './repository.js';
+import {
+  IdentityVerificationUnavailableError,
+  InvalidIdentityTokenError,
+  verifyFirebaseIdentity
+} from './firebase.js';
+import { verifySiteSessionToken } from './site-session.js';
 
 const messageSchema = z.object({
   message: z.string().min(2)
@@ -42,12 +51,23 @@ export type LeadRepository = {
   storeChatLead: (submission: ChatLeadSubmission) => Promise<string>;
 };
 
+export type IdentityVerifier = (idToken: string) => Promise<{ signInProvider?: string }>;
+export type SiteSessionVerifier = (token: string) => Promise<SiteAccessRole | null> | SiteAccessRole | null;
+
 const firestoreLeadRepository: LeadRepository = {
   storeContact,
   storeChatLead
 };
 
-export function createApp({ leadRepository = firestoreLeadRepository }: { leadRepository?: LeadRepository } = {}) {
+export function createApp({
+  leadRepository = firestoreLeadRepository,
+  identityVerifier = verifyFirebaseIdentity,
+  siteSessionVerifier = verifySiteSessionToken
+}: {
+  leadRepository?: LeadRepository;
+  identityVerifier?: IdentityVerifier;
+  siteSessionVerifier?: SiteSessionVerifier;
+} = {}) {
   const app = express();
 
   app.set('trust proxy', 1);
@@ -86,6 +106,39 @@ export function createApp({ leadRepository = firestoreLeadRepository }: { leadRe
 
   app.get('/healthz', (_req, res) => {
     res.status(200).json({ ok: true, service: 'mbmapps-api' });
+  });
+
+  app.post('/v1/auth/verify', generalLimiter, async (req, res, next) => {
+    try {
+      const parsed = siteAccessVerificationRequestSchema.parse(req.body);
+      const identity = await identityVerifier(parsed.idToken);
+      const role = identity.signInProvider === 'anonymous'
+        ? 'guest'
+        : ['google.com', 'microsoft.com', 'apple.com'].includes(identity.signInProvider ?? '')
+          ? 'member'
+          : null;
+
+      if (role === null) {
+        res.status(403).json({
+          ok: false,
+          code: 'UNSUPPORTED_IDENTITY_PROVIDER',
+          message: 'Use Google, Microsoft, Apple, or guest access.'
+        });
+        return;
+      }
+
+      res.status(200).json(siteAccessVerificationResponseSchema.parse({ ok: true, role }));
+    } catch (error) {
+      if (error instanceof InvalidIdentityTokenError) {
+        res.status(401).json({ ok: false, code: 'INVALID_IDENTITY_TOKEN', message: 'Sign in again and retry.' });
+        return;
+      }
+      if (error instanceof IdentityVerificationUnavailableError) {
+        res.status(503).json({ ok: false, code: 'IDENTITY_VERIFICATION_UNAVAILABLE', message: 'Sign-in verification is unavailable.' });
+        return;
+      }
+      next(error);
+    }
   });
 
   app.get('/v1/demo/metrics', generalLimiter, async (_req, res, next) => {
@@ -164,6 +217,18 @@ export function createApp({ leadRepository = firestoreLeadRepository }: { leadRe
 
   app.post('/v1/chat', intakeLimiter, async (req, res, next) => {
     try {
+      const authorization = req.get('authorization') ?? '';
+      const token = authorization.startsWith('Bearer ') ? authorization.slice('Bearer '.length) : '';
+      const role = token ? await siteSessionVerifier(token) : null;
+      if (role === null) {
+        res.status(401).json({ ok: false, code: 'SITE_SESSION_REQUIRED', message: 'A valid site session is required.' });
+        return;
+      }
+      if (role !== 'member') {
+        res.status(403).json({ ok: false, code: 'MEMBER_ACCESS_REQUIRED', message: 'Member access is required.' });
+        return;
+      }
+
       const parsed = chatLeadSubmissionSchema.parse(req.body);
 
       if (parsed.website.trim().length > 0) {

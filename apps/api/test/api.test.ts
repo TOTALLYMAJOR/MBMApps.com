@@ -13,7 +13,9 @@ import {
 
 const storeContact = vi.fn(async () => 'contact_test');
 const storeChatLead = vi.fn(async () => 'chat_test');
-const app = createApp({ leadRepository: { storeContact, storeChatLead } });
+const identityVerifier = vi.fn(async () => ({ signInProvider: 'google.com' }));
+const siteSessionVerifier = vi.fn(async () => 'member' as const);
+const app = createApp({ leadRepository: { storeContact, storeChatLead }, identityVerifier, siteSessionVerifier });
 
 const enrichedContactPayload = {
   name: 'Jordan Lee',
@@ -53,6 +55,31 @@ describe('MBM API', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.ok).toBe(true);
+  });
+
+  it('derives member access from a verified supported provider', async () => {
+    identityVerifier.mockResolvedValueOnce({ signInProvider: 'microsoft.com' });
+    const response = await request(app).post('/v1/auth/verify').send({ idToken: 'verified-firebase-token-value' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ ok: true, role: 'member' });
+    expect(identityVerifier).toHaveBeenCalledWith('verified-firebase-token-value');
+  });
+
+  it('derives guest access only from Firebase anonymous authentication', async () => {
+    identityVerifier.mockResolvedValueOnce({ signInProvider: 'anonymous' });
+    const response = await request(app).post('/v1/auth/verify').send({ idToken: 'anonymous-firebase-token-value' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ ok: true, role: 'guest' });
+  });
+
+  it('rejects verified providers outside the approved access set', async () => {
+    identityVerifier.mockResolvedValueOnce({ signInProvider: 'password' });
+    const response = await request(app).post('/v1/auth/verify').send({ idToken: 'password-firebase-token-value' });
+
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe('UNSUPPORTED_IDENTITY_PROVIDER');
   });
 
   it('returns demo metrics', async () => {
@@ -96,7 +123,7 @@ describe('MBM API', () => {
   });
 
   it('persists guided-chat leads through the same intake seam', async () => {
-    const response = await request(app).post('/v1/chat').send({
+    const response = await request(app).post('/v1/chat').set('Authorization', 'Bearer member-session').send({
       replyTo: 'visitor@example.com',
       transcript: 'Visitor: We need a workflow review with durable delivery evidence.',
       consent: {
@@ -110,6 +137,26 @@ describe('MBM API', () => {
     expect(response.status).toBe(200);
     expect(response.body.state).toBe('persisted');
     expect(storeChatLead).toHaveBeenCalled();
+  });
+
+  it('denies direct guided-chat persistence without a member session', async () => {
+    const restrictedApp = createApp({
+      leadRepository: { storeContact, storeChatLead },
+      identityVerifier,
+      siteSessionVerifier: async () => 'guest'
+    });
+    const response = await request(restrictedApp)
+      .post('/v1/chat')
+      .set('Authorization', 'Bearer guest-session')
+      .send({
+        replyTo: 'visitor@example.com',
+        transcript: 'Visitor: We need a workflow review with durable delivery evidence.',
+        consent: { dataProcessingAccepted: true, acceptedAt: new Date().toISOString() }
+      });
+
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe('MEMBER_ACCESS_REQUIRED');
+    expect(storeChatLead).not.toHaveBeenCalled();
   });
 
   it('reports persistence outages instead of accepting a lead', async () => {
@@ -131,9 +178,10 @@ describe('MBM API', () => {
       leadRepository: {
         storeContact: async () => { throw new LeadPersistenceUnavailableError(); },
         storeChatLead: async () => { throw new LeadPersistenceUnavailableError(); }
-      }
+      },
+      siteSessionVerifier
     });
-    const response = await request(unavailableApp).post('/v1/chat').send({
+    const response = await request(unavailableApp).post('/v1/chat').set('Authorization', 'Bearer member-session').send({
       replyTo: 'visitor@example.com',
       transcript: 'Visitor: We need a workflow review with durable delivery evidence.',
       consent: {
@@ -147,7 +195,7 @@ describe('MBM API', () => {
   });
 
   it('filters honeypots without persisting them', async () => {
-    const response = await request(app).post('/v1/chat').send({
+    const response = await request(app).post('/v1/chat').set('Authorization', 'Bearer member-session').send({
       replyTo: 'visitor@example.com',
       transcript: 'Visitor: We need a workflow review with durable delivery evidence.',
       website: 'https://spam.example',

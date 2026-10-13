@@ -6,7 +6,7 @@ This document states the public product and proof boundaries the MBMApps site mu
 
 `apps/web/lib/projects.ts` owns product names, descriptions, routes, access language, status, proof boundaries, and source-repository links. Presentation code must consume that registry rather than restating product truth.
 
-The visible portfolio currently contains:
+The visible catalog currently contains:
 
 - Wale
 - QuietPilot
@@ -15,14 +15,21 @@ The visible portfolio currently contains:
 
 Visibility is a publication decision, not evidence that a product is deployed, configured, available to every visitor, or operationally effective.
 
+QuietPilot's homepage showcase renders its canonical capabilities, explicitly including Inventory, Staffing, and Partner portals. Partner collaboration is scoped to an authenticated event grant; this showcase neither opens private operations nor proves hosted portal acceptance. Staffing and inventory planning do not establish readiness. The existing catering artwork remains a visual illustration, not an operational receipt.
+
+The homepage also includes an owner-requested SportPilot website preview, after QuietPilot and before LeaguePilot. `sportPilotPreview` in the canonical product source owns its name and URL, `https://sportpilot.mbmapps.com/`. It reuses the scroll-through preview with an accessible full-site link. This is not a new catalog brief, source-repository claim, or verification of SportPilot authentication or operational outcomes. The destination owns its interface and access rules.
+
+The owner selected MasterSC as the last homepage product section, after LeaguePilot. Its preview and full-showcase link use the same-origin `/MasterSC` route and `masterScProduct`; sample state is explicitly labeled. Its `visible: false` catalog setting and existing source/release boundaries remain unchanged. Local inclusion does not establish public deployment.
+
 ## Site and route roles
 
 - `/` is the MBMApps terminal portfolio, rendered by `TerminalPortfolioHome`.
 - `/apps` lists visible canonical product records.
 - `/apps/[slug]` renders a product brief from the registry.
-- `/wale` is the public Wale Living Archive, rendered by `WaleArchiveShell`.
+- `/wale` is the current Wale Living Archive, rendered by `WaleArchiveShell`.
+- `/conceptdesigns` is a protected concept-design route rendered by `WaleExperience`. It contains the blue `AbyssArrival` and deterministic precision workflow previously embedded by the homepage Wale chapter.
 
-The root portfolio and the immersive Wale route are distinct product surfaces. A historical Wale signal-field prototype does not replace either route unless a later accepted decision and implementation explicitly do so.
+The homepage links directly to `/wale` and does not own a competing `#wale` destination. The root portfolio, current Wale route, and concept-design route are distinct surfaces. A concept or historical prototype does not replace the current Wale route unless a later accepted decision and implementation explicitly do so.
 
 ## Wale boundary
 

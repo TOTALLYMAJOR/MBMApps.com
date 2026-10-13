@@ -2,7 +2,7 @@ import { webcrypto } from 'node:crypto';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
   createGateToken,
-  isCorrectSignalPath,
+  readGateSession,
   safeReturnPath,
   verifyGateToken
 } from './site-gate';
@@ -12,19 +12,21 @@ beforeAll(() => {
 });
 
 describe('Signal Lock security contract', () => {
-  it('accepts only the complete signal path in order', () => {
-    expect(isCorrectSignalPath(['observe', 'reason', 'build', 'verify'])).toBe(true);
-    expect(isCorrectSignalPath(['observe', 'build', 'reason', 'verify'])).toBe(false);
-    expect(isCorrectSignalPath(['observe', 'reason', 'build'])).toBe(false);
-  });
-
-  it('issues a signed token that expires and rejects tampering', async () => {
+  it('issues a signed role token that expires and rejects tampering', async () => {
     const now = 1_800_000_000_000;
-    const token = await createGateToken('test-signing-secret', now, 60);
+    const token = await createGateToken('test-signing-secret', 'guest', now, 60);
 
     await expect(verifyGateToken(token, 'test-signing-secret', now + 59_000)).resolves.toBe(true);
     await expect(verifyGateToken(token, 'test-signing-secret', now + 61_000)).resolves.toBe(false);
     await expect(verifyGateToken(`${token}x`, 'test-signing-secret', now + 10_000)).resolves.toBe(false);
+    await expect(readGateSession(token, 'test-signing-secret', now + 10_000)).resolves.toMatchObject({ role: 'guest' });
+  });
+
+  it('does not allow a signed guest token to be relabeled as a member', async () => {
+    const now = 1_800_000_000_000;
+    const token = await createGateToken('test-signing-secret', 'guest', now, 60);
+
+    await expect(readGateSession(token.replace('.guest.', '.member.'), 'test-signing-secret', now)).resolves.toBeNull();
   });
 
   it('keeps redirects on this site', () => {

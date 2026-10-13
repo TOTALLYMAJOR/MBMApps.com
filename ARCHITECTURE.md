@@ -26,6 +26,7 @@ Local development is Docker-first, with host-only web/API fallbacks. Deployment 
 - API validation, persistence, and receipts: `apps/api/src/*` plus web API routes.
 - Long-form content: `content/` through `apps/web/lib/content.ts`.
 - Lead-delivery decisions: `docs/adr/0001-lead-intake-delivery-truth.md` and `CONTEXT.md`.
+- Site access and chat authorization: `docs/adr/0002-firebase-site-access-and-chat-authorization.md`.
 - Visual tokens and global interaction language: `apps/web/app/globals.css`, component styles, and `design-qa.md`.
 
 ## Homepage boundary
@@ -54,6 +55,8 @@ The extraction must not make presentation modules new authorities for products, 
 - A provider event is evidence about that provider, not automatically a business-state transition.
 - Browser-only lifecycle code must be SSR-safe, cleanup-complete, and isolated from render-time data composition.
 - Public content may describe only the proof boundary supported by its source record.
+- Firebase Auth is the identity authority. The API verifies ID tokens and derives `guest` or `member`; the web session carries only that signed role and expiry.
+- Guests may browse protected portfolio routes but cannot render or reach guided-chat or Discord discussion surfaces.
 
 ## Architecture change test
 

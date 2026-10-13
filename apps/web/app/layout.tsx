@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Inter, Instrument_Serif, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { SiteHeader } from '@/components/site-header';
@@ -7,6 +8,8 @@ import { FireflyField } from '@/components/firefly-field';
 import { NorthstarMotion } from '@/components/northstar-motion';
 import { WebVitalsReporter } from '@/components/web-vitals-reporter';
 import { siteConfig } from '@/lib/site';
+import { SiteSessionProvider } from '@/components/site-session';
+import { GATE_COOKIE_NAME, getGateConfiguration, readGateSession } from '@/lib/site-gate';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -47,6 +50,7 @@ export const metadata: Metadata = {
     template: '%s | MBMApps'
   },
   description: siteConfig.description,
+  robots: { index: false, follow: false },
   applicationName: 'MBMApps',
   alternates: {
     canonical: '/'
@@ -81,7 +85,13 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const configuration = getGateConfiguration();
+  const session = configuration.configured
+    ? await readGateSession(cookieStore.get(GATE_COOKIE_NAME)?.value, configuration.secret)
+    : null;
+
   return (
     <html
       lang="en"
@@ -89,15 +99,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${spaceGrotesk.variable} ${inter.variable} ${bricolageGrotesk.variable} ${ibmPlexMono.variable} ${instrumentSerif.variable}`}
     >
       <body className="text-ink antialiased">
-        <a href="#main-content" className="skip-link">Skip to content</a>
-        <FireflyField />
-        <div className="flex min-h-screen flex-col">
-          <SiteHeader />
-          <main id="main-content" className="flex-1">{children}</main>
-          <SiteFooter />
-        </div>
-        <NorthstarMotion />
-        <WebVitalsReporter />
+        <SiteSessionProvider role={session?.role ?? null}>
+          <a href="#main-content" className="skip-link">Skip to content</a>
+          <FireflyField />
+          <div className="flex min-h-screen flex-col">
+            <SiteHeader />
+            <main id="main-content" className="flex-1">{children}</main>
+            <SiteFooter canUseChat={session?.role === 'member'} />
+          </div>
+          <NorthstarMotion />
+          <WebVitalsReporter />
+        </SiteSessionProvider>
       </body>
     </html>
   );

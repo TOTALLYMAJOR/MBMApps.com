@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
   abyssBubbles,
@@ -82,6 +83,20 @@ describe('Wale precision experience model', () => {
 });
 
 describe('Wale abyss arrival model', () => {
+  it('separates the current Wale route from the blue concept-design route', () => {
+    const waleRouteSource = readFileSync(new URL('../app/wale/page.tsx', import.meta.url), 'utf8');
+    const conceptRouteSource = readFileSync(new URL('../app/conceptdesigns/page.tsx', import.meta.url), 'utf8');
+    const homepageSource = readFileSync(new URL('../components/terminal-portfolio-home.tsx', import.meta.url), 'utf8');
+
+    expect(waleRouteSource).toContain("import { WaleArchiveShell } from '@/components/wale-archive-shell'");
+    expect(waleRouteSource).toContain('return <WaleArchiveShell />');
+    expect(conceptRouteSource).toContain("import { WaleExperience } from '@/components/wale/wale-experience'");
+    expect(conceptRouteSource).toContain('return <WaleExperience />');
+    expect(homepageSource).not.toContain('WaleHomeChapter');
+    expect(homepageSource).not.toContain('href="#wale"');
+    expect(homepageSource).toContain('href="/wale"');
+  });
+
   it('defines one fixed arrival viewport before the retained precision viewport', () => {
     expect(abyssContract.documentScroll).toBe(false);
     expect(abyssContract.viewports).toEqual(['abyss', 'precision']);

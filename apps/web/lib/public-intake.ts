@@ -19,7 +19,13 @@ export function assertSameOrigin(request: Request) {
   if (origin === null) return;
 
   try {
-    if (new URL(origin).origin !== new URL(request.url).origin) {
+    const requestUrl = new URL(request.url);
+    const host = request.headers.get('host');
+    const protocol = request.headers.get('x-forwarded-proto')?.split(',')[0]?.trim()
+      || requestUrl.protocol.slice(0, -1);
+    const requestOrigin = host ? new URL(`${protocol}://${host}`).origin : requestUrl.origin;
+
+    if (new URL(origin).origin !== requestOrigin) {
       throw new PublicIntakeRequestError('Cross-origin intake requests are not accepted.', 403);
     }
   } catch (error) {

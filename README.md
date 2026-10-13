@@ -16,12 +16,14 @@ Company site and product showcase for `MBMapps.com`, built as a monorepo with:
 - Lead funnel: enriched contact form with anti-spam honeypot, champion profile signals, consent metadata, and server-side submission route
 - Observability: web vitals + intent telemetry with session, anonymous visitor, attribution, device class, schema version, and data quality context
 - Homepage: terminal-style product portfolio with a governed guided-chat handoff and a reusable selected-work rail
+- Access: Firebase login is required for every visitor; anonymous Firebase users receive restricted guest access with no chat/discussion visibility
 - Demo media: `/demo` QuietPilot preview autoplays muted, loops, and uses top-focused crop for above-the-fold context
 
 ### API (`apps/api`)
 - Express + TypeScript + Zod validation
 - Endpoints:
   - `GET /healthz`
+  - `POST /v1/auth/verify`
   - `GET /v1/demo/metrics`
   - `GET /v1/demo/pipeline`
   - `GET /v1/demo/outcomes`
@@ -43,6 +45,8 @@ Company site and product showcase for `MBMapps.com`, built as a monorepo with:
 - `ChampionScore`
 - `ChampionCohort`
 - `ApiError`
+- `SiteAccessRole`
+- `SiteAccessVerificationResponse`
 - `EventTelemetryPayload`
 
 ## Champion Intelligence Layer
@@ -99,6 +103,21 @@ These files are local tooling artifacts and may vary by org; keep them out of co
 If Firebase Admin env vars are configured, seed demo data:
 
 - `npm run seed:firebase`
+
+## Site Access
+
+Every page and API route requires a verified site session except `/gate` and `/api/site-gate`. Configure Google, Microsoft, Apple, and Anonymous providers in Firebase Authentication. The API verifies each Firebase ID token and derives the role from the verified sign-in provider; the browser cannot choose its role.
+
+Required web and API configuration:
+
+- all six `NEXT_PUBLIC_FIREBASE_*` web values in `.env.example`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY`
+- `MBMAPPS_GATE_SECRET` with at least 32 random characters
+- `BACKEND_API_URL`
+
+`member` sessions come only from Google, Microsoft, or Apple. Firebase Anonymous Authentication creates a `guest` session. Guests can browse the portfolio but cannot see or reach guided chat, `/discuss`, or `/api/chat`. The Express `/v1/chat` endpoint independently verifies the forwarded signed member session, so calling the API directly does not bypass this restriction. `MBMAPPS_GATE_SESSION_HOURS` controls the signed web-session lifetime from 1 through 168 hours and defaults to 12.
 
 ## Lead Intake and Delivery
 
