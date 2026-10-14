@@ -9,7 +9,7 @@ import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
 import { OperatingWorldSphere, type OperatingWorldMode } from '@/components/operating-world-sphere';
 import { LiveProductSite } from '@/components/live-product-site';
-import { WaleHomeChapter } from '@/components/wale/wale-home-chapter';
+import { WaleHomeSection } from '@/components/wale-home-section';
 
 type ChatLine = { from: 'studio' | 'visitor'; text: string };
 type ChatDeliveryState = { status: 'idle' | 'sending' | 'saved' | 'sent' | 'error'; message: string };
@@ -238,7 +238,7 @@ export function TerminalPortfolioHome() {
           </aside>
         </section>
 
-        <WaleHomeChapter />
+        <WaleHomeSection />
 
         <section className="terminal-section terminal-shell" aria-labelledby="stack-title" data-reveal>
           <h2 id="stack-title"><span>*</span> stack</h2>
