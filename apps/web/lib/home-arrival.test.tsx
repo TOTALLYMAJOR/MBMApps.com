@@ -45,9 +45,9 @@ describe('homepage arrival', () => {
     expect(html).not.toContain('<iframe');
     expect(html).toContain('data-wale-started="false"');
     expect(html).toContain('href="/wale"');
-    expect(html).toContain('Wale: Make the whole system work.');
-    expect(html).toContain('Audit controls, diagnose the leading constraint');
+    expect(html).toContain('Wale: The Living Archive');
+    expect(html).toContain('Explore the public archive.');
     expect(html).toContain('Open Wale archive');
-    expect(html).toContain('repository analysis requires the local Wale bridge');
+    expect(html).toContain('Repository analysis requires the separately started local Wale bridge');
   });
 });

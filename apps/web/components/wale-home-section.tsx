@@ -3,17 +3,9 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { WaleArchiveShell } from '@/components/wale-archive-shell';
-import { getProjectBySlug } from '@/lib/projects';
-import styles from './home-arrival.module.css';
+import styles from './wale-home-section.module.css';
 
-function requireWale() {
-  const product = getProjectBySlug('wale');
-  if (!product) throw new Error('Missing canonical Wale product record');
-  return product;
-}
-
-const wale = requireWale();
+export const WALE_ARCHIVE_PREVIEW_SRC = '/wale-archive/index.html?quality=cinema';
 
 export function WaleHomeSection() {
   const viewport = useRef<HTMLDivElement>(null);
@@ -26,30 +18,54 @@ export function WaleHomeSection() {
       setStarted(true);
       return;
     }
+
     const observer = new IntersectionObserver((entries) => {
       if (!entries.some((entry) => entry.isIntersecting)) return;
       setStarted(true);
       observer.disconnect();
     }, { threshold: 0.08 });
+
     observer.observe(target);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <section className={styles.waleSection} aria-labelledby="home-wale-title" data-cinematic-section>
-      <header className={styles.waleHeading} data-cinematic-heading>
-        <div className={styles.waleCopy}>
-          <h2 id="home-wale-title">Wale: {wale.headline}</h2>
-          <p className={styles.waleLead}>{wale.supportingStatement}</p>
-          <p className={styles.waleBoundary}>{wale.accessDescription}</p>
+    <section
+      id="wale"
+      className={styles.section}
+      aria-labelledby="home-wale-title"
+      data-wale-surface="living-archive"
+    >
+      <header className={styles.heading}>
+        <div>
+          <p className={styles.eyebrow}>Development intelligence</p>
+          <h2 id="home-wale-title">Wale: The Living Archive</h2>
+          <p className={styles.boundary}>
+            Explore the public archive. Repository analysis requires the separately started local Wale bridge.
+          </p>
         </div>
-        <Link className={styles.waleCta} href={wale.experienceHref}>
-          {wale.websiteLabel}
+        <Link className={styles.cta} href="/wale">
+          Open Wale archive
           <ArrowUpRight aria-hidden="true" />
         </Link>
       </header>
-      <div ref={viewport} className={styles.waleViewport} data-wale-started={started} data-cinematic-visual>
-        {started ? <WaleArchiveShell embedded /> : <p className={styles.placeholder}>Wale’s animation begins here as you scroll. Reduced-motion preferences are respected.</p>}
+
+      <div ref={viewport} className={styles.viewport} data-wale-started={started}>
+        {started ? (
+          <iframe
+            className={styles.archive}
+            src={WALE_ARCHIVE_PREVIEW_SRC}
+            title="Wale Living Archive preview"
+            aria-hidden="true"
+            tabIndex={-1}
+            loading="lazy"
+            allow="autoplay; fullscreen"
+          />
+        ) : (
+          <p className={styles.placeholder}>
+            Wale’s white Living Archive begins here as you scroll. Reduced-motion preferences are respected.
+          </p>
+        )}
       </div>
     </section>
   );
