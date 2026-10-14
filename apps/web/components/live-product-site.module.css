@@ -38,6 +38,151 @@
   border: 0;
   background: #fff;
 }
+
+/* In-page previews yield all scrolling to the homepage, including touch.
+   Standalone product pages remain interactive. */
+.site[data-scroll-preview='true'] {
+  pointer-events: none;
+}
+
+.previewNote {
+  margin: 6px 0 0;
+  color: #aab4c4;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.quietChapter {
+  overflow: clip;
+  background: #07090d;
+}
+
+.quietCapabilities {
+  padding: 0 clamp(20px, 4vw, 64px) 24px;
+}
+
+.quietCapabilities dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px 32px;
+  margin: 0 0 20px;
+}
+
+.quietCapabilities dt {
+  color: #f1c28b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.quietCapabilities dd {
+  margin: 6px 0 0;
+  color: #b7beca;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.quietStory {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: min(86svh, 880px);
+  min-height: 640px;
+  margin: 0;
+  overflow: hidden;
+  background: #080a0e;
+}
+
+.quietImage {
+  position: absolute;
+  inset: -3%;
+  will-change: transform;
+}
+
+.quietImage img {
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.92) contrast(1.04);
+}
+
+.quietVignette {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(7, 9, 13, 0.72), transparent 20%, transparent 78%, rgba(7, 9, 13, 0.62)),
+    linear-gradient(180deg, rgba(7, 9, 13, 0.44), transparent 24%, transparent 72%, rgba(7, 9, 13, 0.82));
+  pointer-events: none;
+}
+
+.quietFlow {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.quietSweep {
+  position: absolute;
+  inset: 6% auto 6% 42%;
+  width: 15%;
+  opacity: 0.44;
+  transform: translate3d(-130%, 0, 0) skewX(-8deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 170, 82, 0.13), rgba(255, 243, 219, 0.34), transparent);
+  filter: blur(12px);
+}
+
+.quietSignal {
+  position: absolute;
+  width: clamp(6px, 0.6vw, 10px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 214, 158, 0.82);
+  border-radius: 50%;
+  background: rgba(255, 163, 73, 0.72);
+  box-shadow: 0 0 0 6px rgba(255, 145, 55, 0.08), 0 0 24px rgba(255, 145, 55, 0.46);
+  opacity: 0;
+}
+
+.quietSignalOne { left: 45%; top: 34%; }
+.quietSignalTwo { left: 52%; top: 52%; }
+.quietSignalThree { left: 63%; top: 69%; }
+
+@media (max-width: 900px) {
+  .quietStory {
+    height: min(72svh, 680px);
+    min-height: 520px;
+  }
+
+  .quietImage {
+    inset: 0;
+  }
+
+  .quietSweep,
+  .quietSignal {
+    display: none;
+  }
+}
+
 @media (max-width: 600px) {
+  .heading { flex-wrap: wrap; }
+  .quietCapabilities dl { grid-template-columns: 1fr; gap: 16px; }
   .site { min-height: 580px; }
+  .quietStory {
+    height: 68svh;
+    min-height: 460px;
+  }
+  .quietImage img {
+    object-position: 54% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quietImage {
+    transform: none !important;
+  }
+
+  .quietSweep,
+  .quietSignal {
+    display: none;
+  }
 }

@@ -8,6 +8,7 @@ import {
 } from '@mbm/contracts';
 import { sendChatEmail } from '@/lib/chat-email';
 import { backendBaseUrl, PublicIntakeRequestError, readPublicIntakePayload } from '@/lib/public-intake';
+import { GATE_COOKIE_NAME, getGateConfiguration, readGateSession } from '@/lib/site-gate';
 
 export const runtime = 'nodejs';
 
@@ -16,6 +17,22 @@ function requestError(error: PublicIntakeRequestError) {
 }
 
 export async function POST(request: Request) {
+  const configuration = getGateConfiguration();
+  const token = request.headers.get('cookie')
+    ?.split(';')
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${GATE_COOKIE_NAME}=`))
+    ?.slice(GATE_COOKIE_NAME.length + 1);
+  const session = configuration.configured
+    ? await readGateSession(token, configuration.secret)
+    : null;
+  if (session === null) {
+    return NextResponse.json({ ok: false, message: 'A valid site session is required.' }, { status: 401 });
+  }
+  if (session.role !== 'member') {
+    return NextResponse.json({ ok: false, message: 'Member access is required.' }, { status: 403 });
+  }
+
   let payload: unknown;
 
   try {
@@ -44,7 +61,7 @@ export async function POST(request: Request) {
   try {
     const response = await fetch(`${backendBaseUrl()}/v1/chat`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(parsed.data),
       cache: 'no-store'
     });

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { BrandMark } from '@/components/brand-mark';
+import { SiteSessionExit, useSiteSession } from '@/components/site-session';
 import { cn } from '@/lib/utils';
 
 const primaryNavigation = [
@@ -19,6 +20,7 @@ const primaryNavigation = [
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const { role } = useSiteSession();
   const quietPilotJourney = pathname.startsWith('/quietpilot') || pathname === '/demo';
   const [light, setLight] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -52,7 +54,7 @@ export function SiteHeader() {
   }
 
   // These complete landing pages own their navigation.
-  if (pathname === '/' || pathname === '/wale' || pathname === '/quietpilot') return null;
+  if (pathname === '/' || pathname === '/wale' || pathname === '/concepts' || pathname === '/quietpilot' || pathname === '/gate') return null;
 
   return (
     <header className="northstar-header" data-scrolled={scrolled ? 'true' : 'false'}>
@@ -63,7 +65,7 @@ export function SiteHeader() {
         </Link>
 
         <nav className="northstar-nav" aria-label="Primary navigation">
-          {primaryNavigation.map((item) => {
+          {primaryNavigation.filter((item) => item.href !== '/discuss' || role === 'member').map((item) => {
             const active = item.href === '/apps'
               ? pathname.startsWith('/apps') || quietPilotJourney
               : item.href === '/tools'
@@ -105,6 +107,7 @@ export function SiteHeader() {
           <Link className="northstar-header-cta" href={quietPilotJourney ? '/demo' : '/apps'}>
             {quietPilotJourney ? 'View demo' : 'Browse apps'}
           </Link>
+          <SiteSessionExit className="theme-toggle" />
         </div>
       </div>
     </header>

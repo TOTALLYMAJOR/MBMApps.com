@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title description">
+  <title id="title">Wale concept artwork</title>
+  <desc id="description">A teal whale crosses blue water on a black gridded background.</desc>
+  <defs>
+    <radialGradient id="bg" cx="70%" cy="35%" r="70%"><stop stop-color="#0c3436"/><stop offset="1" stop-color="#050708"/></radialGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#74f7df"/><stop offset=".62" stop-color="#18afa4"/><stop offset="1" stop-color="#077d82"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="16" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1440" height="900" fill="url(#bg)"/>
+  <g opacity=".12" stroke="#77f7df"><path d="M0 150h1440M0 300h1440M0 450h1440M0 600h1440M0 750h1440"/><path d="M180 0v900M360 0v900M540 0v900M720 0v900M900 0v900M1080 0v900M1260 0v900"/></g>
+  <path d="M-60 700c180-72 300 78 480 8s320-18 500 20 330-79 580-12" fill="none" stroke="#319cff" stroke-width="18" stroke-linecap="round" filter="url(#glow)"/>
+  <g transform="translate(435 270)" filter="url(#glow)">
+    <path d="M122 220C28 140-10 162 28 248c-38 78 18 100 112 28z" fill="#07958f"/>
+    <path d="M110 245c20-112 146-174 316-148 131 20 195 103 168 191-29 91-136 136-292 114-134-19-211-73-192-157z" fill="url(#body)"/>
+    <path d="M151 304c97 52 276 65 405-18-34 87-151 124-280 94-64-15-106-43-125-76z" fill="#a5f6e8" opacity=".5"/>
+    <path d="M342 356c13 83 89 103 102 15z" fill="#078f8b"/>
+    <circle cx="493" cy="197" r="11" fill="#031112"/><circle cx="497" cy="192" r="3" fill="#fff"/>
+    <path d="M543 279q39 20 62-9" fill="none" stroke="#042425" stroke-width="9" stroke-linecap="round"/>
+  </g>
+  <g fill="#8ed5ff" transform="translate(1110 470)"><path d="M0 0c28-25 74-20 91 8-20 31-67 30-91 7z"/><path d="M2 2l-39-26 4 58L3 16z"/><circle cx="70" cy="1" r="4" fill="#072d3b"/></g>
+  <text x="80" y="126" fill="#7affe8" font-family="ui-monospace, monospace" font-size="28" letter-spacing="10">WALE</text>
+</svg>

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { getProjectBySlug, projectScreens } from '@/lib/projects';
+import { getProjectBySlug, homepagePortfolio, projectScreens } from '@/lib/projects';
 
 describe('project catalog', () => {
-  it('lists exactly the three approved MBMApps applications', () => {
-    expect(projectScreens).toHaveLength(3);
-    expect(projectScreens.map((project) => project.slug)).toEqual(['quietpilot', 'leaguepilot', 'quoteflow']);
+  it('lists the approved MBMApps applications', () => {
+    expect(projectScreens).toHaveLength(4);
+    expect(projectScreens.map((project) => project.slug)).toEqual(['wale', 'quietpilot', 'leaguepilot', 'quoteflow']);
 
     const slugs = new Set(projectScreens.map((project) => project.slug));
     const paths = new Set(projectScreens.map((project) => project.path));
@@ -18,9 +18,10 @@ describe('project catalog', () => {
       expect(project.description.length).toBeGreaterThan(40);
       expect(project.capabilities.length).toBeGreaterThanOrEqual(3);
       expect(project.proofBoundary.length).toBeGreaterThan(30);
+      expect(project.experienceHref).toMatch(/^(\/|https:\/\/)/);
       expect(project.websiteUrl).toMatch(/^https:\/\//);
       expect(project.websiteLabel.length).toBeGreaterThan(4);
-      expect(project.screenshot.src).toMatch(/^\/product-screens\/.+\.(png|webp)$/);
+      expect(project.screenshot.src).toMatch(/^\/product-screens\/.+\.(png|webp|svg)$/);
       expect(project.screenshot.alt.length).toBeGreaterThan(25);
       expect(project.visible).toBe(true);
       expect(project.sourceRepository.label).toMatch(/^TOTALLYMAJOR\//);
@@ -31,9 +32,18 @@ describe('project catalog', () => {
   });
 
   it('resolves project subpages by slug', () => {
+    expect(getProjectBySlug('wale')).toMatchObject({
+      experienceHref: '/wale',
+      websiteUrl: 'https://mbmapps.com/wale'
+    });
     expect(getProjectBySlug('quietpilot')?.name).toBe('QuietPilot');
     expect(getProjectBySlug('leaguepilot')?.websiteUrl).toBe('https://www.leaguepilot.us');
-    expect(getProjectBySlug('quoteflow')).toMatchObject({ category: 'Quote-to-event operations', websiteUrl: 'https://quotepilot.mbmapps.com', websiteLabel: 'Open QuotePilot' });
+    expect(getProjectBySlug('quoteflow')).toMatchObject({
+      category: 'Quote-to-event operations',
+      experienceHref: 'https://quotepilot.mbmapps.com',
+      websiteUrl: 'https://quotepilot.mbmapps.com',
+      websiteLabel: 'Open QuotePilot'
+    });
   });
 
   it('exposes evidence and access context for every app', () => {
@@ -44,5 +54,26 @@ describe('project catalog', () => {
       expect(JSON.stringify(project).toLowerCase()).not.toContain('coming soon');
       expect(JSON.stringify(project).toLowerCase()).not.toContain('app three');
     }
+  });
+
+  it('publishes one canonical homepage taxonomy without changing catalog visibility', () => {
+    expect(homepagePortfolio.map(({ slug, kind, featured }) => ({ slug, kind, featured }))).toEqual([
+      { slug: 'wale', kind: 'Development system', featured: true },
+      { slug: 'quoteflow', kind: 'Product system', featured: true },
+      { slug: 'quietpilot', kind: 'Product', featured: true },
+      { slug: 'leaguepilot', kind: 'Product', featured: false },
+      { slug: 'sportpilot', kind: 'Website preview', featured: false },
+      { slug: 'master-sc', kind: 'Protected showcase', featured: false },
+    ]);
+
+    expect(homepagePortfolio.map((item) => item.href)).toEqual([
+      '/wale',
+      'https://quotepilot.mbmapps.com',
+      'https://www.quietpilot.us',
+      'https://www.leaguepilot.us',
+      'https://sportpilot.mbmapps.com/',
+      '/MasterSC',
+    ]);
+    expect(projectScreens.map((project) => project.slug)).toEqual(['wale', 'quietpilot', 'leaguepilot', 'quoteflow']);
   });
 });

@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import { HomeArrival } from '@/components/home-arrival';
 import { TerminalPortfolioHome } from '@/components/terminal-portfolio-home';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
@@ -9,7 +11,8 @@ export const metadata: Metadata = {
     'Explore Wale and MBMApps applications for development intelligence, catering operations, youth-sports management, and quote-to-event workflows.'
 };
 
-export default function HomePage() {
+export default async function HomePage({ searchParams }: { searchParams: Promise<{ welcome?: string }> }) {
+  const { welcome } = await searchParams;
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -40,7 +43,7 @@ export default function HomePage() {
 
   return (
     <>
-      <TerminalPortfolioHome />
+      <Suspense><HomeArrival welcome={welcome === '1'}><TerminalPortfolioHome /></HomeArrival></Suspense>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
     </>

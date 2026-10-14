@@ -20,6 +20,21 @@ describe('public intake request boundary', () => {
     await expect(readPublicIntakePayload(makeRequest('{"hello":"world"}'))).resolves.toEqual({ hello: 'world' });
   });
 
+  it('accepts same-origin requests when the application URL is internal to a proxy', async () => {
+    const request = new Request('http://web:3001/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'https://mbmapps.com',
+        Host: 'mbmapps.com',
+        'x-forwarded-proto': 'https'
+      },
+      body: '{}'
+    });
+
+    await expect(readPublicIntakePayload(request)).resolves.toEqual({});
+  });
+
   it('rejects cross-origin requests', async () => {
     await expect(readPublicIntakePayload(makeRequest('{}', 'https://attacker.example'))).rejects.toMatchObject({
       status: 403

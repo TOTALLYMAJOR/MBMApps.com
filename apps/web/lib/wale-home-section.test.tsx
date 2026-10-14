@@ -1,7 +1,9 @@
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { TerminalPortfolioHome } from '@/components/terminal-portfolio-home';
 import { WALE_ARCHIVE_PREVIEW_SRC, WaleHomeSection } from '@/components/wale-home-section';
+
+vi.mock('next/navigation', () => ({ useRouter: () => ({}) }));
 
 describe('homepage Wale surface', () => {
   it('binds the homepage preview to the white Living Archive', () => {

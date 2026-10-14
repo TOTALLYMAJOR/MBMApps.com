@@ -10,6 +10,6 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['lib/**/*.test.{ts,tsx}', 'app/api/**/*.test.ts']
+    include: ['lib/**/*.test.{ts,tsx}', 'app/api/**/*.test.ts', 'middleware.test.ts']
   }
 });

@@ -27,6 +27,208 @@
   background: #080b10;
 }
 
+/* Homepage previews must not capture wheel/touch input in a child document.
+   The dedicated /wale route keeps the complete interactive archive. */
+.archive[data-scroll-preview='true'] {
+  pointer-events: none;
+}
+
+.embedded {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: #080b10;
+  color: #e7edf3;
+}
+
+.embedded .profileButton { position: absolute; }
+
+.opening {
+  --opening-line: rgba(255, 255, 255, .2);
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  overflow: hidden;
+  padding: 28px 32px 22px;
+  background:
+    linear-gradient(90deg, transparent 0 49.95%, rgba(255, 255, 255, .035) 50%, transparent 50.05%),
+    #000;
+  color: #fff;
+}
+
+.opening::before,
+.opening::after {
+  position: absolute;
+  content: '';
+  pointer-events: none;
+}
+
+.opening::before {
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .026) 1px, transparent 1px);
+  background-size: 84px 84px;
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 76%, transparent);
+}
+
+.opening::after {
+  right: 7vw;
+  top: 18vh;
+  width: min(34vw, 520px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 50%;
+  box-shadow: 0 0 0 38px rgba(255, 255, 255, .018), 0 0 0 96px rgba(255, 255, 255, .012);
+}
+
+.openingHeader,
+.openingBody,
+.openingStatus,
+.openingProgress {
+  position: relative;
+  z-index: 1;
+}
+
+.openingHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  border-bottom: 1px solid var(--opening-line);
+  padding-bottom: 20px;
+  color: rgba(255, 255, 255, .62);
+  font: 500 10px/1.35 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: .14em;
+}
+
+.openingHeader p {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+}
+
+.openingHeader strong {
+  color: #fff;
+  font-size: 15px;
+  letter-spacing: .18em;
+}
+
+.openingHeader > span::before {
+  content: '□';
+  margin-right: 9px;
+  color: #fff;
+}
+
+.openingBody {
+  align-self: center;
+  width: min(1000px, 78vw);
+  padding: 4vh 0 4vh 6vw;
+}
+
+.openingEyebrow,
+.openingSupport {
+  margin: 0;
+  font-family: var(--font-ibm-plex-mono), monospace;
+}
+
+.openingEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, .62);
+  font-size: 10px;
+  letter-spacing: .18em;
+}
+
+.openingEyebrow::before {
+  width: 36px;
+  height: 1px;
+  background: #fff;
+  content: '';
+}
+
+.openingBody h1 {
+  max-width: 14ch;
+  margin: 24px 0 20px;
+  font: 400 clamp(44px, 4.6vw, 82px)/.9 var(--font-space-grotesk), sans-serif;
+  letter-spacing: -.065em;
+}
+
+.openingBody h1 span,
+.openingBody h1 strong {
+  display: block;
+}
+
+.openingBody h1 strong {
+  margin-top: .16em;
+  color: rgba(255, 255, 255, .58);
+  font-weight: 400;
+}
+
+.openingSupport {
+  max-width: 66ch;
+  color: rgba(255, 255, 255, .58);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.openingBody button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 24px;
+  margin-top: 26px;
+  border: 1px solid rgba(255, 255, 255, .65);
+  padding: 0 18px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font: 600 10px/1 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.openingBody button:hover {
+  background: #fff;
+  color: #000;
+}
+
+.openingBody button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+.openingStatus {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  border-top: 1px solid var(--opening-line);
+  padding: 16px 0 13px;
+  color: rgba(255, 255, 255, .48);
+  font: 500 9px/1.4 var(--font-ibm-plex-mono), monospace;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.openingProgress {
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .14);
+}
+
+.openingProgress i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  background: #fff;
+}
+
 .profileButton {
   position: fixed;
   z-index: 3;
@@ -211,6 +413,15 @@
 .actions button { background: #101923; }
 
 @media (max-width: 640px) {
+  .opening { padding: 20px 18px 16px; }
+  .openingHeader { gap: 16px; padding-bottom: 15px; }
+  .openingHeader > span { max-width: 19ch; text-align: right; }
+  .openingBody { width: 100%; padding: 5vh 0; }
+  .openingBody h1 { margin: 22px 0 20px; font-size: clamp(42px, 13vw, 68px); }
+  .openingSupport { max-width: 44ch; font-size: 10px; }
+  .openingStatus { align-items: flex-end; font-size: 8px; }
+  .openingStatus span:last-child { max-width: 20ch; text-align: right; }
+  .opening::after { right: 0; top: 24vh; width: 78vw; }
   .profileButton { right: 14px; bottom: 72px; min-height: 42px; padding: 0 15px; font-size: 10px; }
   .dialogHeader { padding: 20px; }
   .intro { padding: 18px 20px 0; }
@@ -222,5 +433,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .profileButton { transition: none; }
+  .profileButton,
+  .openingBody button { transition: none; }
+
+  .openingProgress { display: none; }
 }

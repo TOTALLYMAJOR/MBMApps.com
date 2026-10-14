@@ -23,6 +23,7 @@ const configSchema = z.object({
   FIREBASE_PROJECT_ID: optionalEnvString,
   FIREBASE_CLIENT_EMAIL: optionalEnvString,
   FIREBASE_PRIVATE_KEY: optionalEnvString,
+  MBMAPPS_GATE_SECRET: optionalEnvString,
   CONTACT_FORWARD_TO: z.string().email().default('sales@mbmapps.com')
 });
 

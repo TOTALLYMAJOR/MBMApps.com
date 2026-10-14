@@ -1,0 +1,23 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-10-13T22:01:47.592Z",
+        "reason": "Owner: user confirmed keeping the existing Development Control Plane design as shown locally on 2026-10-13"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "apps/web/embeds/development-control-plane/src/styles.css"
+        ],
+        "createdAt": "2026-10-13T22:01:58.032Z",
+        "reason": "Owner: user confirmed keeping the existing control-plane design; the grid is the literal graph-canvas measurement surface"
+      }
+    ]
+  }
+}

@@ -262,7 +262,7 @@ function ControlGraph({ scenario, run, replay }) {
             <radialGradient id="spotlightFill"><stop offset="0%" stopColor="#ff8a00" stopOpacity=".1" /><stop offset="62%" stopColor="#ff8a00" stopOpacity=".035" /><stop offset="100%" stopColor="#ff8a00" stopOpacity="0" /></radialGradient>
           </defs>
 
-          <image href="/icon.svg" x="390" y="155" width="220" height="220" opacity=".045" preserveAspectRatio="xMidYMid meet" />
+          <image href="/mbmapps-mark.svg" x="390" y="155" width="220" height="220" opacity=".045" preserveAspectRatio="xMidYMid meet" />
 
           <motion.circle
             key={'spot-' + run}
@@ -370,7 +370,11 @@ export default function App() {
       <div className="wrap">
         <header className="header">
           <div className="brand">
-            <div className="brandMark"><img src="/icon.svg" alt="" /></div>
+            <div className="brandMark">
+              {/* Standalone esbuild embed; Next Image is not available in this bundle. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/mbmapps-mark.svg" alt="" />
+            </div>
             <div><div className="eyebrow">MBMApps</div><div className="brandName">Development Control Plane</div></div>
           </div>
           <div className="legend">

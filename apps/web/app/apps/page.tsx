@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { ArrowUpRight, Check } from 'lucide-react';
 import { projectScreens } from '@/lib/projects';
 import { siteConfig } from '@/lib/site';
+import { ProductDestinationLink } from '@/components/product-destination-link';
 
 export const metadata: Metadata = {
   title: 'Applications',
-  description: 'Explore QuietPilot, LeaguePilot, and QuoteFlow—the three focused operating applications built by MBMApps.',
+  description: 'Explore the focused operating and development systems built by MBMApps.',
   alternates: { canonical: '/apps' }
 };
 
@@ -31,7 +32,7 @@ export default function AppsPage() {
       <section className="terminal-shell terminal-pagehead">
         <p className="terminal-command"><span>~/mbmapps/apps</span> $ ls --products --available</p>
         <h1>applications<span className="terminal-cursor" aria-hidden="true" /></h1>
-        <p className="terminal-lede">Three independent products for three operating environments. Compare who each serves, what it fixes, and how to inspect it.</p>
+        <p className="terminal-lede">{projectScreens.length} independent products for distinct operating environments. Compare who each serves, what it fixes, and how to inspect it.</p>
         <div className="terminal-links"><Link href="/">[back home]</Link><Link href="/contact">[ask which fits]</Link></div>
       </section>
 
@@ -54,7 +55,7 @@ export default function AppsPage() {
                 <p>{product.description}</p>
                 <p className="terminal-product__problem"><span>Solves</span> {product.problemStatement}</p>
                 <div className="terminal-tags">{product.capabilities.slice(0, 4).map((capability) => <span key={capability.label}>{capability.label}</span>)}</div>
-                <div className="terminal-links"><Link href={product.path}>[view brief]</Link><a href={product.websiteUrl}>[{product.websiteLabel.toLowerCase()}]</a></div>
+                <div className="terminal-links"><Link href={product.path}>[view brief]</Link><ProductDestinationLink href={product.experienceHref}>[{product.websiteLabel.toLowerCase()}]</ProductDestinationLink></div>
                 <p className="terminal-proof"><Check aria-hidden="true" /> {product.accessDescription}</p>
               </div>
             </article>

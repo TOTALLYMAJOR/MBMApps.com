@@ -3,7 +3,7 @@ export const siteConfig = {
   legalName: 'MBMApps LLC',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mbmapps.com',
   description:
-    'Explore MBMApps applications for catering operations, youth-sports management, and quote-to-event workflows, or start a conversation about a custom system.',
+    'Explore MBMApps systems for development intelligence, catering operations, youth-sports management, and quote-to-event workflows, or start a conversation about a custom system.',
   email: 'flightcontrol@quietpilot.us',
   social: {
     github: 'https://github.com/TOTALLYMAJOR'

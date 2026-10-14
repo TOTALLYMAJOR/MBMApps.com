@@ -1,21 +1,23 @@
-export const GATE_COOKIE_NAME = 'mbmapps_signal_access';
-export const SIGNAL_PATH = ['observe', 'reason', 'build', 'verify'] as const;
+import { siteAccessTokenVersion, type SiteAccessRole } from '@mbm/contracts';
 
-const TOKEN_VERSION = 'v1';
+export const GATE_COOKIE_NAME = 'mbmapps_signal_access';
+
 const textEncoder = new TextEncoder();
 
 type GateEnvironment = {
-  MBMAPPS_GATE_ENABLED?: string;
-  MBMAPPS_GATE_PASSPHRASE?: string;
   MBMAPPS_GATE_SECRET?: string;
   MBMAPPS_GATE_SESSION_HOURS?: string;
 };
 
 export type GateConfiguration = {
-  enabled: boolean;
-  passphrase: string;
+  configured: boolean;
   secret: string;
   sessionSeconds: number;
+};
+
+export type GateSession = {
+  role: SiteAccessRole;
+  expiresAt: number;
 };
 
 function bytesToBase64Url(bytes: Uint8Array) {
@@ -50,43 +52,39 @@ function constantTimeEqual(left: string, right: string) {
 }
 
 export function getGateConfiguration(environment: GateEnvironment = process.env as GateEnvironment): GateConfiguration {
-  const passphrase = environment.MBMAPPS_GATE_PASSPHRASE?.trim() ?? '';
   const secret = environment.MBMAPPS_GATE_SECRET?.trim() ?? '';
   const requestedHours = Number(environment.MBMAPPS_GATE_SESSION_HOURS ?? 12);
   const sessionHours = Number.isFinite(requestedHours) ? Math.min(Math.max(requestedHours, 1), 168) : 12;
 
   return {
-    enabled: environment.MBMAPPS_GATE_ENABLED === 'true' && passphrase.length >= 12 && secret.length >= 32,
-    passphrase,
+    configured: secret.length >= 32,
     secret,
     sessionSeconds: Math.round(sessionHours * 60 * 60)
   };
 }
 
-export function isCorrectSignalPath(path: readonly string[]) {
-  return path.length === SIGNAL_PATH.length && path.every((step, index) => step === SIGNAL_PATH[index]);
-}
-
-export function passphraseMatches(candidate: string, expected: string) {
-  return constantTimeEqual(candidate.trim(), expected);
-}
-
-export async function createGateToken(secret: string, now = Date.now(), ttlSeconds = 12 * 60 * 60) {
+export async function createGateToken(secret: string, role: SiteAccessRole, now = Date.now(), ttlSeconds = 12 * 60 * 60) {
   const expiresAt = Math.floor((now + ttlSeconds * 1000) / 1000);
-  const payload = `${TOKEN_VERSION}.${expiresAt}`;
+  const payload = `${siteAccessTokenVersion}.${role}.${expiresAt}`;
   return `${payload}.${await sign(payload, secret)}`;
 }
 
-export async function verifyGateToken(token: string | undefined, secret: string, now = Date.now()) {
-  if (!token || !secret) return false;
-  const [version, expiresAtValue, signature, ...extra] = token.split('.');
-  if (extra.length || version !== TOKEN_VERSION || !expiresAtValue || !signature) return false;
+export async function readGateSession(token: string | undefined, secret: string, now = Date.now()): Promise<GateSession | null> {
+  if (!token || !secret) return null;
+  const [version, roleValue, expiresAtValue, signature, ...extra] = token.split('.');
+  if (extra.length || version !== siteAccessTokenVersion || !expiresAtValue || !signature) return null;
+  if (roleValue !== 'guest' && roleValue !== 'member') return null;
 
   const expiresAt = Number(expiresAtValue);
-  if (!Number.isInteger(expiresAt) || expiresAt <= Math.floor(now / 1000)) return false;
+  if (!Number.isInteger(expiresAt) || expiresAt <= Math.floor(now / 1000)) return null;
 
-  const expected = await sign(`${version}.${expiresAtValue}`, secret);
-  return constantTimeEqual(signature, expected);
+  const expected = await sign(`${version}.${roleValue}.${expiresAtValue}`, secret);
+  if (!constantTimeEqual(signature, expected)) return null;
+  return { role: roleValue, expiresAt };
+}
+
+export async function verifyGateToken(token: string | undefined, secret: string, now = Date.now()) {
+  return (await readGateSession(token, secret, now)) !== null;
 }
 
 export function safeReturnPath(candidate: string | null | undefined) {

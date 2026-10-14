@@ -39,7 +39,7 @@ export default function AboutPage() {
         <h2 id="facts-title"><span>*</span> studio facts</h2>
         <div className="terminal-system-grid terminal-facts-grid">
           <article><p className="terminal-fact__label">base of operations</p><p>Chicago, USA. Working with operators across the US.</p></article>
-          <article><p className="terminal-fact__label">portfolio</p><p>{projectScreens.length} products live: {projectScreens.map((product) => product.name).join(', ')}.</p></article>
+          <article><p className="terminal-fact__label">portfolio</p><p>{projectScreens.length} products listed: {projectScreens.map((product) => product.name).join(', ')}.</p></article>
           <article><p className="terminal-fact__label">engagement model</p><p>Direct studio contact. No account managers, no ticket queues.</p></article>
           <article><p className="terminal-fact__label">stack</p><p>Next.js, React, TypeScript, Firebase, PostgreSQL, Stripe, and Vercel.</p></article>
         </div>

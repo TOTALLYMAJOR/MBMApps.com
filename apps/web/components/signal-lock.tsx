@@ -3,23 +3,55 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import {
+  browserSessionPersistence,
+  GoogleAuthProvider,
+  OAuthProvider,
+  setPersistence,
+  signInAnonymously,
+  signInWithPopup,
+  type UserCredential
+} from 'firebase/auth';
+import { getFirebaseAuth } from '@/lib/firebase/client';
+import { destinationAfterSignIn } from '@/lib/home-arrival';
+import { useSiteSession } from '@/components/site-session';
 import styles from './signal-lock.module.css';
 
-export function SignalLock() {
-  const searchParams = useSearchParams();
-  const [message, setMessage] = useState('Ready when you are.');
-  const [submitting, setSubmitting] = useState(false);
+type EntranceMethod = 'google' | 'microsoft' | 'apple' | 'guest';
 
-  async function enter() {
+export function SignalLock({ onContinue }: { onContinue?: () => void } = {}) {
+  const searchParams = useSearchParams();
+  const { role } = useSiteSession();
+  const [message, setMessage] = useState('Choose an identity to continue.');
+  const [submitting, setSubmitting] = useState<EntranceMethod | null>(null);
+
+  async function enter(method: EntranceMethod) {
     if (submitting) return;
-    setSubmitting(true);
-    setMessage('Opening the portfolio…');
+    setSubmitting(method);
+    setMessage(method === 'guest' ? 'Preparing guest access…' : 'Opening secure sign-in…');
 
     try {
+      const auth = getFirebaseAuth();
+      if (!auth) {
+        setMessage('Firebase sign-in is not configured for this site.');
+        return;
+      }
+
+      await setPersistence(auth, browserSessionPersistence);
+      let credential: UserCredential;
+      if (method === 'guest') {
+        credential = await signInAnonymously(auth);
+      } else if (method === 'google') {
+        credential = await signInWithPopup(auth, new GoogleAuthProvider());
+      } else {
+        credential = await signInWithPopup(auth, new OAuthProvider(method === 'microsoft' ? 'microsoft.com' : 'apple.com'));
+      }
+
+      const idToken = await credential.user.getIdToken(true);
       const response = await fetch('/api/site-gate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'simulation', next: searchParams.get('next') ?? '/' })
+        body: JSON.stringify({ idToken, next: searchParams.get('next') ?? '/' })
       });
       const result = await response.json().catch(() => null) as { ok?: boolean; next?: string; message?: string } | null;
 
@@ -28,12 +60,12 @@ export function SignalLock() {
         return;
       }
 
-      setMessage('Entrance confirmed.');
-      window.location.assign(result.next ?? '/');
+      setMessage(method === 'guest' ? 'Guest access confirmed.' : 'Identity confirmed.');
+      window.location.assign(destinationAfterSignIn(result.next ?? '/'));
     } catch {
-      setMessage('The entrance service is unavailable. Check the connection and try again.');
+      setMessage('Sign-in did not finish. Close any blocked popup and try again.');
     } finally {
-      setSubmitting(false);
+      setSubmitting(null);
     }
   }
 
@@ -51,30 +83,44 @@ export function SignalLock() {
           <Link href="/" className={styles.brand} aria-label="MBMApps entrance">
             <strong>MBM</strong><span>Apps</span>
           </Link>
-          <p><i aria-hidden="true" /> Entrance simulation</p>
+          <p><i aria-hidden="true" /> Protected entrance</p>
         </header>
 
-        <main className={styles.layout}>
+        <div className={styles.layout}>
           <div className={styles.entrance}>
             <div className={styles.entranceMark} aria-hidden="true"><span>01</span><i /><span>ENTER</span></div>
-            <p className={styles.enterEyebrow}>No account / no credentials</p>
-            <h1 id="signal-lock-title">Step inside<br />the system.</h1>
-            <p className={styles.intro}>A deliberate threshold before the portfolio. This is an interaction, not authentication.</p>
+            <p className={styles.enterEyebrow}>Identity required</p>
+            <h1 id="signal-lock-title">Enter<br />MBMApps.</h1>
+            <p className={styles.intro}>Sign in with an approved provider, or continue with a restricted guest session.</p>
 
-            <div className={styles.enterFrame}>
-              <button className={styles.enterButton} type="button" onClick={enter} disabled={submitting}>
-                <span>{submitting ? 'Entering…' : 'Enter'}</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 7l5 5-5 5" /></svg>
+            <div className={styles.providerGrid} aria-label="Sign-in choices">
+              {role && (
+                <button className={styles.guestButton} type="button" disabled={submitting !== null}
+                  onClick={() => onContinue ? onContinue() : window.location.assign(destinationAfterSignIn(searchParams.get('next')))}>
+                  <span>Continue</span><small>Existing {role} session</small>
+                </button>
+              )}
+              <button type="button" onClick={() => enter('google')} disabled={submitting !== null}>
+                <span>Google</span><small>{submitting === 'google' ? 'Opening…' : 'Continue'}</small>
+              </button>
+              <button type="button" onClick={() => enter('microsoft')} disabled={submitting !== null}>
+                <span>Microsoft</span><small>{submitting === 'microsoft' ? 'Opening…' : 'Continue'}</small>
+              </button>
+              <button type="button" onClick={() => enter('apple')} disabled={submitting !== null}>
+                <span>Apple</span><small>{submitting === 'apple' ? 'Opening…' : 'Continue'}</small>
+              </button>
+              <button className={styles.guestButton} type="button" onClick={() => enter('guest')} disabled={submitting !== null}>
+                <span>Guest</span><small>{submitting === 'guest' ? 'Preparing…' : 'Portfolio access'}</small>
               </button>
             </div>
 
             <p className={styles.entranceStatus} role="status" aria-live="polite"><span aria-hidden="true" />{message}</p>
           </div>
-        </main>
+        </div>
 
         <footer className={styles.footer}>
           <span>MBMApps / Chicago</span>
-          <span>Simulation only · grants no private access</span>
+          <span>Guest access · portfolio only</span>
         </footer>
       </div>
     </section>

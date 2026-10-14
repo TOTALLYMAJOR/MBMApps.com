@@ -1,13 +1,21 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import {
+  siteAccessVerificationRequestSchema,
+  siteAccessVerificationResponseSchema
+} from '@mbm/contracts';
+import {
   createGateToken,
   GATE_COOKIE_NAME,
   getGateConfiguration,
-  isCorrectSignalPath,
-  passphraseMatches,
   safeReturnPath
 } from '@/lib/site-gate';
+import {
+  assertSameOrigin,
+  backendBaseUrl,
+  PublicIntakeRequestError,
+  readPublicIntakePayload
+} from '@/lib/public-intake';
 
 export const runtime = 'nodejs';
 
@@ -15,18 +23,9 @@ const WINDOW_MS = 10 * 60 * 1000;
 const MAX_ATTEMPTS = 6;
 const attempts = new Map<string, { count: number; resetsAt: number }>();
 
-const entranceSchema = z.object({
-  sequence: z.array(z.string()).max(8),
-  passphrase: z.string().min(1).max(256),
+const entranceSchema = siteAccessVerificationRequestSchema.extend({
   next: z.string().max(2048).optional()
 });
-
-const simulationSchema = z.object({
-  mode: z.literal('simulation'),
-  next: z.string().max(2048).optional()
-});
-
-const requestSchema = z.union([simulationSchema, entranceSchema]);
 
 function clientKey(request: Request) {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
@@ -44,8 +43,8 @@ function attemptState(key: string, now = Date.now()) {
   return current;
 }
 
-function refused(message: string, status: number, field?: 'sequence' | 'passphrase') {
-  return NextResponse.json({ ok: false, message, ...(field ? { field } : {}) }, { status });
+function refused(message: string, status: number) {
+  return NextResponse.json({ ok: false, message }, { status });
 }
 
 export async function POST(request: Request) {
@@ -62,39 +61,46 @@ export async function POST(request: Request) {
 
   let body: unknown;
   try {
-    body = await request.json();
-  } catch {
+    body = await readPublicIntakePayload(request);
+  } catch (error) {
     state.count += 1;
+    if (error instanceof PublicIntakeRequestError) return refused(error.message, error.status);
     return refused('The entrance request could not be read.', 400);
   }
 
-  const parsed = requestSchema.safeParse(body);
+  const parsed = entranceSchema.safeParse(body);
   if (!parsed.success) {
     state.count += 1;
     return refused('The entrance request is incomplete.', 400);
   }
 
-  if (!configuration.enabled) {
-    if ('mode' in parsed.data) {
-      return NextResponse.json({ ok: true, next: safeReturnPath(parsed.data.next) });
-    }
+  if (!configuration.configured) {
     return refused('The entrance is not configured.', 503);
   }
 
-  if (!('mode' in parsed.data)) {
-    if (!isCorrectSignalPath(parsed.data.sequence)) {
+  let role: 'guest' | 'member';
+  try {
+    const verification = await fetch(`${backendBaseUrl()}/v1/auth/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(siteAccessVerificationRequestSchema.parse({ idToken: parsed.data.idToken })),
+      cache: 'no-store',
+      signal: AbortSignal.timeout(8_000)
+    });
+    const result = await verification.json().catch(() => null);
+    const verified = siteAccessVerificationResponseSchema.safeParse(result);
+    if (!verification.ok || !verified.success) {
       state.count += 1;
-      return refused('The signal path is out of sequence.', 400, 'sequence');
+      return refused('Firebase could not verify this sign-in. Sign in again and retry.', verification.status === 401 ? 401 : 503);
     }
-
-    if (!passphraseMatches(parsed.data.passphrase, configuration.passphrase)) {
-      state.count += 1;
-      return refused('That invite phrase does not complete the signal.', 401, 'passphrase');
-    }
+    role = verified.data.role;
+  } catch {
+    state.count += 1;
+    return refused('Sign-in verification is unavailable. Try again shortly.', 503);
   }
 
   attempts.delete(key);
-  const token = await createGateToken(configuration.secret, Date.now(), configuration.sessionSeconds);
+  const token = await createGateToken(configuration.secret, role, Date.now(), configuration.sessionSeconds);
   const response = NextResponse.json({ ok: true, next: safeReturnPath(parsed.data.next) });
   response.cookies.set({
     name: GATE_COOKIE_NAME,
@@ -104,6 +110,27 @@ export async function POST(request: Request) {
     sameSite: 'strict',
     path: '/',
     maxAge: configuration.sessionSeconds
+  });
+  return response;
+}
+
+export async function DELETE(request: Request) {
+  try {
+    assertSameOrigin(request);
+  } catch (error) {
+    if (error instanceof PublicIntakeRequestError) return refused(error.message, error.status);
+    return refused('The sign-out request could not be read.', 400);
+  }
+
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set({
+    name: GATE_COOKIE_NAME,
+    value: '',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 0
   });
   return response;
 }

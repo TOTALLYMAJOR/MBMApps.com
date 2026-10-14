@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">MasterSC tactical relay concept</title>
+  <desc id="desc">An original orange tactical relay with three abstract doctrine marks on a graphite grid.</desc>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="45%" r="55%">
+      <stop offset="0" stop-color="#ff6b2c" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#ff6b2c" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0v48" fill="none" stroke="#fff" stroke-opacity=".045"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="#080808"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <circle cx="800" cy="430" r="360" fill="url(#glow)"/>
+  <g fill="none" stroke="#ff6b2c" transform="translate(800 430)">
+    <circle r="174" stroke-opacity=".24"/>
+    <circle r="132" stroke-opacity=".55" stroke-dasharray="5 15"/>
+    <circle r="46" fill="#ff6b2c" fill-opacity=".08" stroke-width="3"/>
+    <path d="M0-232v100M0 132v100M-232 0h100M132 0h100" stroke-width="3"/>
+    <path d="m-164-164 72 72m184 184 72 72m0-328-72 72M-92 92l-72 72" stroke-opacity=".52"/>
+  </g>
+  <g fill="none" stroke="#ff8a52" stroke-width="2">
+    <path d="M286 315 396 390 366 548 286 604 206 548 176 390Z" fill="#ff6b2c" fill-opacity=".035"/>
+    <path d="m286 374 53 76-53 104-53-104Z"/>
+    <path d="m1314 302 112 128-112 128-112-128Z" fill="#ff6b2c" fill-opacity=".035"/>
+    <path d="m1314 360 58 70-58 70-58-70Z"/>
+    <path d="M1164 706c44-91 101-137 171-137 41 0 77 20 106 59-58-17-107-5-148 37-42 43-85 56-129 41Z" fill="#ff6b2c" fill-opacity=".035"/>
+  </g>
+  <g fill="#f4f0e9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+    <text x="80" y="86" font-size="22" letter-spacing="6">MASTERSC // TACTICAL REVIEW</text>
+    <text x="80" y="126" fill="#8d8b87" font-size="14" letter-spacing="3">ORIGINAL ABSTRACT INTERFACE MARKS</text>
+    <text x="1220" y="822" fill="#8d8b87" font-size="14" letter-spacing="3">SAMPLE STATE // 20—60</text>
+  </g>
+</svg>
