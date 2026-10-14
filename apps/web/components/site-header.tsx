@@ -54,7 +54,7 @@ export function SiteHeader() {
   }
 
   // These complete landing pages own their navigation.
-  if (pathname === '/' || pathname === '/wale' || pathname === '/conceptdesigns' || pathname === '/quietpilot' || pathname === '/gate') return null;
+  if (pathname === '/' || pathname === '/wale' || pathname === '/concepts' || pathname === '/quietpilot' || pathname === '/gate') return null;
 
   return (
     <header className="northstar-header" data-scrolled={scrolled ? 'true' : 'false'}>

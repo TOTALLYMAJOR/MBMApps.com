@@ -27,9 +27,10 @@ The owner selected MasterSC as the last homepage product section, after LeaguePi
 - `/apps` lists visible canonical product records.
 - `/apps/[slug]` renders a product brief from the registry.
 - `/wale` is the current Wale Living Archive, rendered by `WaleArchiveShell`.
-- `/conceptdesigns` is a protected concept-design route rendered by `WaleExperience`. It contains the blue `AbyssArrival` and deterministic precision workflow previously embedded by the homepage Wale chapter.
+- `/concepts` is the protected retained Wale concept page, rendered separately from both the homepage and the current `/wale` experience.
+- `/MasterSC` is the protected SC2 Master Coach showcase with deterministic sample interface state.
 
-The homepage links directly to `/wale` and does not own a competing `#wale` destination. The root portfolio, current Wale route, and concept-design route are distinct surfaces. A concept or historical prototype does not replace the current Wale route unless a later accepted decision and implementation explicitly do so.
+The homepage links directly to `/wale` and does not own a competing `#wale` destination. The root portfolio, current Wale route, `/concepts`, and `/MasterSC` are distinct surfaces. A concept or historical prototype does not replace the current Wale route unless a later accepted decision and implementation explicitly do so.
 
 ## Wale boundary
 
