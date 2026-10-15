@@ -357,6 +357,8 @@ export function TerminalPortfolioHome() {
         <WaleHomeSection />
 
         <LiveProductSite slug="quoteflow" id="quoteflow" label="QuoteFlow" />
+        <LiveProductSite slug="leaguepilot" id="leaguepilot" label="LeaguePilot" />
+        <LiveProductSite slug="master-sc" id="master-sc" label="SC2 Master Coach" />
         <LiveProductSite slug="quietpilot" id="quietpilot" label="QuietPilot" />
 
         <section
@@ -417,7 +419,7 @@ export function TerminalPortfolioHome() {
             <div className="terminal-methodology__destination-intro">
               <div>
                 <h2 id="destinations-title">The method becomes focused products.</h2>
-                <p>Wale makes development systems legible. QuoteFlow and QuietPilot bring the same evidence-first discipline to operational work.</p>
+                <p>Wale makes development systems legible. QuoteFlow, LeaguePilot, MasterSC, and QuietPilot carry that evidence-first discipline into focused operating work.</p>
               </div>
               <Link className="terminal-methodology__primary-action" href="/contact">
                 Discuss your operation <ArrowUpRight aria-hidden="true" />

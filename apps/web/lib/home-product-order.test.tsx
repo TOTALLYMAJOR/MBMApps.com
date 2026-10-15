@@ -27,19 +27,23 @@ describe('homepage product order', () => {
     expect(actions).not.toContain('Start a conversation');
   });
 
-  it('uses three featured chapters and a progressive operating-world destination hierarchy', () => {
+  it('uses the requested product chapter order and a progressive operating-world destination hierarchy', () => {
     const html = renderToStaticMarkup(
       <SiteSessionProvider role="guest"><TerminalPortfolioHome /></SiteSessionProvider>,
     );
 
     const wale = html.indexOf('data-wale-started="false"');
     const quoteFlow = html.indexOf('id="quoteflow"');
+    const leaguePilot = html.indexOf('id="leaguepilot"');
+    const masterSc = html.indexOf('id="master-sc"');
     const quietPilot = html.indexOf('id="quietpilot"');
     const portfolio = html.indexOf('id="portfolio"');
 
     expect(wale).toBeGreaterThan(-1);
     expect(quoteFlow).toBeGreaterThan(wale);
-    expect(quietPilot).toBeGreaterThan(quoteFlow);
+    expect(leaguePilot).toBeGreaterThan(quoteFlow);
+    expect(masterSc).toBeGreaterThan(leaguePilot);
+    expect(quietPilot).toBeGreaterThan(masterSc);
     expect(portfolio).toBeGreaterThan(quietPilot);
     expect(html).not.toContain('id="studio"');
     expect(html).toContain('data-method-step="observe"');
@@ -53,8 +57,8 @@ describe('homepage product order', () => {
     expect(html).toContain('The method becomes focused products.');
     expect(html).toContain('Discuss your operation');
     expect(html).not.toContain('id="sportpilot"');
-    expect(html).not.toContain('id="leaguepilot"');
-    expect(html).not.toContain('id="master-sc"');
+    expect(html).toContain('data-product-chapter="leaguepilot"');
+    expect(html).toContain('data-product-chapter="master-sc"');
     expect(html).not.toContain('id="stack-title"');
     expect(html).toContain('data-portfolio-slug="sportpilot"');
     expect(html).toContain('data-portfolio-slug="leaguepilot"');
