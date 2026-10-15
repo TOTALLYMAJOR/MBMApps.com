@@ -17,9 +17,9 @@ Visibility is a publication decision, not evidence that a product is deployed, c
 
 QuietPilot's homepage showcase renders its canonical capabilities, explicitly including Inventory, Staffing, and Partner portals. Partner collaboration is scoped to an authenticated event grant; this showcase neither opens private operations nor proves hosted portal acceptance. Staffing and inventory planning do not establish readiness. The existing catering artwork remains a visual illustration, not an operational receipt.
 
-The homepage also includes an owner-requested SportPilot website preview, after QuietPilot and before LeaguePilot. `sportPilotPreview` in the canonical product source owns its name and URL, `https://sportpilot.mbmapps.com/`. It reuses the scroll-through preview with an accessible full-site link. This is not a new catalog brief, source-repository claim, or verification of SportPilot authentication or operational outcomes. The destination owns its interface and access rules.
+The homepage also includes an owner-requested SportPilot website preview as the final product chapter, after QuietPilot and below MasterSC. `sportPilotPreview` in the canonical product source owns its name and URL, `https://sportpilot.mbmapps.com/`. It reuses the scroll-through preview with an accessible full-site link. This is not a new catalog brief, source-repository claim, or verification of SportPilot authentication or operational outcomes. The destination owns its interface and access rules.
 
-The owner selected MasterSC as the last homepage product section, after LeaguePilot. Its preview and full-showcase link use the same-origin `/MasterSC` route and `masterScProduct`; sample state is explicitly labeled. Its `visible: false` catalog setting and existing source/release boundaries remain unchanged. Local inclusion does not establish public deployment.
+MasterSC remains a protected homepage product section after LeaguePilot and before QuietPilot and SportPilot. Its preview and full-showcase link use the same-origin `/MasterSC` route and `masterScProduct`; sample state is explicitly labeled. Its `visible: false` catalog setting and existing source/release boundaries remain unchanged. Local inclusion does not establish public deployment.
 
 ## Site and route roles
 
