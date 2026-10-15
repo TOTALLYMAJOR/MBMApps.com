@@ -360,6 +360,7 @@ export function TerminalPortfolioHome() {
         <LiveProductSite slug="leaguepilot" id="leaguepilot" label="LeaguePilot" />
         <LiveProductSite slug="master-sc" id="master-sc" label="SC2 Master Coach" />
         <LiveProductSite slug="quietpilot" id="quietpilot" label="QuietPilot" />
+        <LiveProductSite slug="sportpilot" id="sportpilot" label="SportPilot" />
 
         <section
           id="portfolio"

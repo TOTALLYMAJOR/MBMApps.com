@@ -37,6 +37,7 @@ describe('homepage product order', () => {
     const leaguePilot = html.indexOf('id="leaguepilot"');
     const masterSc = html.indexOf('id="master-sc"');
     const quietPilot = html.indexOf('id="quietpilot"');
+    const sportPilot = html.indexOf('id="sportpilot"');
     const portfolio = html.indexOf('id="portfolio"');
 
     expect(wale).toBeGreaterThan(-1);
@@ -44,7 +45,8 @@ describe('homepage product order', () => {
     expect(leaguePilot).toBeGreaterThan(quoteFlow);
     expect(masterSc).toBeGreaterThan(leaguePilot);
     expect(quietPilot).toBeGreaterThan(masterSc);
-    expect(portfolio).toBeGreaterThan(quietPilot);
+    expect(sportPilot).toBeGreaterThan(quietPilot);
+    expect(portfolio).toBeGreaterThan(sportPilot);
     expect(html).not.toContain('id="studio"');
     expect(html).toContain('data-method-step="observe"');
     expect(html).toContain('data-method-step="verify"');
@@ -56,7 +58,8 @@ describe('homepage product order', () => {
     expect(html).toContain('aria-expanded="false"');
     expect(html).toContain('The method becomes focused products.');
     expect(html).toContain('Discuss your operation');
-    expect(html).not.toContain('id="sportpilot"');
+    expect(html).toContain('data-product-chapter="sportpilot"');
+    expect(html).toContain('src="https://sportpilot.mbmapps.com/"');
     expect(html).toContain('data-product-chapter="leaguepilot"');
     expect(html).toContain('data-product-chapter="master-sc"');
     expect(html).not.toContain('id="stack-title"');
