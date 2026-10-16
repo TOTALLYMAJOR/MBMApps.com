@@ -55,7 +55,7 @@ The extraction must not make presentation modules new authorities for products, 
 - A provider event is evidence about that provider, not automatically a business-state transition.
 - Browser-only lifecycle code must be SSR-safe, cleanup-complete, and isolated from render-time data composition.
 - Public content may describe only the proof boundary supported by its source record.
-- Firebase Auth is the identity authority. The API verifies ID tokens and derives `guest` or `member`; the web session carries only that signed role and expiry.
+- Firebase Auth is the identity authority. The same-origin Next.js Node route verifies ID tokens with Firebase Admin and derives `guest` or `member`; the web session carries only that signed role and expiry. The separately hosted API is not required for site entry.
 - Guests may browse protected portfolio routes but cannot render or reach guided-chat or Discord discussion surfaces.
 
 ## Architecture change test
