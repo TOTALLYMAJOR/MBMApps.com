@@ -106,18 +106,17 @@ If Firebase Admin env vars are configured, seed demo data:
 
 ## Site Access
 
-Every page and API route requires a verified site session except `/gate` and `/api/site-gate`. Configure Google, Microsoft, Apple, and Anonymous providers in Firebase Authentication. The API verifies each Firebase ID token and derives the role from the verified sign-in provider; the browser cannot choose its role.
+Every page and API route requires a verified site session except `/gate` and `/api/site-gate`. Configure Google, Microsoft, Apple, and Anonymous providers in Firebase Authentication. The same-origin Next.js route verifies each Firebase ID token with Firebase Admin and derives the role from the verified sign-in provider; the browser cannot choose its role, and site access does not depend on the separately hosted API.
 
-Required web and API configuration:
+Required web site-access configuration:
 
 - all six `NEXT_PUBLIC_FIREBASE_*` web values in `.env.example`
 - `FIREBASE_PROJECT_ID`
 - `FIREBASE_CLIENT_EMAIL`
 - `FIREBASE_PRIVATE_KEY`
 - `MBMAPPS_GATE_SECRET` with at least 32 random characters
-- `BACKEND_API_URL`
 
-`member` sessions come only from Google, Microsoft, or Apple. Firebase Anonymous Authentication creates a `guest` session. Guests can browse the portfolio but cannot see or reach guided chat, `/discuss`, or `/api/chat`. The Express `/v1/chat` endpoint independently verifies the forwarded signed member session, so calling the API directly does not bypass this restriction. `MBMAPPS_GATE_SESSION_HOURS` controls the signed web-session lifetime from 1 through 168 hours and defaults to 12.
+`member` sessions come only from Google, Microsoft, or Apple. Firebase Anonymous Authentication creates a `guest` session. Guests can browse the portfolio but cannot see or reach guided chat, `/discuss`, or `/api/chat`. The Express `/v1/chat` endpoint independently verifies the forwarded signed member session, so calling the API directly does not bypass this restriction. `BACKEND_API_URL` remains required for those API-backed features, not for site entry. `MBMAPPS_GATE_SESSION_HOURS` controls the signed web-session lifetime from 1 through 168 hours and defaults to 12.
 
 ## Lead Intake and Delivery
 

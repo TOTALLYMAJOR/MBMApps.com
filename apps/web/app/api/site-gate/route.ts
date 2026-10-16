@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { siteAccessVerificationRequestSchema } from '@mbm/contracts';
 import {
-  siteAccessVerificationRequestSchema,
-  siteAccessVerificationResponseSchema
-} from '@mbm/contracts';
+  InvalidIdentityTokenError,
+  verifyFirebaseIdentity
+} from '@/lib/firebase/admin';
 import {
   createGateToken,
   GATE_COOKIE_NAME,
@@ -12,7 +13,6 @@ import {
 } from '@/lib/site-gate';
 import {
   assertSameOrigin,
-  backendBaseUrl,
   PublicIntakeRequestError,
   readPublicIntakePayload
 } from '@/lib/public-intake';
@@ -26,6 +26,13 @@ const attempts = new Map<string, { count: number; resetsAt: number }>();
 const entranceSchema = siteAccessVerificationRequestSchema.extend({
   next: z.string().max(2048).optional()
 });
+const memberProviders = new Set(['google.com', 'microsoft.com', 'apple.com']);
+
+function roleForProvider(provider: string | undefined): 'guest' | 'member' | null {
+  if (provider === 'anonymous') return 'guest';
+  if (provider !== undefined && memberProviders.has(provider)) return 'member';
+  return null;
+}
 
 function clientKey(request: Request) {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
@@ -80,22 +87,18 @@ export async function POST(request: Request) {
 
   let role: 'guest' | 'member';
   try {
-    const verification = await fetch(`${backendBaseUrl()}/v1/auth/verify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(siteAccessVerificationRequestSchema.parse({ idToken: parsed.data.idToken })),
-      cache: 'no-store',
-      signal: AbortSignal.timeout(8_000)
-    });
-    const result = await verification.json().catch(() => null);
-    const verified = siteAccessVerificationResponseSchema.safeParse(result);
-    if (!verification.ok || !verified.success) {
+    const identity = await verifyFirebaseIdentity(parsed.data.idToken);
+    const verifiedRole = roleForProvider(identity.signInProvider);
+    if (verifiedRole === null) {
       state.count += 1;
-      return refused('Firebase could not verify this sign-in. Sign in again and retry.', verification.status === 401 ? 401 : 503);
+      return refused('Firebase could not verify this sign-in. Sign in again and retry.', 503);
     }
-    role = verified.data.role;
-  } catch {
+    role = verifiedRole;
+  } catch (error) {
     state.count += 1;
+    if (error instanceof InvalidIdentityTokenError) {
+      return refused('Firebase could not verify this sign-in. Sign in again and retry.', 401);
+    }
     return refused('Sign-in verification is unavailable. Try again shortly.', 503);
   }
 

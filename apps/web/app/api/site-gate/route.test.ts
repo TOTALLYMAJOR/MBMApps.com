@@ -3,6 +3,17 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vite
 import { DELETE, POST } from './route';
 
 const originalEnv = { ...process.env };
+const { verifyIdToken } = vi.hoisted(() => ({ verifyIdToken: vi.fn() }));
+
+vi.mock('firebase-admin/app', () => ({
+  cert: vi.fn((serviceAccount: unknown) => serviceAccount),
+  getApps: vi.fn(() => [{ name: 'mbmapps-web-site-gate' }]),
+  initializeApp: vi.fn()
+}));
+
+vi.mock('firebase-admin/auth', () => ({
+  getAuth: vi.fn(() => ({ verifyIdToken }))
+}));
 
 function request(body: unknown, ip: string) {
   return new Request('https://mbmapps.com/api/site-gate', {
@@ -24,13 +35,15 @@ describe('Signal Lock entrance route', () => {
   beforeEach(() => {
     process.env = {
       ...originalEnv,
-      BACKEND_API_URL: 'https://api.mbmapps.test',
+      FIREBASE_PROJECT_ID: 'planning-with-ai-3f9ca',
+      FIREBASE_CLIENT_EMAIL: 'firebase-admin@example.test',
+      FIREBASE_PRIVATE_KEY: 'test-private-key',
       MBMAPPS_GATE_SECRET: 'a-signing-secret-with-at-least-thirty-two-characters'
     };
-    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ ok: true, role: 'member' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    })));
+    delete process.env.BACKEND_API_URL;
+    verifyIdToken.mockReset();
+    verifyIdToken.mockResolvedValue({ firebase: { sign_in_provider: 'google.com' } });
+    vi.stubGlobal('fetch', vi.fn());
   });
 
   afterEach(() => {
@@ -56,17 +69,12 @@ describe('Signal Lock entrance route', () => {
     expect(response.headers.get('set-cookie')).toContain('mbmapps_signal_access=v2.member.');
     expect(response.headers.get('set-cookie')).toContain('HttpOnly');
     expect(response.headers.get('set-cookie')).toContain('SameSite=strict');
-    expect(fetch).toHaveBeenCalledWith(
-      'https://api.mbmapps.test/v1/auth/verify',
-      expect.objectContaining({ method: 'POST', cache: 'no-store' })
-    );
+    expect(verifyIdToken).toHaveBeenCalledWith('verified-firebase-member-token', true);
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it('issues a restricted guest cookie for a verified anonymous identity', async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(new Response(JSON.stringify({ ok: true, role: 'guest' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    }));
+    verifyIdToken.mockResolvedValueOnce({ firebase: { sign_in_provider: 'anonymous' } });
 
     const response = await POST(request({ idToken: 'verified-firebase-guest-token', next: '/apps' }, '192.0.2.3'));
 
@@ -75,13 +83,28 @@ describe('Signal Lock entrance route', () => {
     expect(response.headers.get('set-cookie')).toContain('mbmapps_signal_access=v2.guest.');
   });
 
-  it('does not issue a cookie for an invalid or substituted backend response', async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(new Response(JSON.stringify({ ok: true, role: 'admin' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    }));
+  it('does not issue a cookie for an unsupported verified provider', async () => {
+    verifyIdToken.mockResolvedValueOnce({ firebase: { sign_in_provider: 'password' } });
 
     const response = await POST(request({ idToken: 'untrusted-firebase-token-value' }, '192.0.2.4'));
+
+    expect(response.status).toBe(503);
+    expect(response.headers.get('set-cookie')).toBeNull();
+  });
+
+  it('returns 401 and no cookie when Firebase rejects the ID token', async () => {
+    verifyIdToken.mockRejectedValueOnce({ code: 'auth/id-token-expired' });
+
+    const response = await POST(request({ idToken: 'expired-firebase-token-value' }, '192.0.2.6'));
+
+    expect(response.status).toBe(401);
+    expect(response.headers.get('set-cookie')).toBeNull();
+  });
+
+  it('fails closed when Firebase verification is unavailable', async () => {
+    verifyIdToken.mockRejectedValueOnce(new Error('provider unavailable'));
+
+    const response = await POST(request({ idToken: 'unverifiable-firebase-token-value' }, '192.0.2.7'));
 
     expect(response.status).toBe(503);
     expect(response.headers.get('set-cookie')).toBeNull();
@@ -93,7 +116,7 @@ describe('Signal Lock entrance route', () => {
 
     expect(response.status).toBe(503);
     expect(response.headers.get('set-cookie')).toBeNull();
-    expect(fetch).not.toHaveBeenCalled();
+    expect(verifyIdToken).not.toHaveBeenCalled();
   });
 
   it('clears the site session through an HTTP-only cookie', async () => {
